@@ -1,0 +1,11 @@
+#!/bin/bash
+
+distname=id-openie-1.0
+testfile="${1:-plain.txt}"
+
+gradle clean build
+cd build/distributions
+unzip $distname.zip
+cd $distname
+python extract_triples.py -f tsv $testfile
+

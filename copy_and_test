@@ -1,0 +1,12 @@
+#!/bin/bash
+
+distname=id-openie-1.0
+distdir=build/distributions/$distname
+testfile=$1
+
+cp scripts/tripletools.py $distdir
+cp scripts/extract_triples.py $distdir
+cp scripts/triples-classifier-*.pkl $distdir
+cd $distdir
+python extract_triples.py -f tsv $testfile
+

@@ -1,0 +1,44 @@
+group 'id.nlp'
+version '1.0'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+sourceCompatibility = 1.8
+mainClassName = 'id.nlp.depparser.DependencyParser'
+
+// turn off log
+applicationDefaultJvmArgs = ["-Dorg.slf4j.simpleLogger.defaultLogLevel=error"]
+
+distributions {
+    main {
+        contents {
+            from('scripts') {
+                include('tripletools.py')
+                include('extract_triples.py')
+                include('triples-classifier-model.pkl')
+                include('triples-classifier-scaler.pkl')
+            }
+            from('data') {
+                include('plain.txt')
+            }
+            from('.') {
+                include('README.md')
+            }
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    compile fileTree(dir: 'lib', include: '*.jar')
+    compile group: 'edu.stanford.nlp', name: 'stanford-corenlp', version: '3.7.0'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.23'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.193'
+    compile group: 'net.sourceforge.argparse4j', name: 'argparse4j', version: '0.7.0'
+}
