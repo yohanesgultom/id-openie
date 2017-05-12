@@ -116,28 +116,34 @@
 % in the abstract
 \begin{abstract}
 
-Availability of big amount digital documents calls for an automatic method to extract information from any text document regardless of domain. Unfortunately, existing open domain information extraction (open IE) methods are not suitable for low-resource language such as Indonesian. This paper introduces a method to extract relation triples from Indonesian text using a model composed of rule-based triple candidates generator, rule-based token expander and machine-learning-based triple selector. Trained using our 2,344 triples dataset (166 positives \& 2,183 negatives), a Random Forest triple selector model achieves cross-validation score of 0.58 F1 (0.62 precision and 0.58 recall).
+Availability of big amount digital documents calls for an automatic method to extract information from any text document regardless of domain. Unfortunately, existing open domain information extraction (open IE) systems are not suitable for low-resource language such as Indonesian. This paper introduces a system to extract relation triples from Indonesian text using rule-based triple candidates generator, rule-based token expander and machine-learning-based triple selector. Trained using our 2,344 triples dataset (166 positives \& 2,183 negatives), a Random Forest triple selector model achieves cross-validation score of 0.58 F1 (0.62 precision and 0.58 recall).
 
 \end{abstract}
 
 
 \section{Introduction}
 
-Open domain information extraction (open IE) is a paradigm that facilitates domain-independent discovery of triple relations from text document\cite{banko2007open}. Unlike conventional information extraction, open IE retrieves relations regardless of domain in a consistent triples format. While it uses similar format to knowledge extraction, open IE doesn't limit the extracted relation triples by certain closed ontology or relation schema\cite{auer2007dbpedia}. Relation triples produced by open IE has been reported to be useful for tasks such as question answering\cite{fader2011identifying} and information retrieval\cite{etzioni2011search}. 
+Open domain information extraction (open IE) is a paradigm that facilitates domain-independent discovery of triple relations from text document\cite{banko2007open}. It extracts relations from sentence in three-values tuples or triples format $(x, r, y)$ where $x$ and $y$ called arguments and $r$ is the relation\cite{etzioni2011open}. In more linguistic term, the arguments are also referred as subject and object while relation are referred as predicate\cite{angeli2015leveraging}. The example of this extraction is described in Figure \ref{fig_example_io_openie}.
 
-The objective of open IE is to extract relation triples from a sentence
+As described in Table \ref{table_paradigm_comparison}, unlike traditional information extraction (IE), open IE extracts domain-independent relations from sentence. While it retrieves relations in format of triples similar to knowledge extraction (KE), open IE doesn't follow whole Resource Data Format (RDF) specification\footnote{\url{https://www.w3.org/RDF/}} like KE\cite{auer2007dbpedia} \cite{exner2014refractive}. Although mapping to existing relation schema is required in real word task such as slot filling\cite{angeli2015leveraging}, ontology is not in the scope of open IE research. Open IE has also been reported to be useful for tasks such as question answering\cite{fader2011identifying} and information retrieval\cite{etzioni2011search}. 
 
-%TODO
-%\item What is the research background? amount of digital documents have surpassed human ability to read, interest in machine reading (automatic, unsupervised, understanding of text), traditional ie is limited, knowledge extraction uses NLP tasks which requires datasets that are not available for low-resource language such as Indonesian, openie definition, openie relies on language specific heuristics
-%\item What is the research problem? develop baseline model and implementation for Indonesian openie
-%\item How does this research address the problem? Proposes a model that combine heuristics (rule-based) and supervised learning models for Indonesian language, provides dataset and opensource implementation
-%\item What is the contribution of this paper? model of open IE for Indonesian text, implementation of the model, manually tagged dataset of triple selection, reusable NLP pipeline to annotate lemma, part of speech, named-entity and dependency of Indonesian text
-%\item How is this paper organized? Introduction, related works, model details, experiments, analysis, conclusion and future works
-%\end{itemize}
-
-
-
-\lipsum[1-2]
+\begin{table}[!t]
+\renewcommand{\arraystretch}{1.5}
+\caption{General comparison between traditional information, open domain information and knowledge extraction}
+\label{table_paradigm_comparison}
+\centering
+\begin{tabular}{|l|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|}
+\hline 
+ & \textbf{IE} & \textbf{Open IE} & \textbf{KE} \\ 
+\hline 
+\textbf{Domain} & Closed & Open & Open \\ 
+\hline 
+\textbf{Format} & Depends on domain & Triples & RDF Triples \\ 
+\hline 
+\textbf{Ontology} & Not available & Optional & Mandatory \\ 
+\hline 
+\end{tabular} 
+\end{table}
 
 \begin{figure}
 \textbf{Input} \\[0.1cm]
@@ -149,7 +155,24 @@ The objective of open IE is to extract relation triples from a sentence
 \label{fig_example_io_openie}
 \end{figure}
 
-\section{Related Works}
+Due to the nature of NLP tasks and heuristics used in open IE system, it is only applicable for a specific language\cite{banko2007open}. So in order to extract open domain information from Indonesian text, a specific system has to be defined for this language. Furthermore, considering the scarcity of Indonesian NLP resources, the system need to effectively utilize them to achieve the objective. Through this paper, we propose a open IE system that addresses these issues.
+
+We propose an Open IE system that combine heuristics (rule-based) models and a supervised learning model to extract relation triples from Indonesian text. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. 
+
+In general, the contributions from this research are:
+
+\begin{itemize}
+\item Open domain information extraction system for Indonesian text
+\item Open-source implementation of the system in public repository\footnote{\url{https://github.com/yohanesgultom/id-openie}}
+\item Dataset of manually tagged triple candidates
+\item Reusable Indonesian NLP pipelines (lemmatizer, part of speech tagger, named-entity recognizer and dependency parser) built by extending Stanford CoreNLP\footnote{\url{https://stanfordnlp.github.io/CoreNLP}} API
+\end{itemize}
+
+Further in this paper we will described some of the preeminent related works in open IE, the details about proposed system, experiments using some supervised-learning models as triples selector, analysis of the experiments results, and finally, conclusions and future works of this research.
+
+\section{Related Work}
+
+There has been plenty of works done in the open IE research. Starting from the introduction of open IE along with its first fully-implemented system, TextRunner, which further succeeded by systems built on top of it: ReVerb, R2A2 and Ollie (all from the same research group). The most recent research introduces Stanford OpenIE\footnote{\url{https://nlp.stanford.edu/software/openie.html}} which is an implementation of novel open IE system that outperforms Ollie in TAC-KBP2013 Slot Filling task\cite{angeli2015leveraging}.
 
 TextRunner was designed for massive size of open-domain web documents by avoiding heavy linguistic tasks and used inverted index to store extraction result\cite{banko2007open}. It generates its own dataset (self-supervised) by using part of speech and dependency features and train a naive bayes classifier to select the triples. It argues that heavy linguistic tasks such as dependency parsing are not scalable to handle million of web documents. Additionally, it also uses redundancy assessor to remove redundant words (stop words, adverbs .etc).
 
@@ -159,7 +182,7 @@ R2A2 is a system built to fix argument extraction problem in ReVerb \cite{etzion
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.3]{arglearner_architecture}
+\includegraphics[scale=0.5]{arglearner_architecture}
 \caption{ArgLearner architecture training and extraction architecture}
 \label{fig_arglearner_architecture}
 \end{figure}
@@ -168,17 +191,21 @@ Furthermore, Ollie (Open Language Learning for Information Extraction) utilizes 
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.3]{ollie_architecture}
+\includegraphics[scale=0.5]{ollie_architecture}
 \caption{Ollie training and extraction architecture}
 \label{fig_ollie_architecture}
 \end{figure}
 
-\section{Proposed Models}
+One of the most research proposes new open IE system that replaces the usage of large open patterns in Ollie with a set of fewer patterns for canonically structured sentences and a classifier that learns to extract self-contained clauses from a sentence\cite{angeli2015leveraging}. This system is implemented in Stanford OpenIE which is also integrated in the populer open source suites, Stanford Core NLP.
+
+\section{Proposed System}
+
+As shown in the flowchart Figure \ref{fig_program_flowchart}, our system has three main components:
 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{program_flowchart}
-\caption{Program flowchart}
+\caption{Indonesian open IE system flowchart}
 \label{fig_program_flowchart}
 \end{figure*}
 
@@ -188,11 +215,37 @@ Furthermore, Ollie (Open Language Learning for Information Extraction) utilizes 
 %
 %These model is based on three-step method of Label, Learn, Extract\cite{etzioni2011open} but use the mix of heuristics and manual labeling
 
-\lipsum[1]
-
 \subsection{NLP Pipeline}
 
-\lipsum[3-5]
+The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CONLL-U\footnote{\url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. This pipeline is buit by extending Stanford Core NLP classes and package them as single Java program (JAR). Those NLP tasks are:
+
+\begin{enumerate}
+
+\item \textbf{Tokenizer} \\
+We use default tokenizer provided by Stanford Core NLP, \verb|PTBTokenizer|\cite{manningptbtokenizer}, which mimics Penn Treebank 3 tokenizer\footnote{\url{https://catalog.ldc.upenn.edu/LDC99T42}}. While this tokenizer provides many options to modify its behavior, we stick to default configuration that split sentence by whitelines to get the tokens.\\
+
+\item \textbf{Part of Speech Tagger} \\
+We trained default Stanford Core NLP \verb|MaxentTagger|\cite{toutanova2003feature} with Indonesian universal POS tag dataset which we convert from dependency parsing dataset\footnote{\url{https://github.com/UniversalDependencies/UD_Indonesian}}. This POS tagger uses Max Entropy (multi-class logistic regression) classifier which yields \textbf{93.68\%} token accuracy and \textbf{63.91\%} sentence accuracy when trained using 5,036 sentences and tested with 559 sentences from the dataset. \\
+
+\item \textbf{Lemmatizer} \\
+The lemmatizer used in this pipeline, \verb|IndonesianLemmaAnnotator|, is implemented based on an existing Indonesian rule-based Lemmatizer\cite{suhartono2014lemmatization} with some improvements:
+
+\begin{itemize}
+\item Reimplementation in Java language
+\item Usage of in-memory database to speed up dictionary lookup
+\item Integration with Stanford Core NLP annotator API for reusability
+\end{itemize}
+
+This lemmatizer yields \textbf{99\%} accuracy when tested using dataset of 5,638 token-lemma pairs\footnote{\url{https://github.com/davidchristiandy/lemmatizer}}. \\
+
+\item \textbf{Named-Entity Recognizer} \\
+
+Stanford NLP \verb|CRFClassifier|\cite{finkel2005incorporating}, a linear chain Conditional Random Field (CRF) sequence models, is trained using a dataset containing 3,535 Indonesian sentences with 5 entity class: Person, Organization, Location, Quantity and Time. When tested using 426 sentences, this models achieves 0.86 precision, 0.85 recall and \textbf{0.86} F1-score. The dataset itself is a combination between dataset from Faculty of Computer Science, University of Indonesia and a public dataset\footnote{\url{https://github.com/yusufsyaifudin/indonesia-ner}}. \\
+
+\item \textbf{Dependency Parser} \\
+
+\end{enumerate}
+
 
 \begin{figure}
 \centering
