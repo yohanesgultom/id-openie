@@ -1,10 +1,10 @@
-# Indonesian Knowledge Extractor
+# Indonesian Open Domain Information Extractor
 
-> This is a work in progress and still focusing on proven of concept instead of accuracy
+> This is a work in progress and still focusing on proven of concept instead of precision and recall
 
-Indonesian knowledge extractor using Stanford NLP Open IE [1].
+Indonesian open domain information extractor using Stanford NLP Open IE [1].
 
-Using Indonesian lemmatizer annotator which is an modified port from https://github.com/davidchristiandy/lemmatizer [2].
+Uses Indonesian lemmatizer annotator which is an modified port from https://github.com/davidchristiandy/lemmatizer [2].
 
 **Build**
 
@@ -12,19 +12,10 @@ To build from source:
 
 * Install [Oracle JRE/JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html), [Gradle](https://gradle.org/) and [Python 2.7]()
 * Download and clone this repo
-* Run build command from repo directory
-
-```
-gradle clean build
-```
-
-**Installation**
-
-To run the distribution without building:
-
-* Install [Oracle JRE/JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Python 2.7]()
-* Get the distribution in `build/distributions` (`.zip` or `.tar`) and extract it
-* Install Python dependencies eg. `pip install -r requirements.txt` (Java dependencies are already included inside `lib`)
+* Install Python dependencies: `pip install -r scripts/requirements.txt`
+* Run build command from repo directory: `gradle clean build`
+* Get distribution `.tar` or `.zip` from `build/distribution`
+* Extract distribution to your choice of installation directory
 
 **Usage**
 
@@ -32,20 +23,20 @@ Command format:
 
 ```
 python extract_triples.py [-h] [-o OUTPUT_FILE] input_file
- 
+
 positional arguments:
- 
+
     input_file: Input file containing 1 (one) Indonesian sentence per line
- 
+
 optional arguments:
- 
+
     -o, --output_file: Output file containing triples
 ```
 
 Example:
 
 ```
-python extract_triples.py plain.txt -o triples.tsv 
+python extract_triples.py plain.txt -o triples.tsv
 ```
 
 **References**
