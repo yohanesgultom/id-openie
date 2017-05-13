@@ -81,6 +81,7 @@
 
 % *** Temporary packages ***
 \usepackage{lipsum}
+\usepackage{pifont}
 %\usepackage{xcolor}
 %\newcommand\mytodo[1]{\textcolor{red}{#1}}
 
@@ -172,7 +173,8 @@ Further in this paper we will described some of the preeminent related works in 
 
 \section{Related Work}
 
-There has been plenty of works done in the open IE research. Starting from the introduction of open IE along with its first fully-implemented system, TextRunner, which further succeeded by systems built on top of it: ReVerb, R2A2 and Ollie (all from the same research group). The most recent research introduces Stanford OpenIE\footnote{\url{https://nlp.stanford.edu/software/openie.html}} which is an implementation of novel open IE system that outperforms Ollie in TAC-KBP2013 Slot Filling task\cite{angeli2015leveraging}.
+There has been plenty of works done in the open IE research. Starting from the introduction of open IE along with its first fully-implemented system, TextRunner, which further succeeded by systems built on top of it: ReVerb, R2A2 and Ollie (all from the same research group). The most recent research introduces Stanford OpenIE\footnote{\url{https://nlp.stanford.edu/software/openie.html}} which is an implementation of novel open IE system that outperforms Ollie in TAC-KBP
+2013 Slot Filling task\cite{angeli2015leveraging}.
 
 TextRunner was designed for massive size of open-domain web documents by avoiding heavy linguistic tasks and used inverted index to store extraction result\cite{banko2007open}. It generates its own dataset (self-supervised) by using part of speech and dependency features and train a naive bayes classifier to select the triples. It argues that heavy linguistic tasks such as dependency parsing are not scalable to handle million of web documents. Additionally, it also uses redundancy assessor to remove redundant words (stop words, adverbs .etc).
 
@@ -187,12 +189,12 @@ R2A2 is a system built to fix argument extraction problem in ReVerb \cite{etzion
 \label{fig_arglearner_architecture}
 \end{figure}
 
-Furthermore, Ollie (Open Language Learning for Information Extraction) utilizes ReVerb to learn open pattern templates to guide triples extraction from sentence. Additionally, Ollie does a context analysis to extend the tuples with contextual information in order to improve precision. Its training and extraction architecture is describe in Figure \ref{fig_ollie_architecture}.
+Furthermore, Ollie (Open Language Learning for Information Extraction)\cite{schmitz2012open} utilizes ReVerb to learn open pattern templates to guide triples extraction from sentence. Additionally, Ollie does a context analysis to extend the tuples with contextual information in order to improve precision. Its training and extraction architecture is describe in Figure \ref{fig_ollie_architecture}.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{ollie_architecture}
-\caption{Ollie training and extraction architecture}
+\caption{Ollie labeling and extraction architecture}
 \label{fig_ollie_architecture}
 \end{figure}
 
@@ -200,12 +202,24 @@ One of the most research proposes new open IE system that replaces the usage of 
 
 \section{Proposed System}
 
+Our proposed system also follows the pattern of three-steps\cite{etzioni2011open} method used by open IE system:
+
+\begin{enumerate}
+
+\item \textbf{Label}: sentence are labeled to create a training dataset for the classifier. Although most of the related systems choose to do it automatically (using heuristics or distant supervision)\cite{banko2007open}\cite{etzioni2011open}\cite\cite{schmitz2012open}, we choose to follow the method in recent research\cite{angeli2015leveraging} to manually label our training data to ensure the quality.
+
+\item \textbf{Learn}: train a classifier using the dataset to extract dataset. We use an ensemble model, Random Forest\cite{breiman2001random}, as a classifier since it achieves the best score in our experiment.
+
+\item \textbf{Extract}: use the classifier to extract relations (predicate) and arguments (subjects \& objects) as triples. In our case, we also do token expansion to expand the token into meaningful clause.
+
+\end{enumerate}
+
 As shown in the flowchart Figure \ref{fig_program_flowchart}, our system has three main components:
 
 \begin{figure*}[!t]
 \centering
 \includegraphics[width=\textwidth]{program_flowchart}
-\caption{Indonesian open IE system flowchart}
+\caption{Indonesian open domain information extraction flowchart}
 \label{fig_program_flowchart}
 \end{figure*}
 
@@ -217,7 +231,7 @@ As shown in the flowchart Figure \ref{fig_program_flowchart}, our system has thr
 
 \subsection{NLP Pipeline}
 
-The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CONLL-U\footnote{\url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. This pipeline is buit by extending Stanford Core NLP classes and package them as single Java program (JAR). Those NLP tasks are:
+The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CONLL-U\footnote{\url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. The model used in each of the NLP tasks in the pipeline are explained below:
 
 \begin{enumerate}
 
@@ -244,8 +258,10 @@ Stanford NLP \verb|CRFClassifier|\cite{finkel2005incorporating}, a linear chain 
 
 \item \textbf{Dependency Parser} \\
 
-\end{enumerate}
+We relied on Stanford NLP \verb|nndep.DependencyParser|\cite{chen2014fast}, to annotate dependency relation of each token in the the sentence. We train this transition-based neural network model using a Indonesian universal dependencies dataset of 5,036 sentences and 3,093 Indonesian word embeddings\footnote{\url{https://github.com/yohanesgultom/id-openie/blob/master/data/parser-id.embed}} (vector representation of words). Tested with 559 sentences, this model scores \textbf{70\%} UAS (Unlabeled Attachment Score) and \textbf{46\%} LAS (Labeled Attachment Score).
 
+
+\end{enumerate}
 
 \begin{figure}
 \centering
@@ -254,11 +270,39 @@ Stanford NLP \verb|CRFClassifier|\cite{finkel2005incorporating}, a linear chain 
 \label{fig_conllu_example}
 \end{figure}
 
-\subsection{Triple Candidate Generator}
+This pipeline is built by extending Stanford Core NLP classes and packaged as single Java program (JAR). Therefore it can be reused in any other system that require same kind of annotations.
+
+\subsection{Triple Candidates Generator} \label{Triple Candidates Generator}
 
 % Similar to TextRunner Self-Supervised Learner but doesn't automatically label triples
 
-\lipsum[3-5]
+Triple candidates generator is used to extract relation triples candidates from CONLL-U document produced by NLP pipline. It uses a set of rules listed in Table \ref{table_triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner\cite{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
+
+For example, applying the rules to a annotated sentence in Figure \ref{fig_conllu_example} will generate these 17 triples candidates--where only five of them are valid triples:
+
+\begin{itemize}
+\item (Sembungan, adalah, desa) \ding{51}
+\item (Sembungan, adalah, terletak)
+\item (Sembungan, adalah, kecamatan)
+\item (Sembungan, adalah, kabupaten)
+\item (Sembungan, adalah, Jawa)
+\item (Sembungan, adalah, Tengah)
+\item (Sembungan, adalah, Indonesia)
+\item (Sembungan, terletak, kecamatan) \ding{51}
+\item (Sembungan, terletak, kabupaten) \ding{51}
+\item (Sembungan, terletak, Jawa) \ding{51}
+\item (Sembungan, terletak, Tengah)
+\item (Sembungan, terletak, Indonesia) \ding{51}
+\item (desa, terletak, kecamatan)
+\item (desa, terletak, kabupaten)
+\item (desa, terletak, Jawa)
+\item (desa, terletak, Tengah)
+\item (desa, terletak, Indonesia)
+\end{itemize}
+
+In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. From the candidates, we manually labeled 132 positive and 1,479 negative triples which we use to train binary classifier as triple selector in the training phase.
+
+During the extraction phase, triple candidates generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}.
 
 % Triple candidate generation rules
 \begin{table}[!t]
@@ -289,10 +333,20 @@ Object & Token's position is after Subject and Predicate \\
 
 \subsection{Triple Selector}
 
-%Similar to TextRunner Self-Supervised Learner but uses dependency-based and NER-based features
-%While TextRunner uses Naive Bayes Classifier, our model uses other models such as Logistic Regression, SVM, MLP and Random Forest
+Triple selector is a machine learning classifier trained using manually labeled dataset of valid and invalid relation triples. For example, given the input of 17 candidates in Section \ref{Triple Candidates Generator}, the selector will label the five check-marked triples as true and label the rest as false.
 
-\lipsum[3-5]
+We use Random Forest\cite{breiman2001random}, an ensemble methods that aggregate classification results from multiple decision trees, as the model for the classifier. We use the Scikit-Learn\footnote{\url{http://scikit-learn.org}} implementation of Random Forest with following configuration:
+
+\begin{itemize}
+\item Decision tree criterion: Gini Impurity
+\item Minimum number of samples to split internal node: 5
+\item Maximum trees depth: 8
+\item Number of trees: 20
+\item Maximum features used in each tree: 4 (square root of the number of features)
+\item Class weight: balanced (multiplied by the ratio of training samples)
+\end{itemize}
+
+As for the features, we use 18 features described in Table \ref{table_models_features} which are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. We encode every nominal features and normalize the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
 
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
@@ -326,9 +380,15 @@ Object & Token's position is after Subject and Predicate \\
 
 \subsection{Token Expander}
 
-%While TextRunner uses lightweight noun phrase chunker, our models uses rule-based token expander to find entities (subject or object token) 
+Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system uses rule-based token expander to extract relation or argument clauses. It uses heuristics based on syntactical features (POS tag, dependency relation and named-entity) described in Table \ref{table_token_expansion_rules_s_o} and Table \ref{table_token_expansion_rules_p} to determine whether to expand a token to its dependent, ignore the dependent or even remove the token itself. For example, token expander will expand check-marked triples in Section \ref{Triple Candidates Generator} into:
 
-\lipsum[3-5]
+\begin{itemize}
+\item (Sembungan, adalah, desa)
+\item (Sembungan, terletak di, kecamatan Kejajar)
+\item (Sembungan, terletak di, kabupaten Wonosobo)
+\item (Sembungan, terletak di, Jawa Tengah)
+\item (Sembungan, terletak di, Indonesia)
+\end{itemize}
 
 % Token expansion rules for Subject or Object token
 \begin{table}[!t]
