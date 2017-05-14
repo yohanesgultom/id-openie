@@ -223,15 +223,9 @@ As shown in the flowchart Figure \ref{fig_program_flowchart}, our system has thr
 \label{fig_program_flowchart}
 \end{figure*}
 
-%Generally is similar to TextRunner
-%
-%TextRunner, automatically tag the triples candidates\cite{banko2007open} while we combine automatic candidates generator with manual (human) annotation
-%
-%These model is based on three-step method of Label, Learn, Extract\cite{etzioni2011open} but use the mix of heuristics and manual labeling
-
 \subsection{NLP Pipeline}
 
-The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CONLL-U\footnote{\url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. The model used in each of the NLP tasks in the pipeline are explained below:
+The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CONLL-U\footnote{\url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. The pipeline assumes that each sentence in the input document is separated by new line so preprocessing may be required. The detail of each model the pipeline are described below:
 
 \begin{enumerate}
 
@@ -276,7 +270,7 @@ This pipeline is built by extending Stanford Core NLP classes and packaged as si
 
 % Similar to TextRunner Self-Supervised Learner but doesn't automatically label triples
 
-Triple candidates generator is used to extract relation triples candidates from CONLL-U document produced by NLP pipline. It uses a set of rules listed in Table \ref{table_triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner\cite{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
+Triple candidates generator is used to extract relation triples candidates from CONLL-U document produced by NLP pipeline. It uses a set of rules listed in Table \ref{table_triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner\cite{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
 
 For example, applying the rules to a annotated sentence in Figure \ref{fig_conllu_example} will generate these 17 triples candidates--where only five of them are valid triples:
 
@@ -300,9 +294,9 @@ For example, applying the rules to a annotated sentence in Figure \ref{fig_conll
 \item (desa, terletak, Indonesia)
 \end{itemize}
 
-In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. From the candidates, we manually labeled 132 positive and 1,479 negative triples which we use to train binary classifier as triple selector in the training phase.
+In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually labeled \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
 
-During the extraction phase, triple candidates generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}.
+During the extraction step, triple candidates generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}.
 
 % Triple candidate generation rules
 \begin{table}[!t]
@@ -331,7 +325,7 @@ Object & Token's position is after Subject and Predicate \\
 \end{table}
 
 
-\subsection{Triple Selector}
+\subsection{Triple Selector}  \label{Triple Selector}
 
 Triple selector is a machine learning classifier trained using manually labeled dataset of valid and invalid relation triples. For example, given the input of 17 candidates in Section \ref{Triple Candidates Generator}, the selector will label the five check-marked triples as true and label the rest as false.
 
@@ -346,7 +340,9 @@ We use Random Forest\cite{breiman2001random}, an ensemble methods that aggregate
 \item Class weight: balanced (multiplied by the ratio of training samples)
 \end{itemize}
 
-As for the features, we use 18 features described in Table \ref{table_models_features} which are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. We encode every nominal features and normalize the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
+By using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, we discover that this configuration yields the best F1 score for Random Forest classifier when trained and tested with our dataset described in Section \ref{Triple Candidates Generator}. 
+
+We extract 18 features described in Table \ref{table_models_features} from each triple candidates. Our system uses features based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. Every nominal features are encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
 
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
@@ -377,6 +373,7 @@ As for the features, we use 18 features described in Table \ref{table_models_fea
 \end{tabular}
 \end{table}
 
+During the train step, we use the dataset prepared in the label step (described in Section \ref{Triple Candidates Generator}) to train triple selector and save the best model as binary file. This model is included in the system to be use during the extraction step.
 
 \subsection{Token Expander}
 
@@ -429,20 +426,22 @@ Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system
 \end{tabular}
 \end{table}
 
-\section{Experiments}
+During the label step, token expander is used to make manual annotation process easier. We label a triple candidate as valid only if it makes sense after being expanded to clause. For example, \textit{(Sembungan, terletak, kecamatan)} doesn't really make sense before expanded to \textit{(Sembungan, terletak di, kecamatan Kejajar)}.
 
-In this research, we report two experiments. In the first one, we show the performance comparison (precision \& recall) of four classifiers in selecting valid triples from given candidates. While in the second one, we show the performance of our system (using the best classifier and did end-to-end extraction triples from unlabeled document and observed the required time.
+\section{Experiments} \label{Experiments}
 
-In the first experiment, we chose four classifiers each representing unique characteristics:
+In this research, we report two experiments. The first one shows the performance comparison of four classifiers in selecting valid triples from given candidates. While the second one shows the scalability of our system (using the best classifier) extracting triples from documents (unannotated). Both of the experiments are run on an Ubuntu 15.04 64-bit, Intel Core i7 5500U (dual cores), DDR3 8 GB RAM, SSD 250 GB machine.
+
+In the first experiment, we chose four classifiers each representing unique characteristics: 
 
 \begin{enumerate}
-	\item Logistic Regression\cite{fan2008liblinear} (linear-model)
-	\item Support Vector Machine\cite{chang2011libsvm} (non-linear model)
-	\item Multi Layer Perceptron\cite{hinton1989connectionist} (neural network model)
-	\item Random Forest\cite{wasserman2015grid} (ensemble model)
+\item Linear Logistic Regression\cite{fan2008liblinear} (linear model)
+\item Polynomial Support Vector Machine (SVM)\cite{chang2011libsvm} (nonlinear model)
+\item Multi Layer Perceptron (MLP)\cite{hinton1989connectionist} with 2 hidden layers (20 and 10 ReLU\cite{nair2010rectified} neurons)
+\item Random Forest\cite{wasserman2015grid} (ensemble decision trees)
 \end{enumerate}
-
-The dataset used in the first experiment was manu
+  
+We use the manually annotated triple selector dataset described in Section \ref{Triple Candidates Generator} to cross-validate\cite{kohavi1995study} (k-Fold with k = 3) the four classifiers. Since open IE systems requires both precision and recall\cite{angeli2015leveraging}, we choose F1 score to determine the best classifier for triple selector. The result of this experiment is shown by Figure \ref{fig_models_performance} and Table \ref{table_models_performance} where Random Forest achieves the highest F1 score 0.58.
 
 \begin{figure}
 \includegraphics[scale=0.4]{models_performance}
@@ -467,8 +466,7 @@ Random Forest & 0.62 & \textbf{0.58} & \textbf{0.58} \\
 \end{tabular}
 \end{table}
 
-%Our system is quite scalable (faster on bigger document)
-%Our system has a comparable speed with TextRunner
+In the second experiment, we evaluate the performance of our system by extracting triples from three documents with different number of sentences, measure the total execution time and calculate the average execution time per sentence. The result in Table \ref{table_system_extraction_time} shows that the lowest execution time (or fastest execution time) is 0.014 seconds when processing document of 5,593 sentences.
 
 \begin{table}[!t]
 	\renewcommand{\arraystretch}{1.5}
@@ -486,19 +484,21 @@ Random Forest & 0.62 & \textbf{0.58} & \textbf{0.58} \\
 	\end{tabular}
 \end{table}
 
+\section{Analysis}
+
+As implied by the flowchart in Figure \ref{fig_program_flowchart}, the performance of our system depends on the performance of NLP pipeline. Since most of the heuristics and features used in our systems are based on POS tag and dependency relation, the low performance of the models responsible for these tasks are reducing the overall performance.
+
+The heuristics used in triple candidate generator and token expander are still limited to explicit pattern. For instance, triple candidate generator can not extract relations \textit{(kecamatan Kejajar, terletak di, Jawa Tengah)} and \textit{(Jawa Tengah, terletak di, Indonesia)} from the sentence in Figure \ref{fig_example_io_openie} yet. While the token expander is having problem in expanding token to implicitly expected clauses such as \textit{"seorang pelatih sepak bola"} from \textit{"seorang pelatih dan pemain sepak bola"} or \textit{"satu buah torpedo"} from \textit{"satu atau dua buah torpedo"}.
+
+The first experiment shows that all classifiers are still having problem learning the pattern of triples. We suspect this is primarily caused by insufficient and imbalanced training data. The low performance of linear logistic regression also shows that this problem is not linearly separable. The random forest performs better than other nonlinear models because it is easily tuned to balance the precision and recall by changing the depth of decision trees.
+
+Speed-wise, our system shows reasonable average performance of 0.014 seconds per sentence (for 5,593 sentences) where TextRunner runs on average 0.036 CPU seconds per sentence\cite{banko2007open}. While the speed improvement for bigger document shows that the "heavy" linguistic tasks such as dependency parsing doesn't cause performance drawback in big document.
+
 \section{Conclusion}
 
-%Introduces open ie extraction model for Indonesian text
-%Provides open-source working implementation of the model
+This paper introduces an open domain information extraction system for Indonesian text using basic NLP pipelines and combination of heuristics and machine learning models. The system is able to extract meaningful domain-independent relations from Indonesian sentences to be used as document representation or document understanding task. Additionally, the source code and datasets are published openly\footnote{\url{github.com/yohanesgultom/id-openie}} to improve research reproducibility.
 
-%Future works
-%Extract implicit relations in sentence using better heuristics
-%Use machine learning model for token expansion
-%Estimate confidence level in every phases (NLP pipelines, candidate generator, triple selector, token expander) for following process
-%Use better feature extraction using Word2Vec and deep learning
-%Optimize system to handle large number of documents
-
-\lipsum[6-7]
+In the future, we plan to improve the performance by adding more training data for triple selector and finding better heuristics in triple candidate generator to reduce the negative samples. We also plan to use create additional dataset and use machine learning model for token expansion to improve the result. Adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and include it as features and heuristics may also improve the overall performance of the system.
 
 % conference papers do not normally have an appendix
 
