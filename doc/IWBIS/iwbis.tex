@@ -158,7 +158,7 @@ As described in Table \ref{table_paradigm_comparison}, unlike traditional inform
 
 Due to the nature of NLP tasks and heuristics used in open IE system, it is only applicable for a specific language\cite{banko2007open}. So in order to extract open domain information from Indonesian text, a specific system has to be defined for this language. Furthermore, considering the scarcity of Indonesian NLP resources, the system need to effectively utilize them to achieve the objective. Through this paper, we propose a open IE system that addresses these issues.
 
-We propose an Open IE system that combine heuristics (rule-based) models and a supervised learning model to extract relation triples from Indonesian text. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. 
+We propose an open IE system that combine heuristics (rule-based) models and a supervised learning model to extract relation triples from Indonesian text. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. Our objective is to define a baseline system for Indonesian open IE that may be encourage more research in the future.
 
 In general, the contributions from this research are:
 
@@ -431,13 +431,18 @@ Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system
 
 \section{Experiments}
 
-%2 sentences document, 7 triples, 6.157 seconds (0.8 seconds per sentence)  (Core i7 5500U)
-%138 sentences document, 429 triples, 11.324 seconds (0.082 seconds per sentence) (Core i7 5500U)
-%5,593 sentences document, 19,403 triples, 78.623 seconds (0.014 seconds per sentence)  (Core i7 5500U)
-%Our system is quite scalable (faster on bigger document)
-%Our system has a comparable speed with TextRunner
+In this research, we report two experiments. In the first one, we show the performance comparison (precision \& recall) of four classifiers in selecting valid triples from given candidates. While in the second one, we show the performance of our system (using the best classifier and did end-to-end extraction triples from unlabeled document and observed the required time.
 
-\lipsum[1-2]
+In the first experiment, we chose four classifiers each representing unique characteristics:
+
+\begin{enumerate}
+	\item Logistic Regression\cite{fan2008liblinear} (linear-model)
+	\item Support Vector Machine\cite{chang2011libsvm} (non-linear model)
+	\item Multi Layer Perceptron\cite{hinton1989connectionist} (neural network model)
+	\item Random Forest\cite{wasserman2015grid} (ensemble model)
+\end{enumerate}
+
+The dataset used in the first experiment was manu
 
 \begin{figure}
 \includegraphics[scale=0.4]{models_performance}
@@ -462,21 +467,36 @@ Random Forest & 0.62 & \textbf{0.58} & \textbf{0.58} \\
 \end{tabular}
 \end{table}
 
-\section{Analysis}
+%Our system is quite scalable (faster on bigger document)
+%Our system has a comparable speed with TextRunner
 
-\lipsum[6-7]
+\begin{table}[!t]
+	\renewcommand{\arraystretch}{1.5}
+	\caption{System end-to-end extraction time}
+	\label{table_system_extraction_time}
+	\centering
+	\begin{tabular}{l p{1.2cm} p{1.2cm} p{1.2cm}}
+		\hline
+		\textbf{Sentences} & \textbf{Triples Extracted} & \textbf{Total Time (s)} & \textbf{Time per Sentence (s)} \\
+		\hline
+		2 & 7 & 6.1 & 0.800 \\
+		138 & 429 & 11.3 & 0.082 \\
+		5,593 & 19,403 & 78.6 & 0.014 \\
+		\hline
+	\end{tabular}
+\end{table}
 
 \section{Conclusion}
 
 %Introduces open ie extraction model for Indonesian text
 %Provides open-source working implementation of the model
 
-Future works
-Extract implicit relations in sentence using better heuristics
-Use machine learning model for token expansion
-Estimate confidence level in every phases (NLP pipelines, candidate generator, triple selector, token expander) for following process
-Use better feature extraction using Word2Vec and deep learning
-Optimize system to handle large number of documents
+%Future works
+%Extract implicit relations in sentence using better heuristics
+%Use machine learning model for token expansion
+%Estimate confidence level in every phases (NLP pipelines, candidate generator, triple selector, token expander) for following process
+%Use better feature extraction using Word2Vec and deep learning
+%Optimize system to handle large number of documents
 
 \lipsum[6-7]
 
