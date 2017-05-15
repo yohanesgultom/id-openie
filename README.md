@@ -70,6 +70,23 @@ List of Indonesian NLP datasets collected from various sources:
   * `data/parser-id.conllu.dev`
   * `data/parser-id.conllu.test`
 
+* Triples selection (manually annotated):
+
+  * `data/triple-selector.dataset.csv` (human readable)
+  * `data/triple-selector.train.csv` (vectorized)
+
+**Models**
+
+* Stanford NLP POS tagger: `src/main/resources/tagger-id.universal.model`
+
+* Stanford NLP NER `src/main/resources/ner-id.model.ser.gz`
+
+* Stanford NLP dependency parser: `src/main/resources/parser-id.conllu.model.gz`
+
+* Triple selector model (Scikit-Learn Standard Scaler and Random Forest):
+  * `scripts/triples-classifier-scaler.pkl`
+  * `scripts/triples-classifier-model.pkl`
+
 **References**
 
 1. Banko, M., Cafarella, M.J., Soderland, S., Broadhead, M. and Etzioni, O., 2007, January. Open Information Extraction from the Web. In IJCAI (Vol. 7, pp. 2670-2676).
