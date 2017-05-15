@@ -28,6 +28,7 @@ src/test/resources/*
 !src/main/resources/*.sql
 !src/main/resources/*.model
 !src/main/resources/*.model.gz
+!src/main/resources/*.model.ser.gz
 !src/test/resources/*.sql
 !src/test/resources/plain.txt
 !scripts/PennTreeBankToUniversal.csv
