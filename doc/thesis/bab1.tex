@@ -7,8 +7,26 @@
 %-----------------------------------------------------------------------------%
 \section{Latar Belakang}
 %-----------------------------------------------------------------------------%
-\todo{tuliskan latar belakang penelitian disini}
+Ketersediaan dokumen bahasa Indonesia dalam jumlah banyak dengan domain yang beragam menuntut proses ekstraksi yang otomatis \& generik \\
 
+Kebutuhan akan representasi dokumen teks bahasa Indonesia yang mencerminkan informasi lintas domain di dalamnya. Contoh aplikasinya adalah deteksi plagiarisme, document retrieval .dsb \\
+
+Pembangunan knowledge base bahasa Indonesia dengan ontologi yang matang dapat dimulai dari ekstraksi informasi lintas domain \\
+
+\begin{table}
+	\centering
+	\caption{Perbandingan antara \f{information extraction} tradisional, \f{open domain extraction} dan \f{knowledge extraction}}
+	\label{table_paradigm_comparison}
+	\begin{tabular}{|l|c|c|c|}
+		\hline 
+		 & \textbf{IE} & \textbf{Open IE} & \textbf{KE} \\ 
+		\hline 
+		\textbf{Domain} & Closed & Open & Open \\ 
+		\textbf{Format} & Depends on domain & Triples & RDF Triples \\ 
+		\textbf{Ontology} & Not available & Optional & Mandatory \\ 
+		\hline 
+	\end{tabular} 
+\end{table}
 
 %-----------------------------------------------------------------------------%
 \section{Permasalahan}
@@ -28,24 +46,32 @@ yang digunakan dalam menyelesaikannya.
 %-----------------------------------------------------------------------------%
 \subsection{Batasan Permasalahan}
 %-----------------------------------------------------------------------------%
-\todo{Umumnya ada asumsi atau batasan yang digunakan untuk 
-	menjawab pertanyaan-pertanyaan penelitian diatas.}
 
-
-%-----------------------------------------------------------------------------%
-\section{Tujuan}
-%-----------------------------------------------------------------------------%
-\todo{Tuliskan tujuan penelitian.}
-
+\begin{enumerate}
+\item Ekstraksi dilakukan pada teks bahasa Indonesia yang telah melewati praproses untuk memisahkan tiap kalimat menjadi satu baris
+\item Hanya mengkstraksi triples yang eksplisit secara struktur dependency relation. Contoh: Universitas Indonesia berada di Depok, Jawa Barat, Indonesia → (Universitas Indonesia-terletak di-Depok)
+\item Dataset yang dikembangkan dalam penelitian ini hanya dataset untuk triple selector sedangkan dataset lainnya menggunakan yang sudah tersedia
+\end{enumerate}
 
 %-----------------------------------------------------------------------------%
-\section{Posisi Penelitian}
+\section{Tujuan dan Manfaat}
 %-----------------------------------------------------------------------------%
-\todo{Posisi penelitian Anda jika dilihat secara bersamaan dengan 
-	peneliti-peneliti lainnya. Akan lebih baik lagi jika ikut menyertakan 
-	diagram yang menjelaskan hubungan dan keterkaitan antar 
-	penelitian-penelitian sebelumnya}
 
+Penelitian ini bertujuan untuk:
+\begin{enumerate}
+\item Menghasilkan kakas open domain information extraction otomatis untuk teks bahasa Indonesia
+\item Mendefinisikan model open domain information extraction untuk teks bahasa Indonesia
+\item Menentukan aturan-aturan (rules) yang dibutuhkan model
+\item Menentukan fitur-fitur yang dapat digunakan pada model
+\item Menentukan hyperparameter yang optimal untuk model
+\end{enumerate}
+
+Manfaat yang diharapkan dari penelitian ini adalah:
+\begin{enumerate}
+\item Menyediakan kakas yang menghasilkan representasi dan/atau informasi yang dapat dimanfaatkan untuk aplikasi lain
+\item Memberikan informasi mengenai model open domain information extraction untuk bahasa Indonesia
+\item Mendorong pengembangan sumber daya (language resources) bahasa Indonesia
+\end{enumerate}
 
 %-----------------------------------------------------------------------------%
 \section{Metodologi Penelitian}
