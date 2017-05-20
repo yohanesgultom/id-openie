@@ -42,7 +42,8 @@
 %%*************************************************************************
 
 
-\documentclass[conference,compsoc]{IEEEtran}
+%\documentclass[conference,compsoc,12pt]{IEEEtran}
+\documentclass[peerreview,12pt]{IEEEtran}
 
 % *** CITATION PACKAGES ***
 \usepackage[nocompress]{cite}
@@ -82,11 +83,25 @@
 % *** Temporary packages ***
 \usepackage{lipsum}
 \usepackage{pifont}
+\usepackage{mdframed}
+\usepackage{float}
+
+% Set figures and tables within text for peer-review
+\makeatletter
+\@ifclasswith{IEEEtran}{peerreview}{\floatplacement{figure}{H}}{\floatplacement{table}{H}}	
+\makeatother
+
 %\usepackage{xcolor}
 %\newcommand\mytodo[1]{\textcolor{red}{#1}}
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
+
+\mdfsetup{%
+	skipabove=0.5cm,
+	innertopmargin=0.5cm,
+	innerbottommargin=0.5cm
+}
 
 \begin{document}
 
@@ -101,12 +116,12 @@
 	\IEEEauthorblockN{Yohanes Gultom}
 	\IEEEauthorblockA{Faculty of Computer Science\\
 	University of Indonesia\\
-	Email: yohanes.gultom@ui.ac.id}
+	Email: yohanes.gultom@ui.ac.id\\}
 	\and
 	\IEEEauthorblockN{Wahyu Catur Wibowo}
 	\IEEEauthorblockA{Faculty of Computer Science\\
 	University of Indonesia\\
-	Email: wibowo@cs.ui.ac.id}
+	Email: wibowo@cs.ui.ac.id\\}
 }
 
 
@@ -117,25 +132,38 @@
 % in the abstract
 \begin{abstract}
 
-Amount of digital documents that have surpassed human processing capability, calls for an automatic method to extract information from any text document regardless of domain. Unfortunately, open domain information extraction (open IE) systems are language-specific and there is no published system for Indonesian language. This paper introduces a system to extract relation triples from Indonesian text using rule-based triple candidates generator, rule-based token expander and machine-learning-based triple selector. Trained using our 1,611 triples dataset (132 positives \& 1,479 negatives), a Random Forest triple selector model achieves cross-validation score of 0.58 F1 (0.62 precision and 0.58 recall).
+The vast amount of digital documents that have surpassed human processing capability, calls for an automatic information extraction method from any text document regardless of their domain. Unfortunately, open domain information extraction (open IE) systems are language-specific and there is no published system for Indonesian language. This paper introduces a system to extract entity relations from Indonesian text in triple format using rule-based candidates generator, token expander and machine-learning-based triple selector. We cross-validate four candidates using our dataset and discover that Random Forest is the best classifier for the triple selector achieving 0.58 F1 score (0.62 precision and 0.58 recall). The low score is largely due to the simplistic candidate generation rules and the quality of dataset.
 
 \end{abstract}
 
+\IEEEpeerreviewmaketitle
 
 \section{Introduction}
 
 Open domain information extraction (open IE) is a paradigm that facilitates domain-independent discovery of triple relations from text document\cite{banko2007open}. It extracts relations from sentence in three-values tuples or triples format $(x, r, y)$ where $x$ and $y$ called arguments and $r$ is the relation\cite{etzioni2011open}. In more linguistic term, the arguments are also referred as subject and object while relation are referred as predicate\cite{angeli2015leveraging}. The example of this extraction is described in Figure \ref{fig_example_io_openie}.
 
+\begin{figure}
+\begin{mdframed}
+\textbf{Input} \\[0.1cm]
+"Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia." \\[0.5cm]
+\textbf{Output} \\[0.1cm]
+1. (Sembungan, adalah, desa) \\
+2. (Sembungan, terletak di, kecamatan Kejajar)
+\end{mdframed}
+\caption{Example of expected input and some possible output of open domain information extraction for Indonesian text}
+\label{fig_example_io_openie}
+\end{figure}
+
 As described in Table \ref{table_paradigm_comparison}, unlike traditional information extraction (IE), open IE extracts domain-independent relations from sentence. While it retrieves relations in triples format similar to knowledge extraction (KE), open IE doesn't follow whole Resource Data Format (RDF) specification\footnote{\url{https://www.w3.org/RDF/}} like KE\cite{auer2007dbpedia} \cite{exner2014refractive}. Although mapping to existing relation schema is required in real word task such as slot filling\cite{angeli2015leveraging}, ontology is not in the scope of open IE research. Open IE has also been reported to be useful for tasks such as question answering\cite{fader2011identifying} and information retrieval\cite{etzioni2011search}. 
 
-\begin{table}[!t]
+\begin{table}
 \renewcommand{\arraystretch}{1.5}
 \caption{General comparison between traditional information, open domain information and knowledge extraction}
 \label{table_paradigm_comparison}
 \centering
-\begin{tabular}{|l|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|>{\centering\arraybackslash}p{1.5cm}|}
+\begin{tabular}{l >{\centering\arraybackslash}p{1.9cm} >{\centering\arraybackslash}p{1.9cm} >{\centering\arraybackslash}p{1.9cm}}
 \hline 
- & \textbf{IE} & \textbf{Open IE} & \textbf{KE} \\ 
+\textbf{Aspect} & \textbf{IE} & \textbf{Open IE} & \textbf{KE} \\ 
 \hline 
 \textbf{Domain} & Closed & Open & Open \\ 
 \textbf{Format} & Depends on domain & Triples & RDF Triples \\ 
@@ -144,19 +172,9 @@ As described in Table \ref{table_paradigm_comparison}, unlike traditional inform
 \end{tabular} 
 \end{table}
 
-\begin{figure}
-\textbf{Input} \\[0.1cm]
-"Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia." \\[0.5cm]
-\textbf{Output} \\[0.1cm]
-1. (Sembungan, adalah, desa) \\
-2. (Sembungan, terletak di, kecamatan Kejajar) \\
-\caption{Example of expected input and some possible output of open domain information extraction for Indonesian text}
-\label{fig_example_io_openie}
-\end{figure}
-
 Due to the nature of NLP tasks and heuristics used in open IE system, it is only applicable for a specific language\cite{banko2007open}. So in order to extract open domain information from Indonesian text, a specific system has to be defined for this language. Furthermore, considering the scarcity of Indonesian NLP resources, the system need to effectively utilize them to achieve the objective. Through this paper, we propose a open IE system that addresses these issues.
 
-We propose an open IE system that combine heuristics (rule-based) models and a supervised learning model to extract relation triples from Indonesian text. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. Our objective is to define a baseline system for Indonesian open IE that may encourage further research in the future.
+We propose an open IE system that combine heuristics (rule-based) models and a supervised learning model to extract entity relations from Indonesian text in triple format. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. Our objective is to define a baseline system for Indonesian open IE that may encourage further research in the future.
 
 In general, the contributions from this research are:
 
@@ -171,14 +189,14 @@ Further in this paper we will described some of the preeminent related works in 
 
 \section{Related Work}
 
-There has been plenty of works done in the open IE research. Starting from the introduction of open IE along with its first fully-implemented system, TextRunner, which further succeeded by systems built on top of it: ReVerb, R2A2 and Ollie (all from the same research group). The most recent research introduces Stanford OpenIE\footnote{\url{https://nlp.stanford.edu/software/openie.html}} which is an implementation of novel open IE system that outperforms Ollie in TAC-KBP
+There has been plenty of works done in the open IE research. Starting from the introduction of open IE along with its first fully-implemented system, TextRunner\cite{banko2007open}, which further succeeded by systems built on top of it: ReVerb, R2A2\cite{etzioni2011open} and Ollie\cite{schmitz2012open} (all from the same research group). The most recent research introduces Stanford OpenIE\footnote{\url{https://nlp.stanford.edu/software/openie.html}} which is an implementation of novel open IE system that outperforms Ollie in TAC-KBP
 2013 Slot Filling task\cite{angeli2015leveraging}.
 
-TextRunner is designed for massive size of open-domain web documents by avoiding heavy linguistic tasks and used inverted index to store extraction result\cite{banko2007open}. It generates its own dataset (self-supervised) by using part of speech and dependency features to train a naive bayes classifier used to select the triples. It argues that heavy linguistic tasks such as dependency parsing are not scalable to handle million of web documents. Additionally, it also uses redundancy assessor to remove redundant words (stop words, adverbs .etc).
+\textbf{TextRunner} is designed for massive size of open-domain web documents by avoiding heavy linguistic tasks and used inverted index to store extraction result\cite{banko2007open}. It generates its own dataset (self-supervised) by using part of speech and dependency features to train a naive bayes classifier used to select the triples. It argues that heavy linguistic tasks such as dependency parsing are not scalable to handle million of web documents. Additionally, it also uses redundancy assessor to remove redundant words (stop words, adverbs .etc).
 
-ReVerb is an immediate successor of TextRunner which solves two significant problems in its predecessor: incoherent extractions and uninformative extractions \cite{fader2011identifying}. It is composed of two algorithms: (1) Relation Extraction that extracts relations using syntactical and lexical constraint to solve the problems, and (2) Argument Extraction which retrieves the noun phrases as arguments of the relation. ReVerb takes as input a POS-tagged and NP-chunked and returns a set of relation triples.
+\textbf{ReVerb} is an immediate successor of TextRunner which solves two significant problems in its predecessor: incoherent extractions and uninformative extractions \cite{fader2011identifying}. It is composed of two algorithms: (1) Relation Extraction that extracts relations using syntactical and lexical constraint to solve the problems, and (2) Argument Extraction which retrieves the noun phrases as arguments of the relation. ReVerb takes as input a POS-tagged and NP-chunked and returns a set of triples.
 
-R2A2 is a system built to fix argument extraction problem in ReVerb \cite{etzioni2011open}. Instead of using heuristics to extract the arguments, it uses a learning-based system, ArgLearner, that accepts relation and sentence as inputs and returns the first (Arg1) and second arguments (Arg2). ArgLearner extracts the arguments using three classifiers based on REPTree and sequence labeling CRF as described in Figure \ref{fig_arglearner_architecture}.
+\textbf{R2A2} is a system built to fix argument extraction problem in ReVerb \cite{etzioni2011open}. Instead of using heuristics to extract the arguments, it uses a learning-based system, ArgLearner, that accepts relation and sentence as inputs and returns the first (Arg1) and second arguments (Arg2). ArgLearner extracts the arguments using three classifiers based on REPTree and sequence labeling CRF as described in Figure \ref{fig_arglearner_architecture}.
 
 \begin{figure}
 \centering
@@ -187,7 +205,7 @@ R2A2 is a system built to fix argument extraction problem in ReVerb \cite{etzion
 \label{fig_arglearner_architecture}
 \end{figure}
 
-Furthermore, Ollie (Open Language Learning for Information Extraction)\cite{schmitz2012open} utilizes ReVerb to learn open pattern templates to guide triples extraction from sentence. Additionally, Ollie does a context analysis to extend the tuples with contextual information in order to improve precision. Its training and extraction architecture is describe in Figure \ref{fig_ollie_architecture}.
+Furthermore, \textbf{Ollie} (Open Language Learning for Information Extraction)\cite{schmitz2012open} utilizes ReVerb\cite{fader2011identifying} to learn open pattern templates to guide triples extraction from sentence. Additionally, Ollie does a context analysis to extend the tuples with contextual information in order to improve precision\cite{schmitz2012open}. Its training and extraction architecture is describe in Figure \ref{fig_ollie_architecture}.
 
 \begin{figure}
 \centering
@@ -196,7 +214,7 @@ Furthermore, Ollie (Open Language Learning for Information Extraction)\cite{schm
 \label{fig_ollie_architecture}
 \end{figure}
 
-One of the most research proposes new open IE system that replaces the usage of large open patterns in Ollie with a set of fewer patterns for canonically structured sentences and a classifier that learns to extract self-contained clauses from a sentence\cite{angeli2015leveraging}. This system is implemented in Stanford OpenIE which is also integrated in the populer open source suites, Stanford Core NLP.
+One of the most research proposes new open IE system that replaces the usage of large open patterns in Ollie\cite{schmitz2012open} with a set of fewer patterns for canonically structured sentences and a classifier that learns to extract self-contained clauses from a sentence\cite{angeli2015leveraging}. This system is implemented in \textbf{Stanford OpenIE} which is also integrated in the populer open source suites, Stanford Core NLP.
 
 \section{Proposed System}
 
@@ -212,9 +230,9 @@ Our proposed system also follows the pattern of three-steps\cite{etzioni2011open
 
 \end{enumerate}
 
-As shown in the flowchart Figure \ref{fig_program_flowchart}, our system has three main components:
+As shown in the flowchart Figure \ref{fig_program_flowchart}, our system is composed of four main components: \textbf{NLP pipeline}, \textbf{triple candidate generator}, \textbf{triple selector} and \textbf{token expander}. Each of them are explained further in following subsections.
 
-\begin{figure*}[!t]
+\begin{figure*}
 \centering
 \includegraphics[width=\textwidth]{program_flowchart}
 \caption{Indonesian open domain information extraction flowchart}
@@ -227,13 +245,13 @@ The NLP pipeline is a series of NLP tasks that annotates one or more sentences a
 
 \begin{enumerate}
 
-\item \textbf{Tokenizer} \\
+\item Tokenizer \\
 We use default tokenizer provided by Stanford Core NLP, \verb|PTBTokenizer|\cite{manningptbtokenizer}, which mimics Penn Treebank 3 tokenizer\footnote{\url{https://catalog.ldc.upenn.edu/LDC99T42}}. While this tokenizer provides many options to modify its behavior, we stick to default configuration that split sentence by whitelines to get the tokens.\\
 
-\item \textbf{Part of Speech Tagger} \\
+\item Part of Speech Tagger \\
 We trained default Stanford Core NLP \verb|MaxentTagger|\cite{toutanova2003feature} with Indonesian universal POS tag dataset which we convert from dependency parsing dataset\footnote{\url{https://github.com/UniversalDependencies/UD_Indonesian}}. This POS tagger uses Max Entropy (multi-class logistic regression) classifier which yields \textbf{93.68\%} token accuracy and \textbf{63.91\%} sentence accuracy when trained using 5,036 sentences and tested with 559 sentences from the dataset. \\
 
-\item \textbf{Lemmatizer} \\
+\item Lemmatizer \\
 The lemmatizer used in this pipeline, \verb|IndonesianLemmaAnnotator|, is implemented based on an existing Indonesian rule-based Lemmatizer\cite{suhartono2014lemmatization} with some improvements:
 
 \begin{itemize}
@@ -242,18 +260,20 @@ The lemmatizer used in this pipeline, \verb|IndonesianLemmaAnnotator|, is implem
 \item Integration with Stanford Core NLP annotator API for reusability
 \end{itemize}
 
-This lemmatizer yields \textbf{99\%} accuracy when tested using dataset of 5,638 token-lemma pairs\footnote{\url{https://github.com/davidchristiandy/lemmatizer}}. \\
+This lemmatizer yields \textbf{99\%} accuracy when tested using dataset of 5,638 token-lemma pairs\footnote{\url{https://github.com/davidchristiandy/lemmatizer}}. We use lemma as one of the features for NER classifier. \\
 
-\item \textbf{Named-Entity Recognizer} \\
+
+\item Named-Entity Recognizer (NER)
 
 Stanford NLP \verb|CRFClassifier|\cite{finkel2005incorporating}, a linear chain Conditional Random Field (CRF) sequence models, is trained using a dataset containing 3,535 Indonesian sentences with 5 entity class: Person, Organization, Location, Quantity and Time. When tested using 426 sentences, this models achieves 0.86 precision, 0.85 recall and \textbf{0.86} F1-score. The dataset itself is a combination between dataset from Faculty of Computer Science, University of Indonesia and a public dataset\footnote{\url{https://github.com/yusufsyaifudin/indonesia-ner}}. \\
 
-\item \textbf{Dependency Parser} \\
+\item Dependency Parser
 
 We relied on Stanford NLP \verb|nndep.DependencyParser|\cite{chen2014fast}, to annotate dependency relation of each token in the the sentence. We train this transition-based neural network model using a Indonesian universal dependencies dataset of 5,036 sentences and 3,093 Indonesian word embeddings\footnote{\url{https://github.com/yohanesgultom/id-openie/blob/master/data/parser-id.embed}} (vector representation of words). Tested with 559 sentences, this model scores \textbf{70\%} UAS (Unlabeled Attachment Score) and \textbf{46\%} LAS (Labeled Attachment Score).
 
-
 \end{enumerate}
+
+The output of the pipeline is a CONLL-U document containing annotated sentence such as Figure \ref{fig_conllu_example}. The document becomes an input for next model, the triple candidate generator which is described in Section \ref{Triple Candidates Generator}.
 
 \begin{figure}
 \centering
@@ -292,7 +312,7 @@ For example, applying the rules to a annotated sentence in Figure \ref{fig_conll
 \item (desa, terletak, Indonesia)
 \end{itemize}
 
-In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually labeled \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
+In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually label \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
 
 During the extraction step, triple candidates generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}.
 
@@ -302,7 +322,7 @@ During the extraction step, triple candidates generator is used in the system to
 \caption{Triple candidate generation rules}
 \label{table_triple_candidate_generation_rules}
 \centering
-\begin{tabular}{l|p{6cm}}
+\begin{tabular}{l p{6cm}}
 \hline
 \textbf{Type} & \textbf{Condition} \\
 \hline
@@ -331,23 +351,23 @@ We use Random Forest\cite{breiman2001random}, an ensemble methods that aggregate
 
 \begin{itemize}
 \item Decision tree criterion: Gini Impurity
-\item Minimum number of samples to split internal node: 5
+\item Minimum number of samples to split tree node: 5 samples
+\item Maximum features used in each tree: 4 (square root of the number of features)
 \item Maximum trees depth: 8
 \item Number of trees: 20
-\item Maximum features used in each tree: 4 (square root of the number of features)
-\item Class weight: balanced (multiplied by the ratio of training samples)
+\item Class weight: balanced (prediction probability is multiplied by the ratio of training samples)
 \end{itemize}
 
-By using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, we discover that this configuration yields the best F1 score for Random Forest classifier when trained and tested with our dataset described in Section \ref{Triple Candidates Generator}. 
+We discover the configuration by using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidates Generator}. 
 
-We extract 18 features described in Table \ref{table_models_features} from each triple candidates. Our system uses features based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. Every nominal features are encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
+We extract 18 features described in Table \ref{table_models_features} from each triple candidates. These features are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. Every nominal features are also encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
 
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
 \caption{Triple selector features}
 \label{table_models_features}
 \centering
-\begin{tabular}{r|l}
+\begin{tabular}{r l}
 \hline
 \textbf{\#} & \textbf{Features} \\
 \hline
@@ -391,7 +411,7 @@ Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system
 \caption{Token expansion rules for Subject or Object token}
 \label{table_token_expansion_rules_s_o}
 \centering
-\begin{tabular}{r|p{6cm}|l}
+\begin{tabular}{r p{6cm} l}
 \hline
 \textbf{\#} & \textbf{Condition for Subject or Object Token} & \textbf{Action} \\
 \hline
@@ -406,7 +426,7 @@ Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system
 9 & If the first or last index of expansion result is an incomplete parentheses symbol & Remove \\
 10 & If the last index of expansion result is “yang” & Remove \\
 11 & Else & Ignore \\
-
+\hline
 \end{tabular}
 \end{table}
 
@@ -415,12 +435,13 @@ Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system
 \caption{Token expansion rules for Predicate token}
 \label{table_token_expansion_rules_p}
 \centering
-\begin{tabular}{r|p{6cm}|l}
+\begin{tabular}{r p{6cm} l}
 \hline
 \textbf{\#} & \textbf{Condition for Predicate Token} & \textbf{Action} \\
 \hline
 1 & If dependent is “tidak” & Expand \\
 2 & Else & Ignore \\
+\hline
 \end{tabular}
 \end{table}
 
@@ -464,7 +485,7 @@ Random Forest & 0.62 & \textbf{0.58} & \textbf{0.58} \\
 \end{tabular}
 \end{table}
 
-In the second experiment, we evaluate the performance of our system by extracting triples from three documents with different number of sentences, measure the total execution time and calculate the average execution time per sentence. The result in Table \ref{table_system_extraction_time} shows that the lowest execution time (or fastest execution time) is 0.014 seconds when processing document of 5,593 sentences.
+In the second experiment, we evaluate the performance of our system by extracting triples from three documents with different number of sentences, measuring the total execution time and calculating the average execution time per sentence. The result in Table \ref{table_system_extraction_time} shows that the lowest execution time (or fastest execution time) is 0.014 seconds when processing document of 5,593 sentences.
 
 \begin{table}[!t]
 	\renewcommand{\arraystretch}{1.5}
@@ -484,19 +505,19 @@ In the second experiment, we evaluate the performance of our system by extractin
 
 \section{Analysis}
 
-As implied by the flowchart in Figure \ref{fig_program_flowchart}, the performance of our system depends on the performance of NLP pipeline. Since most of the heuristics and features used in our systems are based on POS tag and dependency relation, the low performance of the models responsible for these tasks are reducing the overall performance.
+The first experiment shows that all classifiers are still having problem learning the pattern of triples. We suspect this is primarily caused by the quality of our dataset. As described in Section \ref{Triple Candidates Generator}, the dataset has unbalanced training samples ratio of 1:11 (positive:negative). 
+
+The low performance of linear logistic regression also shows that this problem is not linearly separable. The random forest performs better than other nonlinear models because it is easily tuned to balance the precision and recall by changing the number and the depth of decision trees.
+
+Additionally, through the second experiment, we also find that our system average extraction performance is 0.014 seconds/sentence (for 5,593 sentences document) which is still comparable to TextRunner\cite{banko2007open}. Therefore, in contrast to the argument proposed in the related work\cite{banko2007open}\cite{etzioni2011open}, this experiment shows that the heavy linguistic tasks such as dependency parsing doesn't cause performance drawback in big document (assuming the average number of sentences in document do not exceed 5,593). 
 
 The heuristics used in triple candidate generator and token expander are still limited to explicit pattern. For instance, triple candidate generator can not extract relations \textit{(kecamatan Kejajar, terletak di, Jawa Tengah)} and \textit{(Jawa Tengah, terletak di, Indonesia)} from the sentence in Figure \ref{fig_example_io_openie} yet. While the token expander is having problem in expanding token to implicitly expected clauses such as \textit{"seorang pelatih sepak bola"} from \textit{"seorang pelatih dan pemain sepak bola"} or \textit{"satu buah torpedo"} from \textit{"satu atau dua buah torpedo"}.
-
-The first experiment shows that all classifiers are still having problem learning the pattern of triples. We suspect this is primarily caused by insufficient and imbalanced training data. The low performance of linear logistic regression also shows that this problem is not linearly separable. The random forest performs better than other nonlinear models because it is easily tuned to balance the precision and recall by changing the depth of decision trees.
-
-Speed-wise, our system shows reasonable average performance of 0.014 seconds per sentence (for 5,593 sentences) where TextRunner runs on average 0.036 CPU seconds per sentence\cite{banko2007open}. In contrast to the argument proposed in the related work\cite{banko2007open}\cite{etzioni2011open}, the speed improvement for bigger document shows that the heavy linguistic tasks such as dependency parsing doesn't cause performance drawback in big document (assuming the average number of sentences in document do not exceed 5,593).
 
 \section{Conclusion}
 
 This paper introduces an open domain information extraction system for Indonesian text using basic NLP pipelines and combination of heuristics and machine learning models. The system is able to extract meaningful domain-independent relations from Indonesian sentences to be used as document representation or document understanding task. Additionally, the source code and datasets are published openly\footnote{\url{github.com/yohanesgultom/id-openie}} to improve research reproducibility.
 
-In the future, we plan to improve the performance by adding more training data for triple selector and finding better heuristics in triple candidate generator to reduce the negative samples. We also plan to use create additional dataset and use machine learning model for token expansion to improve the result. Adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and include it as features and heuristics may also improve the overall performance of the system.
+In the future, we plan to improve the performance by adding more training data for triple selector and finding better heuristics in triple candidate generator to reduce the negative samples. We also plan to create additional dataset and use machine learning model for token expansion to improve the result. Adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and include it as features and heuristics may also improve the overall performance of the system.
 
 % conference papers do not normally have an appendix
 

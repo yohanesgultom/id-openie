@@ -70,8 +70,12 @@ experiments = [
 def cross_validate_precision_recall_fbeta(model, X, y, cv=None):
     precision = cross_val_score(model, X, y, cv=cv, scoring='precision').mean()
     recall = cross_val_score(model, X, y, cv=cv, scoring='recall').mean()
-    fbeta = cross_val_score(model, X, y, cv=cv, scoring='f1').mean()
-    return precision, recall, fbeta
+    fbeta_list = cross_val_score(model, X, y, cv=cv, scoring='f1')
+    fbeta = fbeta_list.mean()
+    fbeta_min = fbeta_list.min()
+    fbeta_max = fbeta_list.max()
+    fbeta_std = fbeta_list.std()
+    return precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std
 
 
 def plot_model_performance_comparison(experiments):
@@ -150,12 +154,15 @@ if __name__ == '__main__':
                 cv=cv
             )
             search.fit(X, y)
-            precision, recall, fbeta = cross_validate_precision_recall_fbeta(search.best_estimator_, X, y)
+            precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(search.best_estimator_, X, y)
             print(search.best_estimator_)
-            print('Precision: {}\nRecall: {}\nF1: {}\n'.format(
+            print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
                 precision,
                 recall,
-                fbeta
+                fbeta,
+                fbeta_min,
+                fbeta_max,
+                fbeta_std,
             ))
             experiment['best_model'] = best_model
             experiment['best_score'] = {'precision': precision, 'recall': recall, 'f1': fbeta}
@@ -172,13 +179,18 @@ if __name__ == '__main__':
         plot_model_performance_comparison(experiments)
 
     else:
-        model = RandomForestClassifier(max_depth=8, class_weight='balanced', n_estimators=20, min_samples_leaf=1)
+        model = RandomForestClassifier(max_depth=8, class_weight='balanced', n_estimators=20, min_samples_split=5, max_features='auto', random_state=77)
 
         # cross validate best model to compare score
-        precision, recall, fbeta = cross_validate_precision_recall_fbeta(model, X, y)
-        print('Precision: {}'.format(precision))
-        print('Recall: {}'.format(recall))
-        print('F1-Score: {}'.format(fbeta))
+        precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y)
+        print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
+            precision,
+            recall,
+            fbeta,
+            fbeta_min,
+            fbeta_max,
+            fbeta_std,
+        ))
 
     # save model to file
     joblib.dump(model, args.output_path)

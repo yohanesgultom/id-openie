@@ -227,12 +227,19 @@ if __name__ == '__main__':
         model = rf
         precision = np.mean(scores['precision'])
         recall = np.mean(scores['recall'])
-        fbeta = np.mean(scores['f1'])
+        fbeta_array = np.array(scores['f1'])
+        fbeta = fbeta_array.mean()
+        fbeta_min = fbeta_array.min()
+        fbeta_max = fbeta_array.max()
+        fbeta_std = fbeta_array.std()
 
         print('Cross Validation K: {}'.format(cv))
-        print('Average precision: {}'.format(precision))
-        print('Average recall: {}'.format(recall))
-        print('Average F1-Score: {}'.format(fbeta))
+        print('Precision avg: {}'.format(precision))
+        print('Recall avg: {}'.format(recall))
+        print('F1 avg: {}'.format(fbeta))
+        print('F1 min: {}'.format(fbeta_min))
+        print('F1 max: {}'.format(fbeta_max))
+        print('F1 std: {}'.format(fbeta_std))
 
     # save model to file
     joblib.dump(model, args.output_path)
