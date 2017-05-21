@@ -1,0 +1,6 @@
+abstrak tambah penjelasan kenapa rendah
+abstract disebutkan model apa saja yang dibandingkan
+figure input output ditambah border 
+analisis tentang akibat nlp pipelines terlalu sederhana
+untuk kecepatan/efisiensi disebut eksplisit sebagai tambahan
+cek ulang grammar
