@@ -287,7 +287,7 @@ The output of the pipeline is a CONLL-U document containing annotated sentence s
 
 Triple candidates generator is used to extract relation triples candidates from CONLL-U document produced by NLP pipeline. It uses a set of rules listed in Table \ref{table_triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner\cite{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
 
-For example, applying the rules to an annotated sentence in Figure \ref{fig_conllu_example} will generate these 17 triples candidates--where only five of them are valid triples:
+For example, applying the rules to an annotated sentence in Figure \ref{fig_conllu_example} will generate these 17 triples candidates where only five of them are valid triples (check-marked):
 
 \begin{itemize}
 \item (Sembungan, adalah, desa) \ding{51}
