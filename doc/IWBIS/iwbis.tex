@@ -311,7 +311,7 @@ For example, applying the rules to an annotated sentence in Figure \ref{fig_conl
 
 In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually label \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
 
-During the extraction step, triple candidates generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}.
+During the extraction step, triple candidates generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}).
 
 % Triple candidate generation rules
 \begin{table}[!t]
@@ -388,7 +388,7 @@ We extract 17 features described in Table \ref{table_models_features} from each 
 \end{tabular}
 \end{table}
 
-During the train step, we use the dataset prepared in the label step (described in Section \ref{Triple Candidates Generator}) to train triple selector and save the best model as binary file. This model is included in the system to be use during the extraction step.
+During the train step, we use the dataset to train triple selector and save the best model as binary file. This model is included in the system to be use during the extraction step.
 
 \subsection{Token Expander}
 
