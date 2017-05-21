@@ -42,8 +42,8 @@
 %%*************************************************************************
 
 
-%\documentclass[conference,compsoc,12pt]{IEEEtran}
-\documentclass[peerreview,12pt]{IEEEtran}
+\documentclass[conference,compsoc,12pt]{IEEEtran}
+%\documentclass[peerreview,12pt]{IEEEtran}
 
 % *** CITATION PACKAGES ***
 \usepackage[nocompress]{cite}
@@ -52,10 +52,10 @@
 %
 \usepackage[pdftex]{graphicx}
 % declare the path(s) where your graphic files are
-\graphicspath{{../images/}}
+%\graphicspath{{../images/}}
 % and their extensions so you won't have to specify these with
 % every instance of \includegraphics
-\DeclareGraphicsExtensions{.jpeg,.png}
+%\DeclareGraphicsExtensions{.jpeg,.png}
 
 % *** MATH PACKAGES ***
 \usepackage{amsmath}
@@ -200,7 +200,7 @@ There has been plenty of works done in the open IE research. Starting from the i
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{arglearner_architecture}
+\includegraphics[scale=0.5]{../images/arglearner_architecture.png}
 \caption{ArgLearner architecture training and extraction architecture}
 \label{fig_arglearner_architecture}
 \end{figure}
@@ -209,7 +209,7 @@ Furthermore, \textbf{Ollie} (Open Language Learning for Information Extraction)\
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.5]{ollie_architecture}
+\includegraphics[scale=0.5]{../images/ollie_architecture.png}
 \caption{Ollie labeling and extraction architecture}
 \label{fig_ollie_architecture}
 \end{figure}
@@ -234,7 +234,7 @@ As shown in the flowchart Figure \ref{fig_program_flowchart}, our system is comp
 
 \begin{figure*}
 \centering
-\includegraphics[width=\textwidth]{program_flowchart}
+\includegraphics[width=\textwidth]{../images/program_flowchart.png}
 \caption{Indonesian open domain information extraction flowchart}
 \label{fig_program_flowchart}
 \end{figure*}
@@ -276,7 +276,7 @@ The output of the pipeline is a CONLL-U document containing annotated sentence s
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.35]{conllu_example}
+\includegraphics[scale=0.35]{../images/conllu_example.png}
 \caption{CONLL-U Format Example}
 \label{fig_conllu_example}
 \end{figure}
@@ -460,7 +460,7 @@ In the first experiment, we chose four classifiers each representing unique char
 We use the manually annotated triple selector dataset described in Section \ref{Triple Candidates Generator} to cross-validate\cite{kohavi1995study} (k-Fold with $k=3$) the four classifiers. Since open IE systems requires both precision and recall\cite{angeli2015leveraging}, we choose F1 score to determine the best classifier for triple selector. The result of this experiment is shown by Figure \ref{fig_models_performance} and Table \ref{table_models_performance} where Random Forest achieves the highest F1 score 0.58.
 
 \begin{figure}
-\includegraphics[scale=0.4]{models_performance}
+\includegraphics[scale=0.4]{../images/models_performance.png}
 \caption{Triple selector models performance comparison chart}
 \label{fig_models_performance}
 \end{figure}
