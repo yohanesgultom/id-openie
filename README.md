@@ -4,6 +4,19 @@
 
 Indonesian open domain information extractor using Stanford NLP pipeline, heuristics triples candidate generator, heuristics token expander and Random Forest triple selector.
 
+Input example:
+
+```
+"Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia."
+```
+
+Expected output:
+
+```
+"Sembungan" "adalah"  "desa"
+"Sembungan" "terletak di" "kecamatan Kejajar"
+```
+
 **Build**
 
 To build from source:
