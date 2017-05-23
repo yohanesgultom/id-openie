@@ -10,6 +10,10 @@ mainClassName = 'id.nlp.depparser.DependencyParser'
 // turn off log
 applicationDefaultJvmArgs = ["-Dorg.slf4j.simpleLogger.defaultLogLevel=error"]
 
+distTar {
+    enabled = false
+}
+
 distributions {
     main {
         contents {

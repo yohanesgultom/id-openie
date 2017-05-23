@@ -1,80 +1,17 @@
 %-----------------------------------------------------------------------------%
 \chapter{\babLima}
 %-----------------------------------------------------------------------------%
-\todo{Tambahkan kata-kata pengantar bab 5 disini.}
 
-
-%-----------------------------------------------------------------------------%
-\section{Mengubah Tampilan Teks}
-%-----------------------------------------------------------------------------%
-Beberapa perintah yang dapat digunakan untuk mengubah tampilan adalah: 
-\begin{itemize}
-	\item \bslash f \\
-		Merupakan alias untuk perintah \bslash textit, contoh 
-		\f{contoh hasil tulisan}.
-	\item \bslash bi \\
-		\bi{Contoh hasil tulisan}.
-	\item \bslash bo \\
-		\bo{Contoh hasil tulisan}.
-	\item \bslash m \\
-		\m{Contoh hasil tulisan}.
-	\item \bslash mc \\
-		\mc{Contoh hasil tulisan}.
-	\item \bslash code \\ 
-		\code{Contoh hasil tulisan}.
-\end{itemize}
-
+Pada bab ini dijelaskan kesimpulan penelitian ini dan saran untuk pengembangan penelitian di masa depan.
 
 %-----------------------------------------------------------------------------%
-\section{Memberikan Catatan}
+\section{Kesimpulan}
 %-----------------------------------------------------------------------------%
-Ada dua perintah untuk memberikan catatan penulisan dalam dokumen yang Anda 
-kerjakan, yaitu: 
-\begin{itemize}
-	\item \bslash todo \\
-		Contoh: \\ \todo{Contoh bentuk todo.}
-	\item \bslash todoCite \\ 
-		Contoh: \todoCite
-\end{itemize}
 
+This paper introduces an open domain information extraction system for Indonesian text using basic NLP pipelines and combination of heuristics and machine learning models. The system is able to extract meaningful domain-independent relations from Indonesian sentences to be used as document representation or document understanding task. Additionally, the source code and datasets are published openly\footnote{Paper source code \url{https://github.com/yohanesgultom/id-openie}} to improve research reproducibility.
 
 %-----------------------------------------------------------------------------%
-\section{Menambah Isi Daftar Isi}
+\section{Saran}
 %-----------------------------------------------------------------------------%
-Terkadang ada kebutuhan untuk memasukan kata-kata tertentu kedalam Daftar Isi. 
-Perintah \bslash addChapter dapat digunakan untuk judul bab dalam Daftar isi. 
-Contohnya dapat dilihat pada berkas thesis.tex.
 
-
-%-----------------------------------------------------------------------------%
-\section{Memasukan PDF}
-%-----------------------------------------------------------------------------%
-Untuk memasukan PDF dapat menggunakan perintah \bslash inpdf yang menerima satu 
-buah argumen. Argumen ini berisi nama berkas yang akan digabungkan dalam 
-laporan. PDF yang dimasukan degnan cara ini akan memiliki header dan footer 
-seperti pada halaman lainnya. 
-
-\inpdf{include}
-
-Cara lain untuk memasukan PDF adalah dengan menggunakan perintah \bslash putpdf 
-dengan satu argumen yang berisi nama berkas pdf. Berbeda dengan perintah 
-sebelumnya, PDF yang dimasukan dengan cara ini tidak akan memiliki footer atau 
-header seperti pada halaman lainnya. 
-
-\putpdf{include}
-
-
-%-----------------------------------------------------------------------------%
-\section{Membuat Perintah Baru}
-%-----------------------------------------------------------------------------%
-Ada dua perintah yang dapat digunakan untuk membuat perintah baru, yaitu: 
-\begin{itemize}
-	\item \bslash Var \\
-		Digunakan untuk membuat perintah baru, namun setiap kata yang diberikan
-		akan diproses dahulu menjadi huruf kapital. 
-		Contoh jika perintahnya adalah \bslash Var\{adalah\} makan ketika 
-		perintah \bslash Var dipanggil, yang akan muncul adalah ADALAH. 
-	\item \bslash var \\
-		Digunakan untuk membuat perintah atau baru. 
-\end{itemize}
-
+In the future, we plan to improve the performance of our system finding better heuristics for triple candidates generator to reduce the negative samples. We also plan adding more training data for triple selector to improve the precision and recall score. We also need to create dataset for triple candidates generator and token expander in order to properly evaluate further improvement of both components. We also consider adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and including them as features and/or heuristics may also improve the overall performance of the system.
