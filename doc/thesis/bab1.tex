@@ -9,24 +9,7 @@ Di masa sekarang ketersediaan dokumen digital berbahasa natural seperti berita, 
 
 Meskipun \textit{IE} sudah mampu manusia untuk memproses dokumen digital dengan lebih efisien, metode yang digunakan umumnya hanya berlaku untuk kelompok dokumen yang homogen atau berada dalam satu domain (\textit{closed-domain}). Hal ini terjadi karena umumnya teknik yang dipakai dibuat sedemikian rupa untuk memanfaatkan pola tertentu pada teks atau dokumen\citep{cowie1996information}. Sebagai contoh untuk mengekstraksi nama penulis dari berita elektronik, salah satu cara paling mudah adalah mencari nama orang di awal atau akhir dokumen. Cara yang sama tidak bisa digunakan untuk mencari nama penulis dari dokumen lain seperti jurnal karena struktur dokumen yang berbeda. Hal ini mendorong berkembangnya metode lain yang mampu mengekstraksi informasi dari berbagai domain (\textit{open domain}) yang disebut \textit{open domain information extraction} (\textit{open IE}) \citep{banko2007open}.
 
-\begin{table}
-	\centering
-	\caption{Perbandingan antara \f{information extraction} tradisional (IE), \f{open domain extraction} (open IE) dan \f{knowledge extraction} (KE)}
-	\label{table_paradigm_comparison}
-	\begin{tabular}{l c c c}
-		\hline 
-		\textbf{Aspek} & \textbf{IE} & \textbf{Open IE} & \textbf{KE} \\ 
-		\hline 
-		\textbf{Domain} & Tertutup & Terbuka & Terbuka \\ 
-		\textbf{Format} & Tergantung domain & Triples & RDF Triples \\ 
-		\textbf{Ontologi} & Tidak tersedia & Opsional & Wajib \\ 
-		\hline 
-	\end{tabular} 
-\end{table}
-
-Metode \textit{open domain information extraction} (\textit{open IE}) mengekstrak informasi dari dokumen dalam format \textit{tuple} $(x, r, y)$ di mana $r$ adalah relasi antara dua buah argumen/entitas $x$ dan $y$ \citep{etzioni2011open}. Format informasi dari tiga nilai tersebut, yang disebut juga \textit{triple}, berlaku umum untuk semua dokumen yang berisi bahasa natural sehingga dapat diterapkan pada dokumen dari berbagai domain. Format \textit{triple} yang digunakan open IE memiliki kemiripan dengan format yang lazim digunakan pada \textit{knowledge extraction} (KE), yaitu Resource Data Format (RDF) specification\footnote{Resource Data Format W3C \url{https://www.w3.org/RDF/}} \citep{auer2007dbpedia, exner2014refractive}. Namun, open IE umumnya tidak mengikuti seluruh spesifikasi RDF dan tidak memiliki set ontologi tetap. Ringkasan perbandingan antara open IE dengan IE tradisional dan KE ditunjukkan pada Tabel \ref{table_paradigm_comparison}. 
-
-Seiring dengan berkembangnya waktu, beberapa sistem open IE sudah dikembangkan \citep{schmitz2012open} untuk bahasa Inggris. Bahkan penelitian terkait melaporkan kesuksesan aplikasi open IE untuk \textit{task} \textit{question answering} \citep{fader2011identifying} dan \textit{information retrieval} \citep{etzioni2011search}. Akan tetapi karena sistem open IE menggunakan satu atau lebih \textit{task natural language processing} (NLP) dan aturan/heuristik yang hanya berlaku untuk bahasa tertentu, maka sistem yang berkembang tidak dapat dipakai untuk memproses teks atau dokumen dalam bahasa lain seperti bahasa Indonesia. Oleh karena itu dalam penelitian ini, \saya~memperkenalkan sistem open IE untuk bahasa Indonesia.
+Seiring dengan berkembangnya waktu, beberapa sistem \textit{open IE} sudah dikembangkan \citep{schmitz2012open} untuk bahasa Inggris. Bahkan penelitian terkait melaporkan kesuksesan aplikasi open IE untuk \textit{task} \textit{question answering} \citep{fader2011identifying} dan \textit{information retrieval} \citep{etzioni2011search}. Akan tetapi karena sistem open IE menggunakan satu atau lebih \textit{task natural language processing} (NLP) dan aturan/heuristik yang hanya berlaku untuk bahasa tertentu, maka sistem yang berkembang tidak dapat dipakai untuk memproses teks atau dokumen dalam bahasa lain seperti bahasa Indonesia. Oleh karena itu dalam penelitian ini, \saya~memperkenalkan sistem open IE untuk bahasa Indonesia.
 
 \begin{figure}
 	\begin{mdframed}
