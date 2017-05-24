@@ -24,7 +24,7 @@ Meskipun \textit{IE} sudah mampu manusia untuk memproses dokumen digital dengan 
 	\end{tabular} 
 \end{table}
 
-Metode \textit{open domain information extraction} (\textit{open IE}) mengekstrak informasi dari dokumen dalam format \textit{tuple} $(x, r, y)$ di mana $r$ adalah relasi antara dua buah entitas $x$ dan $y$ \citep{etzioni2011open}. Format informasi dari tiga nilai tersebut, yang disebut juga \textit{triple}, berlaku umum untuk semua dokumen yang berisi bahasa natural sehingga dapat diterapkan pada dokumen dari berbagai domain. Format \textit{triple} yang digunakan open IE memiliki kemiripan dengan format yang lazim digunakan pada \textit{knowledge extraction} (KE), yaitu Resource Data Format (RDF) specification\footnote{Resource Data Format W3C \url{https://www.w3.org/RDF/}} \citep{auer2007dbpedia, exner2014refractive}. Namun, open IE umumnya tidak mengikuti seluruh spesifikasi RDF dan tidak memiliki set ontologi tetap. Ringkasan perbandingan antara open IE dengan IE tradisional dan KE ditunjukkan pada Tabel \ref{table_paradigm_comparison}. 
+Metode \textit{open domain information extraction} (\textit{open IE}) mengekstrak informasi dari dokumen dalam format \textit{tuple} $(x, r, y)$ di mana $r$ adalah relasi antara dua buah argumen/entitas $x$ dan $y$ \citep{etzioni2011open}. Format informasi dari tiga nilai tersebut, yang disebut juga \textit{triple}, berlaku umum untuk semua dokumen yang berisi bahasa natural sehingga dapat diterapkan pada dokumen dari berbagai domain. Format \textit{triple} yang digunakan open IE memiliki kemiripan dengan format yang lazim digunakan pada \textit{knowledge extraction} (KE), yaitu Resource Data Format (RDF) specification\footnote{Resource Data Format W3C \url{https://www.w3.org/RDF/}} \citep{auer2007dbpedia, exner2014refractive}. Namun, open IE umumnya tidak mengikuti seluruh spesifikasi RDF dan tidak memiliki set ontologi tetap. Ringkasan perbandingan antara open IE dengan IE tradisional dan KE ditunjukkan pada Tabel \ref{table_paradigm_comparison}. 
 
 Seiring dengan berkembangnya waktu, beberapa sistem open IE sudah dikembangkan \citep{schmitz2012open} untuk bahasa Inggris. Bahkan penelitian terkait melaporkan kesuksesan aplikasi open IE untuk \textit{task} \textit{question answering} \citep{fader2011identifying} dan \textit{information retrieval} \citep{etzioni2011search}. Akan tetapi karena sistem open IE menggunakan satu atau lebih \textit{task natural language processing} (NLP) dan aturan/heuristik yang hanya berlaku untuk bahasa tertentu, maka sistem yang berkembang tidak dapat dipakai untuk memproses teks atau dokumen dalam bahasa lain seperti bahasa Indonesia. Oleh karena itu dalam penelitian ini, \saya~memperkenalkan sistem open IE untuk bahasa Indonesia.
 
@@ -92,7 +92,7 @@ Tujuan dan manfaat dari penelitian ini adalah:\\
 \textbf{Manfaat}
 
 \begin{enumerate}
-\item Menghasilkan sistem \textit{open IE} yang dapat digunakan untuk mengekstrak entitas relasi dari teks bahasa Indonesia
+\item Menghasilkan sistem \textit{open IE} yang dapat digunakan untuk mengekstrak entitas relasi dan argumen/entitas dalam format \textit{triple} dari teks bahasa Indonesia
 
 \item Memberikan acuan untuk pengembangan sistem \textit{open IE} untuk bahasa Indonesia
 
@@ -105,7 +105,8 @@ Tujuan dan manfaat dari penelitian ini adalah:\\
 Sistematika penulisan laporan adalah sebagai berikut:
 \begin{itemize}
 	\item Bab 1 \babSatu \\
-	Bab ini akan menjelaskan mengenai latar belakang permasalahan, rumusanmasalah, tujuan, manfaat dan batasan penelitian.
+	Bab ini akan menjelaskan mengenai latar belakang permasalahan, rumusan
+masalah, tujuan, manfaat dan batasan penelitian.
 	
 	\item Bab 2 \babDua \\
 	Bab ini akan menjelaskan landasan teori yang digunakan pada penelitian ini serta memaparkan kajian pustaka terhadap penelitian-penelitian terkait.
@@ -114,9 +115,11 @@ Sistematika penulisan laporan adalah sebagai berikut:
 	Bab ini akan menjelaskan mengenai tahapan, rancangan \& implementasi sistem, pengumpulan \& pengolahan data dan teknik evaluasi yang digunakan pada penelitian ini.
 	
 	\item Bab 4 \babEmpat \\
-	Bab ini akan menjelaskan tentang hasil eksperimen dan analisis hasileksperimen.
+	Bab ini akan menjelaskan tentang hasil eksperimen dan analisis hasil
+eksperimen.
 	
 	\item Bab 5 \babLima \\
-	Bab ini akan menjelaskan tentang kesimpulan dari penelitian yang telahdilakukan dan saran untuk penelitian berikutnya.
+	Bab ini akan menjelaskan tentang kesimpulan dari penelitian yang telah
+dilakukan dan saran untuk penelitian berikutnya.
 \end{itemize}
 
