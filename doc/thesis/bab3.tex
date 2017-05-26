@@ -39,9 +39,9 @@ We trained default Stanford Core NLP \verb|MaxentTagger| \citep{toutanova2003fea
 The lemmatizer used in this pipeline, \verb|IndonesianLemmaAnnotator|, is implemented based on an existing Indonesian rule-based Lemmatizer \citep{suhartono2014lemmatization} with some improvements:
 
 \begin{itemize}
-\item Reimplementation in Java language
+\item Ability to process a sentence instead of a token
 \item Usage of in-memory database to speed up dictionary lookup
-\item Integration with Stanford Core NLP annotator API for reusability
+\item Reimplementation in Java language and integration with Stanford Core NLP annotator API to improve reusability
 \end{itemize}
 
 This lemmatizer yields \textbf{99\%} accuracy when tested using dataset of 5,638 token-lemma pairs\footnote{Indonesian Lemmatizer \url{https://github.com/davidchristiandy/lemmatizer}}. We use lemma as one of the features for NER classifier. \\

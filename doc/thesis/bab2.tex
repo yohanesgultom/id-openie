@@ -70,9 +70,17 @@ Hasil ekstraksi \textit{open IE} berguna untuk berbagai \textit{task} seperti \t
 
 Pemrosesan bahasa natural atau \textit{natural language processing} (NLP) tidak bisa dipisahkan dari information extraction \citep{banko2007open,fader2011identifying,etzioni2011open,angeli2015leveraging}. Semua model sistem \textit{open IE} juga selalu membutuhkan informasi yang dihasilkan oleh \textit{task} NLP seperti \textit{part of speech tagging}, \textit{dependency parsing} dan \textit{named-entity recognition}. Informasi tersebut digunakan sebagai variabel dalam heuristik \textit{open IE} dan juga sebagai fitur untuk \textit{classifier}.
 
+\subsection{\textit{Tokenization}}
+
+\textit{Tokenization} adalah \textit{task} NLP yang bertujuan memotong kalimat atau frase menjadi kata-kata (\textit{tokens}) \citep{manning2008introduction}. Ini merupakan \textit{task} yang paling dasar dan diperlukan sebelum dapat menjalankan \textit{task} lainnya seperti \textit{lemmatization}, \textit{POS tagging}, dsb. Untuk bahasa yang ditulis secara horizontal dan setiap katanya dipisahkan oleh spasi seperti Inggris dan Indonesia, dapat digunakan algoritma berbasis aturan (\textit{rule-based}) yang cukup sederhana \citep{manningptbtokenizer}, yaitu memotong kalimat di antara spasi dan memisahkan tanda baca sebagai \textit{token}. Contoh \textit{tokenization} dari kalimat "Ibu pergi ke pasar." adalah senarai \textit{token} ("Ibu", "pergi", "ke", "pasar", "."). Dalam implementasinya pada bahasa tertentu, algoritma tersebut juga disesuaikan untuk menjalankan proses yang berbeda pada \textit{token} tertentu misalnya gelar atau singkatan yang diikuti titik ("dr.", "Dra.", "Ir.", dsb.).
+
+\subsection{\textit{Lemmatization}}
+
+\textit{Lemmatization} adalah \textit{task} NLP yang bertujuan mengubah kata imbuhan ke bentuk \textit{lemma} atau bentuk kamus \citep{suhartono2014lemmatization}. Sekalipun memiliki tujuan yang mirip dengan \textit{stemming}, \textit{lemmatization} tidak selalu menghasilkan kata dasar karena menggunakan analisis kosakata dan morfologi yang dapat menghindari terbuangnya \textit{derivational affixes} \citep{manning2008introduction}. Jika dilakukan \textit{stemming} dan \textit{lemmatization} pada \textit{token} "penjahit" maka yang dihasikan sesuai urutan adalah adalah "jahit" dan "penjahit". Hal ini bermanfaat untuk mengurangi terbuangnya informasi yang berguna. Algoritma yang dilaporkan efektif untuk bahasa Indonesia adalah algoritma berbasis aturan penghapusan imbuhan (\textit{affixes}) dan pencarian kamus (\textit{dictionary lookup}) \citep{suhartono2014lemmatization}.
+
 \subsection{\textit{Part of Speech Tagging}}
 
-\textit{Part of speech} (POS) \textit{tagging} adalah \textit{task} NLP yang bertujuan menentukan \textit{POS tag} atau jenis setiap kata pada kalimat. Contoh \textit{POS tag} dasar adalah kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}) dst. Gambar \ref{fig_example_pos_tagging} menunjukkan contoh \textit{POS tagging} terhadap kalimat sederhana. \textit{POS tag} dapat digunakan juga oleh \textit{NLP task} yang lain seperti \textit{dependency parsing} dan \textit{named-entity recognition}.
+\textit{Part of speech} (POS) \textit{tagging} adalah \textit{task} NLP yang bertujuan menentukan \textit{POS tag} atau jenis setiap kata pada kalimat \citep{jurafsky2000speech}. Contoh \textit{POS tag} dasar adalah kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}) dst. Gambar \ref{fig_example_pos_tagging} menunjukkan contoh \textit{POS tagging} terhadap kalimat sederhana. \textit{POS tag} dapat digunakan juga oleh \textit{NLP task} yang lain seperti \textit{dependency parsing} dan \textit{named-entity recognition}.
 
 \begin{figure}
 	\begin{mdframed}
@@ -83,14 +91,22 @@ Pemrosesan bahasa natural atau \textit{natural language processing} (NLP) tidak 
 	\label{fig_example_pos_tagging}
 \end{figure}
 
+Algoritma \textit{POS tagging} umumnya dapat dikelompokkan menjadi dua: berbasis aturan (\textit{rule-based}) dan berbasis stokastik (\textit{stochastic-based}) \citep{jurafsky2000speech}. Salah satu algoritma yang menjadi \textit{state-of-the-art} adalah \textit{maximum-entropy-based POS tagger} (berbasis stokastik) yaitu \textit{tagger} yang mempelajari model probabilitas kondisional \textit{log-linear} (\textit{logistic regression}) menggunakan metode \textit{maximum entropy}.
 
-\subsection{\textit{Dependency Parsing}}
-
-\lipsum[6]
+%\noindent \begin{align}\label{eq:maxent}
+%	P(t|h)={\frac 
+%		{\exp \left(\sum _{j}\lambda _{j}f_{j}(h,t)\right)}
+%		{\sum\limits_{t' \in T} \exp \left(\sum _{j}\lambda _{j}f_{j}(h,t')\right)}
+%	}
+%\end{align}
 
 \subsection{\textit{Named-Entity Recognition}}
 
 \lipsum[5]
+
+\subsection{\textit{Dependency Parsing}}
+
+\lipsum[6]
 
 \subsection{CONLL-U}
 
