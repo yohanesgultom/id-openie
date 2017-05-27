@@ -172,7 +172,7 @@ As described in Table \ref{table_paradigm_comparison}, unlike traditional inform
 \end{tabular} 
 \end{table}
 
-Due to the nature of NLP tasks and heuristics used in open IE system, it is only applicable for a specific language\cite{banko2007open}. So in order to extract open domain information from Indonesian text, a specific system has to be defined for this language. Furthermore, considering the scarcity of Indonesian NLP resources, the system need to effectively utilize them to achieve the objective. Through this paper, we propose an open IE system that addresses these issues.
+Due to the nature of NLP tasks and heuristics used in open IE system, it is only applicable for a specific language\cite{banko2007open}. So, in order to extract open domain information from Indonesian text, a specific system has to be defined for this language. Furthermore, considering the scarcity of Indonesian NLP resources, the system need to effectively utilize them to achieve the objective. Through this paper, we propose an open IE system that addresses these issues.
 
 We propose an open IE system that combine heuristics (rule-based) models and a supervised learning model to extract entity relations from Indonesian text in triple format. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. Our objective is to define a baseline system for Indonesian open IE that may encourage further research in the future.
 
@@ -205,7 +205,7 @@ There has been plenty of works done in the open IE research. Starting from the i
 \label{fig_arglearner_architecture}
 \end{figure}
 
-Furthermore, \textbf{Ollie} (Open Language Learning for Information Extraction)\cite{schmitz2012open} utilizes ReVerb\cite{fader2011identifying} to learn open pattern templates to guide triples extraction from sentence. Additionally, Ollie does a context analysis to extend the tuples with contextual information in order to improve precision\cite{schmitz2012open}. Its training and extraction architecture is describe in Figure \ref{fig_ollie_architecture}.
+Furthermore, \textbf{Ollie} (Open Language Learning for Information Extraction)\cite{schmitz2012open} utilizes ReVerb\cite{fader2011identifying} to learn open pattern templates to guide triples extraction from sentence. Additionally, Ollie does a context analysis to extend the tuples with contextual information in order to improve precision\cite{schmitz2012open}. Its training and extraction architecture is described by Figure \ref{fig_ollie_architecture}.
 
 \begin{figure}
 \centering
@@ -241,7 +241,7 @@ As shown in the flowchart Figure \ref{fig_program_flowchart}, our system is comp
 
 \subsection{NLP Pipeline}
 
-The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CoNLL-U\footnote{CoNLL-U format description \url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. The pipeline assumes that each sentence in the input document is separated by new line so preprocessing may be required. The detail of each model the pipeline are described below:
+The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CoNLL-U\footnote{CoNLL-U format description \url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. The pipeline assumes that each sentence in the input document is separated by new line so preprocessing may be required. The detail of each model in the pipeline are described below:
 
 \begin{enumerate}
 
@@ -264,11 +264,11 @@ This lemmatizer yields \textbf{99\%} accuracy when tested using dataset of 5,638
 
 \item Named-Entity Recognizer (NER)
 
-Stanford NLP \verb|CRFClassifier|\cite{finkel2005incorporating}, a linear chain Conditional Random Field (CRF) sequence models, is trained using a dataset containing 3,535 Indonesian sentences with 5 entity class: Person, Organization, Location, Quantity and Time. When tested using 426 sentences, this models achieves 0.86 precision, 0.85 recall and \textbf{0.86} F1-score. The dataset itself is a combination between dataset from Faculty of Computer Science, University of Indonesia and a public dataset\footnote{Indonesian NER \url{https://github.com/yusufsyaifudin/indonesia-ner}}. \\
+Stanford NLP \verb|CRFClassifier|\cite{finkel2005incorporating}, a linear chain Conditional Random Field (CRF) sequence models, is trained using a dataset containing 3,535 Indonesian sentences with 5 entity class: Person, Organization, Location, Quantity and Time. When tested using 426 sentences, this model achieves 0.86 precision, 0.85 recall and \textbf{0.86} F1-score. The dataset itself is a combination between dataset from Faculty of Computer Science, University of Indonesia and a public dataset\footnote{Indonesian NER \url{https://github.com/yusufsyaifudin/indonesia-ner}}. \\
 
 \item Dependency Parser
 
-We relied on Stanford NLP \verb|nndep.DependencyParser|\cite{chen2014fast}, to annotate dependency relation of each token in the sentence. We train this transition-based neural network model using a Indonesian universal dependencies dataset of 5,036 sentences and 3,093 Indonesian word embedding\footnote{Indonesian word embedding \url{https://github.com/yohanesgultom/id-openie/blob/master/data/parser-id.embed}} (vector representation of words). Tested with 559 sentences, this model scores \textbf{70\%} UAS (Unlabeled Attachment Score) and \textbf{46\%} LAS (Labeled Attachment Score).
+We relied on Stanford NLP \verb|nndep.DependencyParser|\cite{chen2014fast}, to annotate dependency relation of each token in the sentence. We train this transition-based neural network model using an Indonesian universal dependencies dataset of 5,036 sentences and 3,093 Indonesian word embedding\footnote{Indonesian word embedding \url{https://github.com/yohanesgultom/id-openie/blob/master/data/parser-id.embed}} (vector representation of words). Tested with 559 sentences, this model scores \textbf{70\%} UAS (Unlabeled Attachment Score) and \textbf{46\%} LAS (Labeled Attachment Score).
 
 \end{enumerate}
 
@@ -344,7 +344,7 @@ Object & Token's position is after Subject and Predicate \\
 
 Triple selector is a machine learning classifier trained using manually labeled dataset of valid and invalid relation triples. For example, given the input of 17 candidates in Section \ref{Triple Candidates Generator}, the selector will label the five check-marked triples as true and label the rest as false.
 
-We use Random Forest\cite{breiman2001random}, an ensemble methods that aggregate classification results from multiple decision trees, as the model for the classifier. We use the Scikit-Learn\footnote{scikit-learn: machine learning in Python \url{http://scikit-learn.org}} implementation of Random Forest with following configuration:
+We use Random Forest\cite{breiman2001random}, an ensemble method that aggregate classification results from multiple decision trees, as the model for the classifier. We use the Scikit-Learn\footnote{scikit-learn: machine learning in Python \url{http://scikit-learn.org}} implementation of Random Forest with following configuration:
 
 \begin{itemize}
 \item Decision tree criterion: Gini Impurity
@@ -357,7 +357,7 @@ We use Random Forest\cite{breiman2001random}, an ensemble methods that aggregate
 
 We discover the configuration by using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidates Generator}. 
 
-We extract 17 features described in Table \ref{table_models_features} from each triple candidates. These features are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. Every nominal features are also encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
+We extract 17 features described in Table \ref{table_models_features} from each triple candidates. These features are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. Every nominal feature are also encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
 
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
