@@ -74,10 +74,6 @@ Pemrosesan bahasa natural atau \textit{natural language processing} (NLP) tidak 
 
 \textit{Tokenization} adalah \textit{task} NLP yang bertujuan memotong kalimat atau frase menjadi kata-kata (\textit{tokens}) \citep{manning2008introduction}. Ini merupakan \textit{task} yang paling dasar dan diperlukan sebelum dapat menjalankan \textit{task} lainnya seperti \textit{lemmatization}, \textit{POS tagging}, dsb. Untuk bahasa yang ditulis secara horizontal dan setiap katanya dipisahkan oleh spasi seperti Inggris dan Indonesia, dapat digunakan algoritma berbasis aturan (\textit{rule-based}) yang cukup sederhana \citep{manningptbtokenizer}, yaitu memotong kalimat di antara spasi dan memisahkan tanda baca sebagai \textit{token}. Contoh \textit{tokenization} dari kalimat "Ibu pergi ke pasar." adalah senarai \textit{token} ("Ibu", "pergi", "ke", "pasar", "."). Dalam implementasinya pada bahasa tertentu, algoritma tersebut juga disesuaikan untuk menjalankan proses yang berbeda pada \textit{token} tertentu misalnya gelar atau singkatan yang diikuti titik ("dr.", "Dra.", "Ir.", dsb.).
 
-\subsection{\textit{Lemmatization}}
-
-\textit{Lemmatization} adalah \textit{task} NLP yang bertujuan mengubah kata imbuhan ke bentuk \textit{lemma} atau bentuk kamus \citep{suhartono2014lemmatization}. Sekalipun memiliki tujuan yang mirip dengan \textit{stemming}, \textit{lemmatization} tidak selalu menghasilkan kata dasar karena menggunakan analisis kosakata dan morfologi yang dapat menghindari terbuangnya \textit{derivational affixes} \citep{manning2008introduction}. Jika dilakukan \textit{stemming} dan \textit{lemmatization} pada \textit{token} "penjahit" maka yang dihasikan sesuai urutan adalah adalah "jahit" dan "penjahit". Hal ini bermanfaat untuk mengurangi terbuangnya informasi yang berguna. Algoritma yang dilaporkan efektif untuk bahasa Indonesia adalah algoritma berbasis aturan penghapusan imbuhan (\textit{affixes}) dan pencarian kamus (\textit{dictionary lookup}) \citep{suhartono2014lemmatization}.
-
 \subsection{\textit{Part of Speech Tagging}}
 
 \textit{Part of speech} (POS) \textit{tagging} adalah \textit{task} NLP yang bertujuan menentukan \textit{POS tag} atau jenis setiap kata pada kalimat \citep{jurafsky2000speech}. Contoh \textit{POS tag} dasar adalah kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}) dst. Gambar \ref{fig_example_pos_tagging} menunjukkan contoh \textit{POS tagging} terhadap kalimat sederhana. \textit{POS tag} dapat digunakan juga oleh \textit{NLP task} yang lain seperti \textit{dependency parsing} dan \textit{named-entity recognition}.
@@ -100,23 +96,103 @@ Algoritma \textit{POS tagging} umumnya dapat dikelompokkan menjadi dua: berbasis
 %	}
 %\end{align}
 
+\subsection{\textit{Lemmatization}}
+
+\textit{Lemmatization} adalah \textit{task} NLP yang bertujuan mengubah kata imbuhan ke bentuk \textit{lemma} atau bentuk kamus \citep{suhartono2014lemmatization}. Sekalipun memiliki tujuan yang mirip dengan \textit{stemming}, \textit{lemmatization} tidak selalu menghasilkan kata dasar karena menggunakan analisis kosakata dan morfologi yang dapat menghindari terbuangnya \textit{derivational affixes} \citep{manning2008introduction}. Jika dilakukan \textit{stemming} dan \textit{lemmatization} pada \textit{token} "penjahit" maka yang dihasikan sesuai urutan adalah adalah "jahit" dan "penjahit". Hal ini bermanfaat untuk mengurangi terbuangnya informasi yang berguna. Algoritma yang dilaporkan efektif untuk bahasa Indonesia adalah algoritma berbasis aturan penghapusan imbuhan (\textit{affixes}) dan pencarian kamus (\textit{dictionary lookup}) \citep{suhartono2014lemmatization}.
+
 \subsection{\textit{Named-Entity Recognition}}
 
-\lipsum[5]
+\textit{Named-entity recognition} (NER) adalah \textit{task} NLP yang mengenali jenis entitas dari \textit{token} pada kalimat. Jenis entitas yang umumnya dikenali contohnya \textit{Person} (nama orang), \textit{Location} (nama lokasi), \textit{Organization} (nama organisasi atau kelompok), dsb. Algoritma \textit{state-of-the-art} untuk NER adalah yang berbasis stokastik seperti \textit{Conditional Random Field} (CRF) dengan fitur-fitur berbasis morfologi, leksikal dan ortografik.
+
+\begin{figure}
+	\begin{mdframed}
+		\textbf{Input}: "Ibu Budi tinggal di Solo." \\		
+		\textbf{Output}: (Ibu) (Budi, \textit{Person}) (tinggal) (di) (Solo, \textit{Location}) (.)
+	\end{mdframed}
+	\caption{Contoh \textit{input} dan \textit{output} NER}
+	\label{fig_example_ner}
+\end{figure}
 
 \subsection{\textit{Dependency Parsing}}
 
-\lipsum[6]
+\textit{Dependency parsing} adalah \textit{task} NLP yang memetakan dan mengenali pohon hubungan antar \textit{token} dalam kalimat. Masing-masing \textit{token} dapat memiliki satu atau lebih \textit{token} yang bergantung padanya (\textit{dependents}) tapi hanya bisa memiliki satu kepala (\textit{head}) atau tidak memiliki kepala sama sekali. Salah satu algoritma yang menjadi \textit{state-of-the-art} untuk \textit{dependency parsing} adalah algoritma berbasis jaringan syaraf tiruan (\textit{neural network}) yang mempelajari transisi antar \textit{token} \citep{chen2014fast}. 
 
-\subsection{CONLL-U}
+\subsection{CoNLL-U}
 
-\lipsum[4]
+CoNLL-U adalah format anotasi yang dikembangkan berdasarkan CoNLL-X, format yang disepakati dalam \textit{Conference on Computational Natural Language Learning} ke sepuluh, yang menggunakan himpunan \textit{POS tag} dan \textit{dependency relation} yang berlaku untuk banyak bahasa atau universal \citep{nivre2016universal}.
+
+Himpunan \textit{POS tag} yang dipakai pada CoNLL-U adalah:
+\begin{multicols}{2}
+	\begin{enumerate}
+		\item ADJ: \textit{adjective}
+		\item ADP: \textit{adposition}
+		\item ADV: \textit{adverb}
+		\item AUX: \textit{auxiliary}
+		\item CCONJ: \textit{coordinating conjunction}
+		\item DET: \textit{determiner}
+		\item INTJ: \textit{interjection}
+		\item NOUN: \textit{noun}
+		\item NUM: \textit{numeral}
+		\item PART: \textit{particle}
+		\item PRON: \textit{pronoun}
+		\item PROPN: \textit{proper noun}
+		\item PUNCT: \textit{punctuation}
+		\item SCONJ: \textit{subordinating conjunction}
+		\item SYM: \textit{symbol}
+		\item VERB: \textit{verb}
+		\item X: \textit{other}
+	\end{enumerate}
+\end{multicols}
+
+Sementara himpunan \textit{dependency relation} yang dipakai adalah:
+
+\begin{multicols}{2}
+	\begin{enumerate}
+		\item acl: \textit{clausal modifier of noun (adjectival clause)}
+		\item advcl: \textit{adverbial clause modifier}
+		\item advmod: \textit{adverbial modifier}
+		\item amod: \textit{adjectival modifier}
+		\item appos: \textit{appositional modifier}
+		\item aux: \textit{auxiliary}
+		\item case: \textit{case marking}
+		\item cc: \textit{coordinating conjunction}
+		\item ccomp: \textit{clausal complement}
+		\item clf: \textit{classifier}
+		\item compound: \textit{compound}
+		\item conj: \textit{conjunct}
+		\item cop: \textit{copula}
+		\item csubj: \textit{clausal subject}
+		\item dep: \textit{unspecified dependency}
+		\item det: \textit{determiner}
+		\item discourse: \textit{discourse element}
+		\item dislocated: \textit{dislocated elements}
+		\item expl: \textit{expletive}
+		\item fixed: \textit{fixed multiword expression}
+		\item flat: \textit{flat multiword expression}
+		\item goeswith: \textit{goes with}
+		\item iobj: \textit{indirect object}
+		\item list: \textit{list}
+		\item mark: \textit{marker}
+		\item nmod: \textit{nominal modifier}
+		\item nsubj: \textit{nominal subject}
+		\item nummod: \textit{numeric modifier}
+		\item obj: \textit{object}
+		\item obl: \textit{oblique nominal}
+		\item orphan: \textit{orphan}
+		\item parataxis: \textit{parataxis}
+		\item punct: \textit{punctuation}
+		\item reparandum: \textit{overridden disfluency}
+		\item root: \textit{root}
+		\item vocative: \textit{vocative}
+		\item xcomp: \textit{open clausal complement}
+	\end{enumerate}
+\end{multicols}
 
 %-----------------------------------------------------------------------------%
 \section{\textit{Supervised Learning}}
 %-----------------------------------------------------------------------------%
 
-\lipsum[3]
+\textit{Supervised learning} adalah algoritma yang data melakukan klasifikasi data dengan mempelajari pola data lain yang sudah diketahui kelasnya. Contoh algoritma \textit{supervised learning} di antaranya adalah \textit{logistic regression}, \textit{support vector machine}, \textit{multi-layer perceptron} dan \textit{random forest}. Untuk mengevaluasi kinerja dari algoritma \textit{supervised learning} dilakukan proses validasi silang (\textit{cross validation}) menggunakan data yang sudah diketahui kelasnya.
 
 \subsection{\textit{Logistic Regression}}
 
