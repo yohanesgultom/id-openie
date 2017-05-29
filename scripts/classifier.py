@@ -9,6 +9,7 @@ from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import precision_recall_fscore_support
 from tripletools import get_best_features
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -116,6 +117,7 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output_path', help='Output model path', default='triples-classifier-model.pkl')
     parser.add_argument('-s', '--scaler_output_path', help='Output scaler path', default='triples-classifier-scaler.pkl')
     parser.add_argument('-b', '--best', help='search parameters that gives best model', action='store_true')
+    parser.add_argument('--nocv', help='no cross-validation. training accuracy only', action='store_true')
     args = parser.parse_args()
 
     # load dataset
@@ -154,7 +156,12 @@ if __name__ == '__main__':
                 cv=cv
             )
             search.fit(X, y)
-            precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(search.best_estimator_, X, y)
+            if args.nocv:
+                y_pred = search.best_estimator_.predict(X)
+                precision, recall, fbeta, support = precision_recall_fscore_support(y, y_pred, average='binary')
+                fbeta_min = fbeta_max = fbeta_std = fbeta
+            else:
+                precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(search.best_estimator_, X, y)
             print(search.best_estimator_)
             print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
                 precision,

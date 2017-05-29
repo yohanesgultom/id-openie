@@ -13,22 +13,22 @@ Sistem \textit{open IE} yang pertama diperkenalkan adalah \textsc{TextRunner}. S
 
 \textsc{ReVerb} adalah sistem \textit{open IE} yang dikembangkan untuk memperbaiki dua masalah pada pendahulunya, \textsc{TextRunner}. Masalah yang ingin diselesaikan oleh \textsc{ReVerb} adalah inkoherensi hasil ekstraksi \textit{incoherent extractions} dan hasil ekstraksi yang tidak informatif \textit{uninformative extractions} \citep{fader2011identifying}. Untuk mengekstrak \textit{triple} $t = (e_i, r_{i,j}, e_j)$, sistem ini menggunakan dua algoritma utama, yaitu (1) \textit{Relation Extraction}, algoritma yang mengekstrak relasi $r_{i,j}$ menggunakan pembatasan sintaktik dan leksikal yang menyelesaikan dua masalah tersebut, dan (2) \textit{Argument Extraction}, algoritma yang mencari entitas $e_i$ dan $e_j$ yang dihubungkan oleh relasi $r_{i,j}$ menggunakan heuristik.  \textsc{ReVerb} menerima \textit{input} berupa kalimat yang telah dianotasi POS-nya \% potongan frase kata bendanya (NP \textit{chunk}) dan menghasilkan \textit{output} sejumlah \textit{triple}. Dari hasil pengujian yang dilakukan, \textsc{ReVerb} mencapai \textit{precision} dan \textit{recall} yang hampir dua kali lebih baik dari \textsc{TextRunner} \citep{fader2011identifying}.
 
-Jika \textsc{ReVerb} memperbaiki masalah pada ekstraksi relasi, \textsc{R2A2} berfokus untuk memperbaiki ekstraksi argumen/entitas \citep{etzioni2011open}. Jika \textsc{ReVerb} hanya menggunakan aturan atau heuristik untuk mengekstraksi argumen \citep{fader2011identifying}, \textsc{R2A2} menggunakan modul berbasis \textit{machine learning}, \textsc{ArgLearner}. Modul ini menerima relasi dan kalimat sebagai \textit{input} dan mengembalikan dua buah argumen sebagai \textit{output}. Modul ini menggunakan tiga buah \textit{classifier} berbasiskan \textsc{REPTree} \citep{hall2009weka} dan \textit{sequence labeling} CRF \citep{mccallum2002mallet} untuk mengekstrak argumen dari kalimat melalui proses yang ditunjukkan pada Gambar \ref{fig_arglearner_architecture} \citep{etzioni2011open}.
+Jika \textsc{ReVerb} memperbaiki masalah pada ekstraksi relasi, \textsc{R2A2} berfokus untuk memperbaiki ekstraksi argumen/entitas \citep{etzioni2011open}. Jika \textsc{ReVerb} hanya menggunakan aturan atau heuristik untuk mengekstraksi argumen \citep{fader2011identifying}, \textsc{R2A2} menggunakan modul berbasis \textit{machine learning}, \textsc{ArgLearner}. Modul ini menerima relasi dan kalimat sebagai \textit{input} dan mengembalikan dua buah argumen sebagai \textit{output}. Modul ini menggunakan tiga buah \textit{classifier} berbasiskan \textsc{REPTree} \citep{hall2009weka} dan \textit{sequence labeling} CRF \citep{mccallum2002mallet} untuk mengekstrak argumen dari kalimat melalui proses yang ditunjukkan pada Gambar \ref{fig:arglearner_architecture} \citep{etzioni2011open}.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{../images/arglearner_architecture.png}
 \caption{Proses pelatihan dan ekstraksi \textsc{ArgLearner}}
-\label{fig_arglearner_architecture}
+\label{fig:arglearner_architecture}
 \end{figure}
 
-Penelitian berikutnya memperkenalkan \textsc{Ollie} (\textit{Open Language Learning for Information Extraction}) \citep{schmitz2012open} yang menjadikan \textsc{ReVerb} sebagai salah satu modulnya. \textsc{Ollie} menggunakan \textsc{ReVerb} untuk mencari sejumlah (\textit{open pattern})/\textit{template} sebagai panduan untuk mengekstrak \textit{triple} dari kalimat. Perbedaan lain sistem ini dengan pendahulunya adalah relasi yang diekstrak tidak hanya dari kata kerja (\textit{verb}) tetapi bisa juga diekstrak secara implisit dari kata benda (\textit{noun}), kata sifat (\textit{adjective}) \citep{schmitz2012open}. Selain itu \textsc{Ollie} juga menambahkan modul untuk melakukan analisis dan penambahan informasi kontekstual pada hasil ekstraksi sehingga presisi lebih tinggi. Dua modul utama ini diajukan untuk memperbaiki kekurangan dari \textsc{ReVerb} yaitu pembatasan relasi hanya pada kata kerja (\textit{verb}) dan pengabaian konteks kalimat \citep{schmitz2012open}. Proses pelabelan (\textit{labeling}) data latih dan ekstraksi \textsc{Ollie} ditunjukkan pada Gambar \ref{fig_ollie_architecture}.
+Penelitian berikutnya memperkenalkan \textsc{Ollie} (\textit{Open Language Learning for Information Extraction}) \citep{schmitz2012open} yang menjadikan \textsc{ReVerb} sebagai salah satu modulnya. \textsc{Ollie} menggunakan \textsc{ReVerb} untuk mencari sejumlah (\textit{open pattern})/\textit{template} sebagai panduan untuk mengekstrak \textit{triple} dari kalimat. Perbedaan lain sistem ini dengan pendahulunya adalah relasi yang diekstrak tidak hanya dari kata kerja (\textit{verb}) tetapi bisa juga diekstrak secara implisit dari kata benda (\textit{noun}), kata sifat (\textit{adjective}) \citep{schmitz2012open}. Selain itu \textsc{Ollie} juga menambahkan modul untuk melakukan analisis dan penambahan informasi kontekstual pada hasil ekstraksi sehingga presisi lebih tinggi. Dua modul utama ini diajukan untuk memperbaiki kekurangan dari \textsc{ReVerb} yaitu pembatasan relasi hanya pada kata kerja (\textit{verb}) dan pengabaian konteks kalimat \citep{schmitz2012open}. Proses pelabelan (\textit{labeling}) data latih dan ekstraksi \textsc{Ollie} ditunjukkan pada Gambar \ref{fig:ollie_architecture}.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{../images/ollie_architecture.png}
 \caption{Proses \textit{labeling} dan ekstraksi pada \textsc{Ollie}}
-\label{fig_ollie_architecture}
+\label{fig:ollie_architecture}
 \end{figure}
 
 Salah satu riset terbaru memperkenalkan model sistem \textit{open IE} yang mengganti penggunaan banyak \textit{open pattern}/\textit{template} untuk mengekstrak \textit{triple} pada \textsc{Ollie} \citep{schmitz2012open} dengan hanya enam pola atomik (\textit{atomic patterns}) \citep{angeli2015leveraging}. Enam pola atomik itu digunakan untuk mengekstrak \textit{triple} dari klausa yang \textit{self-contained} dan \textit{maximally compact}. Modul ekstraktor \textit{inter-clauses}, yang menggunakan \textit{multinomial logistic regression classifier}, bertanggungjawab menghasilkan klausa yang \textit{self-contained} (independen secara sintaktik dan semantik), dan modul ekstraktor \textit{intra-clause}, yang menggunakan model \textit{natural logic} \citep{maccartney2007natural}, mengubahnya menjadi klausa yang \textit{maximally compact} (tidak mengandung kata redundan). Model sistem ini diimplementasikan dalam \textsc{Stanford Open IE}, yang merupakan bagian dari kakas NLP \textit{opensource}, \textit{Stanford Core NLP}\footnote{Stanford Core NLP \url{https://stanfordnlp.github.io/CoreNLP/}}.
@@ -76,7 +76,7 @@ Pemrosesan bahasa natural atau \textit{natural language processing} (NLP) tidak 
 
 \subsection{\textit{Part of Speech Tagging}}
 
-\textit{Part of speech} (POS) \textit{tagging} adalah \textit{task} NLP yang bertujuan menentukan \textit{POS tag} atau jenis setiap kata pada kalimat \citep{jurafsky2000speech}. Contoh \textit{POS tag} dasar adalah kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}) dst. Gambar \ref{fig_example_pos_tagging} menunjukkan contoh \textit{POS tagging} terhadap kalimat sederhana. \textit{POS tag} dapat digunakan juga oleh \textit{NLP task} yang lain seperti \textit{dependency parsing} dan \textit{named-entity recognition}.
+\textit{Part of speech} (POS) \textit{tagging} adalah \textit{task} NLP yang bertujuan menentukan \textit{POS tag} atau jenis setiap kata pada kalimat \citep{jurafsky2000speech}. Contoh \textit{POS tag} dasar adalah kata benda (\textit{noun}), kata kerja (\textit{verb}), kata sifat (\textit{adjective}) dst. Gambar \ref{fig:example_pos_tagging} menunjukkan contoh \textit{POS tagging} terhadap kalimat sederhana. \textit{POS tag} dapat digunakan juga oleh \textit{NLP task} yang lain seperti \textit{dependency parsing} dan \textit{named-entity recognition}.
 
 \begin{figure}
 	\begin{mdframed}
@@ -84,7 +84,7 @@ Pemrosesan bahasa natural atau \textit{natural language processing} (NLP) tidak 
 		\textbf{Output}: (Ibu, \textit{noun}) (pergi, \textit{verb}) (ke, \textit{preposition}) (pasar, \textit{noun}) (., \textit{punctuation})
 	\end{mdframed}
 	\caption{Contoh \textit{input} dan \textit{output} \textit{POS tagging}}
-	\label{fig_example_pos_tagging}
+	\label{fig:example_pos_tagging}
 \end{figure}
 
 Algoritma \textit{POS tagging} umumnya dapat dikelompokkan menjadi dua: berbasis aturan (\textit{rule-based}) dan berbasis stokastik (\textit{stochastic-based}) \citep{jurafsky2000speech}. Salah satu algoritma yang menjadi \textit{state-of-the-art} adalah \textit{maximum-entropy-based POS tagger} (berbasis stokastik) yaitu \textit{tagger} yang mempelajari model probabilitas kondisional \textit{log-linear} (\textit{logistic regression}) menggunakan metode \textit{maximum entropy}.
@@ -110,7 +110,7 @@ Algoritma \textit{POS tagging} umumnya dapat dikelompokkan menjadi dua: berbasis
 		\textbf{Output}: (Ibu) (Budi, \textit{Person}) (tinggal) (di) (Solo, \textit{Location}) (.)
 	\end{mdframed}
 	\caption{Contoh \textit{input} dan \textit{output} NER}
-	\label{fig_example_ner}
+	\label{fig:example_ner}
 \end{figure}
 
 \subsection{\textit{Dependency Parsing}}
@@ -192,19 +192,79 @@ Sementara himpunan \textit{dependency relation} yang dipakai adalah:
 \section{\textit{Supervised Learning}}
 %-----------------------------------------------------------------------------%
 
-\textit{Supervised learning} adalah algoritma yang data melakukan klasifikasi data dengan mempelajari pola data lain yang sudah diketahui kelasnya. Contoh algoritma \textit{supervised learning} di antaranya adalah \textit{logistic regression}, \textit{support vector machine}, \textit{multi-layer perceptron} dan \textit{random forest}. Untuk mengevaluasi kinerja dari algoritma \textit{supervised learning} dilakukan proses validasi silang (\textit{cross validation}) menggunakan data yang sudah diketahui kelasnya.
+\textit{Supervised learning} adalah teknik \textit{machine learning} yang mempelajari pola dari data yang telah diberi label atau dikelompokkan \citep{mohri2012foundations}. Metode \textit{supervised learning} dapat dibagi menjadi dua, yaitu deskriptif (\textit{descriptive learning}) dan generatif (\textit{generative learning}). Pada \textit{descriptive learning} mencari fungsi untuk memetakan data $x$ ke label $y$ atau probabilitas posterior (\textit{posterior probability}) $p(y|x)$ (contoh: \textit{logistic regression}, \textit{support vector machine}, \textit{multi-layer perceptron}, dsb.) sedangkan \textit{generative learning} mencari probabilitas gabungan (\textit{joint probability}) $p(x,y)$ lebih dulu sebelum menggunakan \textit{Bayes Rules} untuk menghitung $p(y|x)$ (contoh: \textit{naive bayes classifier}, \textit{decision tree}, dsb.) \citep{ng2002discriminative}. Untuk mengevaluasi kinerja dari algoritma \textit{supervised learning} dilakukan proses validasi silang (\textit{cross validation}) menggunakan data yang sudah diketahui kelasnya. Penelitian ini membandingkan empat buah model klasifikasi biner yang dihasilkan oleh metode-metode berikut:
 
 \subsection{\textit{Logistic Regression}}
 
-\lipsum[4]
+\textit{Logistic regression} adalah metode pemodelan deskriptif yang mencari fungsi hipotesis yang memetakan data $x$ ke kelas $y$ yang dapat dipisahkan fungsi logistik/\textit{sigmoid} (\ref{eq:logistic_function}) sesuai kelasnya $\{0,1\}$ \citep{theodoridis2015machine} seperti visualisasi pada Gambar \ref{fig:logreg}. Fungsi hipotesis dihasilkan dengan mencari bobot $\theta$ yang dapat meminimumkan \textit{cost function} (\ref{eq:logreg_cost_function}) menggunakan algoritma \textit{gradient descent}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{../images/logreg.png}
+\caption{Contoh hasil pemetaan (titik merah dan biru) fungsi \textit{logistic regression} dari fitur $x$ ke kelas $y$ yang dapat dipisahkan oleh fungsi logistik/\textit{sigmoid} (garis hijau) (sumber: \url{https://florianhartl.com})}
+\label{fig:logreg}
+\end{figure}
+
+
+\noindent \begin{align}\label{eq:logistic_function}
+	\sigma(t) = {\frac {1}{1+e^{-t}}} \\[0.2cm]
+	\textrm{di mana $t$ adalah fungsi hipotesis, } t = \theta^{T}x \nonumber 
+\end{align}
+
+\noindent \begin{align}\label{eq:logreg_cost_function}
+	L(\theta) = - \sum_{n=1}^{N} \, (y_{n} \ln \sigma(t) \, + \, (1 - y_{n}) \ln (1 - \sigma(t)))
+\end{align}
+
+\noindent \begin{align}\label{eq:gradient_descent}
+	\theta_{j} &= \theta_{j} - \alpha \frac{\partial}{\partial \theta_{j}} L(\theta) \\ \nonumber 
+	di mana, \theta &= \textrm{bobot} \\ \nonumber 
+			 \alpha &= \textit{learning rate} \\ \nonumber 		 
+\end{align}
+
 
 \subsection{\textit{Support Vector Machine}}
 
-\lipsum[5]
+\textit{Support vector machine} (SVM) merupakan pemodelan yang mencari fungsi \textit{hyperplane} yang memisahkan data sesuai kelasnya dengan menggunakan \textit{decision boundary} yang memiliki jarak optimal dengan \textit{hyperplane} \citep{theodoridis2015machine} seperti pada Gambar \ref{fig:svm}. Untuk memisahkan data yang tidak terpisahkan secara linier (\textit{non-linearly separable}), dapat digunakan fungsi \textit{kernel} untuk memetakan data sehingga bisa bisa dipisahkan secara linier. Salah satu fungsi \textit{kernel} yang umum digunakan pada \textit{task} NLP adalah \textit{kernel} polinomial (\ref{eq:poly_kernel}) \citep{joachims1998text}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{../images/svm.png}
+\caption{Contoh fungsi linier (garis hijau) dari SVM yang memisahkan dua kelompok data dua dimensi (titik merah dan biru) menggunakan dua \textit{support vector} (sumber: \url{https://florianhartl.com})}
+\label{fig:svm}
+\end{figure}
+
+\noindent \begin{align} \label{eq:poly_kernel}
+K(x,y) &= (x^\mathsf{T} y + c)^{d} \\ \nonumber
+\textrm{di mana, } x &= \textrm{data atau fitur, } \\ \nonumber 
+	y &= \textrm{kelas atau label, } \\ \nonumber
+	d &= \textrm{derajat polinomial, } \\ \nonumber 
+	c &= \textrm{konstanta} \\ \nonumber 
+\end{align}
+
+%\noindent \begin{align} \label{eq:cost_function}
+%f(c_{1}\ldots c_{n}) &= \sum _{i=1}^{n}c_{i}-{\frac {1}{2}}\sum _{i=1}^{n}\sum _{j=1}^{n}y_{i} \, c_{i} \, K({\vec {x}}_{i},{\vec {x}}_{j})y_{j}c_{j} \\ \nonumber 
+%& \text{di mana, } \sum _{i=1}^{n}c_{i}y_{i} = 0,\,\text{dan }0\leq c_{i}\leq {\frac {1}{2n\lambda }}\; \text{untuk semua }i. \\ \nonumber 
+%\end{align}
 
 \subsection{\textit{Multi-Layer Perceptron}}
 
-\lipsum[6]
+\textit{Multi-Layer Perceptron} (MLP) atau \textit{feed-forward neural network} adalah pemodelan klasifikasi nonlinier berbasiskan jaringan syaraf tiruan (\textit{perceptron}) yang memiliki lebih dari satu \textit{hidden layer} yang berisi sejumlah neuron \citep{theodoridis2015machine} seperti yang divisualisasikan pada Gambar \ref{fig:mlp}. Nilai \textit{output} dari suatu neuron ditentukan oleh \textit{input} $x$, bobot (\textit{weight}) $w$, \textit{bias} $b$ dan fungsi aktivasi $f$, $o(\vec{x}) = f(\vec{w} \cdot \vec{x} + \vec{b})$ \citep{mitchell1997machine}. Contoh fungsi aktivasi yang bisa digunakan \citep{mitchell1997machine} adalah:
+
+\begin{enumerate}
+	\item Fungsi \textit{sign} : $ f(x) = 1 \; \textrm{if} \; x > 0 \; \textrm{selain itu} -1 $
+	\item Fungsi \textit{sigmoid/logistic} : $ f(x)={\frac {1}{1+e^{-x}}} $
+	\item Fungsi \textit{tanh}: $ f(x)=\tanh(x)={\frac {2}{1+e^{-2x}}}-1 $
+	\item Fungsi \textit{rectifier}: $ f(x)=\max(0,x) \citep{nair2010rectified} $
+\end{enumerate}
+
+MLP dilatih dengan menggunakan algoritma \textit{backpropagation} dan \textit{gradient descent} \citep{mitchell1997machine}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{../images/mlp.png}
+\caption{Visualisasi MLP dengan \textit{input layer} \{$x_1, x_2$\}, dua \textit{hidden layer} \{\{$y_1, y_2, y_3$\}, \{$z_1, z_2$\}\} dan satu \textit{output layer} \{$y$\}}
+\label{fig:mlp}
+\end{figure}
 
 \subsection{\textit{Random Forest}}
 
