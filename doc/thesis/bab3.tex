@@ -227,3 +227,24 @@ Instead of using lightweight noun phrase chunker \citep{banko2007open}, our syst
 \end{table}
 
 During the label step, token expander is used to make manual annotation process easier. We label a triple candidate as valid only if it makes sense after being expanded to clause. For example, \textit{(Sembungan, terletak, kecamatan)} doesn't seem to make sense before expanded to \textit{(Sembungan, terletak di, kecamatan Kejajar)}.
+
+%-----------------------------------------------------------------------------%
+\section{Pengumpulan dan Pengolahan Data}
+%-----------------------------------------------------------------------------%
+
+
+Kamus lemma \url{https://github.com/davidchristiandy/lemmatizer} (5,638 kata uji)
+
+Dataset POS tagging \url{https://github.com/UniversalDependencies/UD_Indonesian} (5,036 kalimat latih + 559 kalimat uji)
+
+Dataset NER Kelas NLP Fasilkom, UI, 2016 \url{https://github.com/yohanesgultom/knowledge-extractor-id} (1,700 kalimat latih  + 426 kalimat uji, 3 kelas entitas: Person, Organization, Location) \url{https://github.com/yusufsyaifudin/indonesia-ner} (1,835 kalimat latih, 5 kelas entitas: Person, Organization, Location, Quantity, Time)
+
+Dataset Dependency parsing \url{https://github.com/UniversalDependencies/UD_Indonesian} (5,036 kalimat latih + 559 kalimat uji)
+
+Dataset triple selector, anotasi manual dari sebagian dataset dependency parsing
+
+%-----------------------------------------------------------------------------%
+\section{Teknik Evaluasi}
+%-----------------------------------------------------------------------------%
+
+Untuk mengevaluasi kinerja dari algoritma \textit{supervised learning} dilakukan proses validasi silang (\textit{cross validation}) menggunakan data yang sudah diketahui kelasnya.

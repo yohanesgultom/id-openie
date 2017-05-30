@@ -192,7 +192,7 @@ Sementara himpunan \textit{dependency relation} yang dipakai adalah:
 \section{\textit{Supervised Learning}}
 %-----------------------------------------------------------------------------%
 
-\textit{Supervised learning} adalah teknik \textit{machine learning} yang mempelajari pola dari data yang telah diberi label atau dikelompokkan \citep{mohri2012foundations}. Metode \textit{supervised learning} dapat dibagi menjadi dua, yaitu deskriptif (\textit{descriptive learning}) dan generatif (\textit{generative learning}). Pada \textit{descriptive learning} mencari fungsi untuk memetakan data $x$ ke label $y$ atau probabilitas posterior (\textit{posterior probability}) $p(y|x)$ (contoh: \textit{logistic regression}, \textit{support vector machine}, \textit{multi-layer perceptron}, dsb.) sedangkan \textit{generative learning} mencari probabilitas gabungan (\textit{joint probability}) $p(x,y)$ lebih dulu sebelum menggunakan \textit{Bayes Rules} untuk menghitung $p(y|x)$ (contoh: \textit{naive bayes classifier}, \textit{decision tree}, dsb.) \citep{ng2002discriminative}. Untuk mengevaluasi kinerja dari algoritma \textit{supervised learning} dilakukan proses validasi silang (\textit{cross validation}) menggunakan data yang sudah diketahui kelasnya. Penelitian ini membandingkan empat buah model klasifikasi biner yang dihasilkan oleh metode-metode berikut:
+\textit{Supervised learning} adalah teknik \textit{machine learning} yang mempelajari pola dari data yang telah diberi label atau dikelompokkan \citep{mohri2012foundations}. Metode \textit{supervised learning} dapat dibagi menjadi dua, yaitu deskriptif (\textit{descriptive learning}) dan generatif (\textit{generative learning}). Pada \textit{descriptive learning} mencari fungsi untuk memetakan data $x$ ke label $y$ atau probabilitas posterior (\textit{posterior probability}) $p(y|x)$ (contoh: \textit{logistic regression}, \textit{support vector machine}, \textit{multi-layer perceptron}, dsb.) sedangkan \textit{generative learning} mencari probabilitas gabungan (\textit{joint probability}) $p(x,y)$ lebih dulu sebelum menggunakan \textit{Bayes Rules} untuk menghitung $p(y|x)$ (contoh: \textit{naive bayes classifier}, \textit{decision tree}, dsb.) \citep{ng2002discriminative}. Penelitian ini membandingkan empat buah model klasifikasi biner yang dihasilkan oleh metode-metode berikut:
 
 \subsection{\textit{Logistic Regression}}
 
@@ -257,19 +257,22 @@ K(x,y) &= (x^\mathsf{T} y + c)^{d} \\ \nonumber
 	\item Fungsi \textit{rectifier}: $ f(x)=\max(0,x) \citep{nair2010rectified} $
 \end{enumerate}
 
-MLP dilatih dengan menggunakan algoritma \textit{backpropagation} dan \textit{gradient descent} \citep{mitchell1997machine}.
+MLP dilatih dengan menyesuaikan bobot secara iteratif menggunakan algoritma \textit{gradient descent} dan \textit{backpropagation} \citep{theodoridis2015machine}.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.5]{../images/mlp.png}
-\caption{Visualisasi MLP dengan \textit{input layer} \{$x_1, x_2$\}, dua \textit{hidden layer} \{\{$y_1, y_2, y_3$\}, \{$z_1, z_2$\}\} dan satu \textit{output layer} \{$y$\}}
+\caption{Visualisasi MLP dengan \textit{input layer} \{$x_1, x_2$\}, dua \textit{hidden layer} \{\{$y_1, y_2, y_3$\}, \{$z_1, z_2$\}\} dan satu \textit{output layer} \{$y$\} (sumber: \cite{theodoridis2015machine})}
 \label{fig:mlp}
 \end{figure}
 
 \subsection{\textit{Random Forest}}
 
-\lipsum[7]
+\textit{Random forest} adalah metode \textit{bagging} lebih dari satu varian \textit{decision tree} (\textit{forest}) dengan pemilihan fitur yang acak (\textit{random}) \citep{breiman2001random}. \textit{Bagging} sendiri adalah metode klasifikasi berdasarkan voting lebih dari satu varian \textit{classifier} dengan tujuan meningkatkan kemampuan generalisasi \citep{breiman1996bagging}. Sedangkan \textit{decision tree} adalah pemodelan klasifikasi generatif yang membangun serangkaian tes terhadap data/fitur untuk menolak kemungkinan kelas sampai hanya tersisa satu kelas \citep{theodoridis2015machine}. Visualisi \textit{random forest} ditunjukkan pada Gambar \ref{fig:random-forest}.
 
-\subsection{\textit{Cross Validation}}
-
-\lipsum[8]
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{../images/random-forest.png}
+\caption{Visualisasi \textit{random forest} yang memprediksi kelas $k$ untuk data $x$ berdasarkan voting hasil klasifikasi setiap \textit{tree} $\{k_1, k_2, .., k_b\}$ (sumber: \url{http://wwww.scirp.org})}
+\label{fig:random-forest}
+\end{figure}
