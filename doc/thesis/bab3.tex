@@ -1,26 +1,55 @@
 %-----------------------------------------------------------------------------%
 \chapter{\babTiga}
+\label{chap:babTiga}
 %-----------------------------------------------------------------------------%
 
-Pada bab ini dijelaskan mengenai tahapan, rancangan \& implementasi sistem, pengumpulan \& pengolahan data dan teknik evaluasi yang digunakan pada penelitian ini.
+Pada bab ini dijelaskan mengenai tahapan penelitian, seperti yang ditunjukkan pada Tabel \ref{tab:tahapan_penelitian}, yang meliputi studi literatur, perancangan dan implementasi sistem, pengumpulan data serta evaluasi dan analisis.
+
+\begin{table}
+\centering
+\caption{Tahapan penelitian}
+\label{tab:tahapan_penelitian}
+\begin{tabular}{p{3.5cm} p{4.5cm} p{4.5cm}}
+\hline
+\textbf{Tahapan} & \textbf{Alat} & \textbf{Hasil} \\
+\hline
+Studi literatur & Mesin pencari buku dan jurnal elektronik & Latar belakang masalah, rumusan masalah, rangkuman penelitian terkait dan ide rancangan sistem \\
+\hline
+Perancangan dan pengimplentasian sistem & Java, Python, Git, editor kode & Sistem Open IE \\
+\hline
+Pengumpulan data & Python, Java & Dataset dan model \textit{classifier} \\
+\hline
+Evaluasi dan analisis & Python & Tabel hasil, diagram hasil, kesimpulan dan saran \\
+\hline
+\end{tabular}
+\end{table}
 
 %-----------------------------------------------------------------------------%
-\section{Tahapan Penelitian}
+\section{Studi Literatur}
 %-----------------------------------------------------------------------------%
 
-\lipsum[1-2]
+Pada tahap ini \saya~mengumpulkan dan menelaah dokumen ilmiah seperti \textit{paper} dan artikel elektronik terkait \textit{open IE} untuk memahami topik ini secara lebih mendalam dan mengetahui pencapaian penelitian-penelitian terkait. Pencarian dilakukan digunakan menggunakan mesin pencari\footnote{Database Jurnal Universitas Indonesia \url{http://remote-lib.ui.ac.id}}\footnote{Google Scholar \url{https://scholar.google.co.id/}} jurnal dan artikel ilmiah elektronik nasional dan internasional. Hasil penelaahan ini berupa latar belakang dan rumusan masalah yang dituangkan pada bab \ref{chap:babSatu}, rangkuman dan perbandingan sistem \textit{open IE} pada bab \ref{chap:babDua}, serta ide rancangan sistem \textit{open IE} untuk bahasa Indonesia yang akan dijelaskan pada subbab berikutnya.
 
 %-----------------------------------------------------------------------------%
 \section{Rancangan dan Implementasi Sistem}
 %-----------------------------------------------------------------------------%
 
-As shown in the flowchart Figure \ref{fig_program_flowchart}, our system is composed of four main components: \textbf{NLP pipeline}, \textbf{triple candidate generator}, \textbf{triple selector} and \textbf{token expander}. Each of them are explained further in following subsections.
+As shown in the flowchart Figure \ref{fig:program_flowchart}, our system is composed of four main components: \textbf{NLP pipeline}, \textbf{triple candidate generator}, \textbf{triple selector} and \textbf{token expander}. Each of them are explained further in following subsections.
+
+Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia yang mengadaptasi beberapa teknik pada sistem \textit{open IE} pada penelitian terkait. Rancangan sistem ini berisi empat modul utama, seperti yang ditunjukkan pada Gambar \ref{fig:program_flowchart}, yaitu \textbf{NLP pipeline}, \textbf{triple candidate generator}, \textbf{triple selector} dan \textbf{token expander}. Terdapat tiga fase atau langkah untuk melakukan ekstraksi \textit{triple} menggunakan sistem ini:
+
+\begin{enumerate}
+	\item Label (\textit{label}): membangun data latih untuk untuk \textit{triple selector} dengan menganotasi manual hasil ekstraksi dari \textit{triple candidate generator}
+	\item Belajar (\textit{learn}): melatih \textit{classifier} untuk mengekstrak himpunan \textit{triple} dari kalimat menggunakan data dari fase Label.
+	\item Ekstrak (\textit{extract}): mengekstrak himpunan \textit{triple} dari kalimat menggunakan \textit{classifier} yang telah dilatih pada fase Belajar
+\end{enumerate}
+
 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{../images/program_flowchart.png}
 \caption{Indonesian open domain information extraction flowchart}
-\label{fig_program_flowchart}
+\label{fig:program_flowchart}
 \end{figure}
 
 \subsection{NLP Pipeline}
@@ -56,22 +85,22 @@ We relied on Stanford NLP \verb|nndep.DependencyParser| \citep{chen2014fast}, to
 
 \end{enumerate}
 
-The output of the pipeline is a CONLL-U document containing annotated sentence such as Figure \ref{fig_conllu_example}. The document becomes an input for next model, the triple candidate generator which is described in Section \ref{Triple Candidates Generator}. Since the annotations that are directly used by following process are POS tag, named entity and dependency relation, we estimate that the accuracy of this NLP pipeline is \textbf{65.30\%} which comes from the average of POS tagger sentence accuracy, NER F1-score (in percent) and dependency parser LAS. Additionally, this pipeline is built by extending Stanford Core NLP classes and packaged as single Java program (JAR) to improve reusability.
+The output of the pipeline is a CONLL-U document containing annotated sentence such as Figure \ref{fig:conllu_example}. The document becomes an input for next model, the triple candidate generator which is described in Section \ref{Triple Candidate Generator}. Since the annotations that are directly used by following process are POS tag, named entity and dependency relation, we estimate that the accuracy of this NLP pipeline is \textbf{65.30\%} which comes from the average of POS tagger sentence accuracy, NER F1-score (in percent) and dependency parser LAS. Additionally, this pipeline is built by extending Stanford Core NLP classes and packaged as single Java program (JAR) to improve reusability.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.35]{../images/conllu_example.png}
 \caption{Example of CONLL-U sentence annotation format}
-\label{fig_conllu_example}
+\label{fig:conllu_example}
 \end{figure}
 
-\subsection{Triple Candidates Generator} \label{Triple Candidates Generator}
+\subsection{Triple Candidate Generator} \label{Triple Candidate Generator}
 
 % Similar to TextRunner Self-Supervised Learner but doesn't automatically label triples
 
-Triple candidates generator is used to extract relation triples candidates from CONLL-U document produced by NLP pipeline. It uses a set of rules listed in Table \ref{table_triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner \citep{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
+Triple candidate generator is used to extract relation triples candidates from CONLL-U document produced by NLP pipeline. It uses a set of rules listed in Table \ref{tab:triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner \citep{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
 
-For example, applying the rules to an annotated sentence in Figure \ref{fig_conllu_example} will generate these 17 triples candidates where only five of them are valid triples (check-marked):
+For example, applying the rules to an annotated sentence in Figure \ref{fig:conllu_example} will generate these 17 triples candidates where only five of them are valid triples (check-marked):
 
 \begin{itemize}
 \item (Sembungan, adalah, desa) \ding{51}
@@ -93,15 +122,15 @@ For example, applying the rules to an annotated sentence in Figure \ref{fig_conl
 \item (desa, terletak, Indonesia)
 \end{itemize}
 
-In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually label \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
+In order to build a training data for the triple selector, we used triple candidate generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually label \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
 
-During the extraction step, triple candidates generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}).
+During the extraction step, triple candidate generator is used in the system to extract unlabeled candidates from CONLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig:program_flowchart}).
 
 % Triple candidate generation rules
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
 \caption{Triple candidate generation rules}
-\label{table_triple_candidate_generation_rules}
+\label{tab:triple_candidate_generation_rules}
 \centering
 \begin{tabular}{l p{6cm}}
 \hline
@@ -126,7 +155,7 @@ Object & Token's position is after Subject and Predicate \\
 
 \subsection{Triple Selector}  \label{Triple Selector}
 
-Triple selector is a machine learning classifier trained using manually labeled dataset of valid and invalid relation triples. For example, given the input of 17 candidates in Section \ref{Triple Candidates Generator}, the selector will label the five check-marked triples as true and label the rest as false.
+Triple selector is a machine learning classifier trained using manually labeled dataset of valid and invalid relation triples. For example, given the input of 17 candidates in Section \ref{Triple Candidate Generator}, the selector will label the five check-marked triples as true and label the rest as false.
 
 We use Random Forest \citep{breiman2001random}, an ensemble methods that aggregate classification results from multiple decision trees, as the model for the classifier. We use the Scikit-Learn\footnote{scikit-learn: machine learning in Python \url{http://scikit-learn.org}} implementation of Random Forest with following configuration:
 
@@ -139,14 +168,14 @@ We use Random Forest \citep{breiman2001random}, an ensemble methods that aggrega
 \item Class weight: balanced (prediction probability is multiplied by the ratio of training samples)
 \end{itemize}
 
-We discover the configuration by using Grid Search \citep{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidates Generator}. 
+We discover the configuration by using Grid Search \citep{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidate Generator}. 
 
-We extract 17 features described in Table \ref{table_models_features} from each triple candidates. These features are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb \citep{banko2007open} \citep{etzioni2011open}. Every nominal features are also encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
+We extract 17 features described in Table \ref{tab:models_features} from each triple candidates. These features are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb \citep{banko2007open} \citep{etzioni2011open}. Every nominal features are also encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
 
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
 \caption{Triple selector features}
-\label{table_models_features}
+\label{tab:models_features}
 \centering
 \begin{tabular}{r l}
 \hline
@@ -176,7 +205,7 @@ During the train step, we use the dataset to train triple selector and save the 
 
 \subsection{Token Expander}
 
-Instead of using lightweight noun phrase chunker \citep{banko2007open}, our system uses rule-based token expander to extract relation or argument clauses. While having different objective and approach, this token expander works similarly to Clause Selector in Stanford Open IE \citep{angeli2015leveraging} where the algorithm starts from a token then decides whether to expand to its dependents. Instead of using machine learning model like Clause Selector, it uses simple heuristics based on syntactical features (POS tag, dependency relation and named-entity) described in Table \ref{table_token_expansion_rules_s_o} and Table \ref{table_token_expansion_rules_p} to determine whether to: (1) expand a token to its dependent, (2) ignore the dependent or (3) remove the token itself. For example, token expander will expand check-marked triples in Section \ref{Triple Candidates Generator} into:
+Instead of using lightweight noun phrase chunker \citep{banko2007open}, our system uses rule-based token expander to extract relation or argument clauses. While having different objective and approach, this token expander works similarly to Clause Selector in Stanford Open IE \citep{angeli2015leveraging} where the algorithm starts from a token then decides whether to expand to its dependents. Instead of using machine learning model like Clause Selector, it uses simple heuristics based on syntactical features (POS tag, dependency relation and named-entity) described in Table \ref{tab:token_expansion_rules_s_o} and Table \ref{tab:token_expansion_rules_p} to determine whether to: (1) expand a token to its dependent, (2) ignore the dependent or (3) remove the token itself. For example, token expander will expand check-marked triples in Section \ref{Triple Candidate Generator} into:
 
 \begin{itemize}
 \item (Sembungan, adalah, desa)
@@ -190,7 +219,7 @@ Instead of using lightweight noun phrase chunker \citep{banko2007open}, our syst
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
 \caption{Token expansion rules for Subject or Object token}
-\label{table_token_expansion_rules_s_o}
+\label{tab:token_expansion_rules_s_o}
 \centering
 \begin{tabular}{r p{6cm} l}
 \hline
@@ -214,7 +243,7 @@ Instead of using lightweight noun phrase chunker \citep{banko2007open}, our syst
 \begin{table}[!t]
 \renewcommand{\arraystretch}{1.5}
 \caption{Token expansion rules for Predicate token}
-\label{table_token_expansion_rules_p}
+\label{tab:token_expansion_rules_p}
 \centering
 \begin{tabular}{r p{6cm} l}
 \hline
@@ -229,7 +258,7 @@ Instead of using lightweight noun phrase chunker \citep{banko2007open}, our syst
 During the label step, token expander is used to make manual annotation process easier. We label a triple candidate as valid only if it makes sense after being expanded to clause. For example, \textit{(Sembungan, terletak, kecamatan)} doesn't seem to make sense before expanded to \textit{(Sembungan, terletak di, kecamatan Kejajar)}.
 
 %-----------------------------------------------------------------------------%
-\section{Pengumpulan dan Pengolahan Data}
+\section{Pengumpulan Data}
 %-----------------------------------------------------------------------------%
 
 
@@ -244,7 +273,7 @@ Dataset Dependency parsing \url{https://github.com/UniversalDependencies/UD_Indo
 Dataset triple selector, anotasi manual dari sebagian dataset dependency parsing
 
 %-----------------------------------------------------------------------------%
-\section{Teknik Evaluasi}
+\section{Evaluasi dan Analisis}
 %-----------------------------------------------------------------------------%
 
 Untuk mengevaluasi kinerja dari algoritma \textit{supervised learning} dilakukan proses validasi silang (\textit{cross validation}) menggunakan data yang sudah diketahui kelasnya.

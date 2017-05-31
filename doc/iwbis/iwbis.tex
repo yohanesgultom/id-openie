@@ -272,7 +272,7 @@ We relied on Stanford NLP \verb|nndep.DependencyParser|\cite{chen2014fast}, to a
 
 \end{enumerate}
 
-The output of the pipeline is a CoNLL-U document containing annotated sentence such as Figure \ref{fig_conllu_example}. The document becomes an input for next model, the triple candidate generator which is described in Section \ref{Triple Candidates Generator}. Since the annotations that are directly used by following process are POS tag, named entity and dependency relation, we estimate that the accuracy of this NLP pipeline is \textbf{65.30\%} which comes from the average of POS tagger sentence accuracy, NER F1-score (in percent) and dependency parser LAS. Additionally, this pipeline is built by extending Stanford Core NLP classes and packaged as single Java program (JAR) to improve reusability.
+The output of the pipeline is a CoNLL-U document containing annotated sentence such as Figure \ref{fig_conllu_example}. The document becomes an input for next model, the triple candidate generator which is described in Section \ref{Triple Candidate Generator}. Since the annotations that are directly used by following process are POS tag, named entity and dependency relation, we estimate that the accuracy of this NLP pipeline is \textbf{65.30\%} which comes from the average of POS tagger sentence accuracy, NER F1-score (in percent) and dependency parser LAS. Additionally, this pipeline is built by extending Stanford Core NLP classes and packaged as single Java program (JAR) to improve reusability.
 
 \begin{figure}
 \centering
@@ -281,11 +281,11 @@ The output of the pipeline is a CoNLL-U document containing annotated sentence s
 \label{fig_conllu_example}
 \end{figure}
 
-\subsection{Triple Candidates Generator} \label{Triple Candidates Generator}
+\subsection{Triple Candidate Generator} \label{Triple Candidate Generator}
 
 % Similar to TextRunner Self-Supervised Learner but doesn't automatically label triples
 
-Triple candidates generator is used to extract relation triples candidates from CoNLL-U document produced by NLP pipeline. It uses a set of rules listed in Table \ref{table_triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner\cite{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
+Triple candidate generator is used to extract relation triples candidates from CoNLL-U document produced by NLP pipeline. It uses a set of rules listed in Table \ref{table_triple_candidate_generation_rules} to extract relations (predicates) and arguments (subjects and predicates) from the sentence. The results of triples extraction are not always the positive or valid relation triples so, unlike TextRunner\cite{banko2007open}, we cannot use them directly as training data for triple selector/classifier.
 
 For example, applying the rules to an annotated sentence in Figure \ref{fig_conllu_example} will generate these 17 triples candidates where only five of them are valid triples (check-marked):
 
@@ -309,9 +309,9 @@ For example, applying the rules to an annotated sentence in Figure \ref{fig_conl
 \item (desa, terletak, Indonesia)
 \end{itemize}
 
-In order to build a training data for the triple selector, we used triple candidates generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually label \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
+In order to build a training data for the triple selector, we used triple candidate generator to generate 1,611 triple candidates from 42 sentences. As part of the label step, we manually label \textbf{132 positive} and \textbf{1,479 negative} triples which we use to train binary classifier as triple selector in the learn step.
 
-During the extraction step, triple candidates generator is used in the system to extract unlabeled candidates from CoNLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}).
+During the extraction step, triple candidate generator is used in the system to extract unlabeled candidates from CoNLL-U document. These unlabeled triples will be labeled by trained triple selector as described in  (referring to flowchart in Figure \ref{fig_program_flowchart}).
 
 % Triple candidate generation rules
 \begin{table}[!t]
@@ -342,7 +342,7 @@ Object & Token's position is after Subject and Predicate \\
 
 \subsection{Triple Selector}  \label{Triple Selector}
 
-Triple selector is a machine learning classifier trained using manually labeled dataset of valid and invalid relation triples. For example, given the input of 17 candidates in Section \ref{Triple Candidates Generator}, the selector will label the five check-marked triples as true and label the rest as false.
+Triple selector is a machine learning classifier trained using manually labeled dataset of valid and invalid relation triples. For example, given the input of 17 candidates in Section \ref{Triple Candidate Generator}, the selector will label the five check-marked triples as true and label the rest as false.
 
 We use Random Forest\cite{breiman2001random}, an ensemble method that aggregate classification results from multiple decision trees, as the model for the classifier. We use the Scikit-Learn\footnote{scikit-learn: machine learning in Python \url{http://scikit-learn.org}} implementation of Random Forest with following configuration:
 
@@ -355,7 +355,7 @@ We use Random Forest\cite{breiman2001random}, an ensemble method that aggregate 
 \item Class weight: balanced (prediction probability is multiplied by the ratio of training samples)
 \end{itemize}
 
-We discover the configuration by using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidates Generator}. 
+We discover the configuration by using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidate Generator}. 
 
 We extract 17 features described in Table \ref{table_models_features} from each triple candidates. These features are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. Every nominal feature are also encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
 
@@ -392,7 +392,7 @@ During the train step, we use the dataset to train triple selector and save the 
 
 \subsection{Token Expander}
 
-Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system uses rule-based token expander to extract relation or argument clauses. While having different objective and approach, this token expander works similarly to Clause Selector in Stanford Open IE\cite{angeli2015leveraging} where the algorithm starts from a token then decides whether to expand to its dependents. Instead of using machine learning model like Clause Selector, it uses simple heuristics based on syntactical features (POS tag, dependency relation and named-entity) described in Table \ref{table_token_expansion_rules_s_o} and Table \ref{table_token_expansion_rules_p} to determine whether to: (1) expand a token to its dependent, (2) ignore the dependent or (3) remove the token itself. For example, token expander will expand check-marked triples in Section \ref{Triple Candidates Generator} into:
+Instead of using lightweight noun phrase chunker\cite{banko2007open}, our system uses rule-based token expander to extract relation or argument clauses. While having different objective and approach, this token expander works similarly to Clause Selector in Stanford Open IE\cite{angeli2015leveraging} where the algorithm starts from a token then decides whether to expand to its dependents. Instead of using machine learning model like Clause Selector, it uses simple heuristics based on syntactical features (POS tag, dependency relation and named-entity) described in Table \ref{table_token_expansion_rules_s_o} and Table \ref{table_token_expansion_rules_p} to determine whether to: (1) expand a token to its dependent, (2) ignore the dependent or (3) remove the token itself. For example, token expander will expand check-marked triples in Section \ref{Triple Candidate Generator} into:
 
 \begin{itemize}
 \item (Sembungan, adalah, desa)
@@ -457,7 +457,7 @@ In the first experiment, we chose four classifiers each representing unique char
 \item Random Forest\cite{wasserman2015grid} (ensemble decision trees)
 \end{enumerate}
   
-We use the manually annotated triple selector dataset described in Section \ref{Triple Candidates Generator} to cross-validate\cite{kohavi1995study} (k-Fold with $k=3$) the four classifiers. Since open IE systems requires both precision and recall\cite{angeli2015leveraging}, we choose F1 score to determine the best classifier for triple selector. The result of this experiment is shown by Figure \ref{fig_models_performance} and Table \ref{table_models_performance} where Random Forest achieves the highest F1 score 0.58.
+We use the manually annotated triple selector dataset described in Section \ref{Triple Candidate Generator} to cross-validate\cite{kohavi1995study} (k-Fold with $k=3$) the four classifiers. Since open IE systems requires both precision and recall\cite{angeli2015leveraging}, we choose F1 score to determine the best classifier for triple selector. The result of this experiment is shown by Figure \ref{fig_models_performance} and Table \ref{table_models_performance} where Random Forest achieves the highest F1 score 0.58.
 
 \begin{figure}
 \includegraphics[scale=0.4]{../images/models_performance.png}
@@ -502,9 +502,9 @@ In the second experiment, we evaluate the performance of our system by extractin
 
 \section{Analysis}
 
-The first experiment shows that all classifiers are still having problem learning the pattern of triples when cross-validated using $k=3$ which means two thirds of our dataset is insufficient to cover the patterns in other one third part. The dataset also suffers unbalance 1:11 ratio of positive and negative samples which is caused by lack of efficiency in triple candidates generator. To solve this issue, we plan to annotate more sentences to increase the coverage and improve the efficiency of triple candidates generator. The low performance of linear logistic regression indicates that this problem is not linearly separable. The random forest performs better than other nonlinear models (SVM and MLP) because it is easily tuned to balance the precision and recall by changing the number and the depth of decision trees.
+The first experiment shows that all classifiers are still having problem learning the pattern of triples when cross-validated using $k=3$ which means two thirds of our dataset is insufficient to cover the patterns in other one third part. The dataset also suffers unbalance 1:11 ratio of positive and negative samples which is caused by lack of efficiency in triple candidate generator. To solve this issue, we plan to annotate more sentences to increase the coverage and improve the efficiency of triple candidate generator. The low performance of linear logistic regression indicates that this problem is not linearly separable. The random forest performs better than other nonlinear models (SVM and MLP) because it is easily tuned to balance the precision and recall by changing the number and the depth of decision trees.
 
-We are also aware that the heuristics used in triple candidates generator and token expander are still limited to explicit pattern. For instance, triple candidate generator can not extract relations \textit{(kecamatan Kejajar, terletak di, Jawa Tengah)} and \textit{(Jawa Tengah, terletak di, Indonesia)} from the sentence in Figure \ref{fig_example_io_openie} yet. In the future research, we plan to improve the model to extract implicit patterns while keeping the number of negative candidates. The token expander is having problem in expanding token to implicitly expected clauses such as \textit{"seorang pelatih sepak bola"} from \textit{"seorang pelatih dan pemain sepak bola"} or \textit{"satu buah torpedo"} from \textit{"satu atau dua buah torpedo"}. We expect there will be more patterns that need to be considered in order to properly expand the token so further research on effective model to achieve this is required. Also, in order to properly evaluate the performance of these components, we need to create test datasets for both triple candidates generator and token expander.
+We are also aware that the heuristics used in triple candidate generator and token expander are still limited to explicit pattern. For instance, triple candidate generator can not extract relations \textit{(kecamatan Kejajar, terletak di, Jawa Tengah)} and \textit{(Jawa Tengah, terletak di, Indonesia)} from the sentence in Figure \ref{fig_example_io_openie} yet. In the future research, we plan to improve the model to extract implicit patterns while keeping the number of negative candidates. The token expander is having problem in expanding token to implicitly expected clauses such as \textit{"seorang pelatih sepak bola"} from \textit{"seorang pelatih dan pemain sepak bola"} or \textit{"satu buah torpedo"} from \textit{"satu atau dua buah torpedo"}. We expect there will be more patterns that need to be considered in order to properly expand the token so further research on effective model to achieve this is required. Also, in order to properly evaluate the performance of these components, we need to create test datasets for both triple candidate generator and token expander.
 
 Additionally, through the second experiment, we also find that our system average extraction performance is 0.014 seconds/sentence (for 5,593 sentences document) which is still comparable to TextRunner\cite{banko2007open}. Therefore, in contrast to the argument proposed in the related work\cite{banko2007open}\cite{etzioni2011open}, this experiment shows that the heavy linguistic tasks such as dependency parsing doesn't cause performance drawback in big document, assuming the average number of sentences in document do not exceed 5,593.
 
@@ -512,7 +512,7 @@ Additionally, through the second experiment, we also find that our system averag
 
 This paper introduces an open domain information extraction system for Indonesian text using basic NLP pipelines and combination of heuristics and machine learning models. The system is able to extract meaningful domain-independent relations from Indonesian sentences to be used as document representation or document understanding task. Additionally, the source code and datasets are published openly\footnote{Paper source code \url{https://github.com/yohanesgultom/id-openie}} to improve research reproducibility.
 
-In the future, we plan to improve the performance of our system finding better heuristics for triple candidates generator to reduce the negative samples. We also plan adding more training data for triple selector to improve the precision and recall score. We also need to create dataset for triple candidates generator and token expander in order to properly evaluate further improvement of both components. We also consider adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and including them as features and/or heuristics may also improve the overall performance of the system.
+In the future, we plan to improve the performance of our system finding better heuristics for triple candidate generator to reduce the negative samples. We also plan adding more training data for triple selector to improve the precision and recall score. We also need to create dataset for triple candidate generator and token expander in order to properly evaluate further improvement of both components. We also consider adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and including them as features and/or heuristics may also improve the overall performance of the system.
 
 % conference papers do not normally have an appendix
 
