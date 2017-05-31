@@ -3,7 +3,7 @@
 \label{chap:babTiga}
 %-----------------------------------------------------------------------------%
 
-Pada bab ini dijelaskan mengenai tahapan penelitian, seperti yang ditunjukkan pada Tabel \ref{tab:tahapan_penelitian}, yang meliputi studi literatur, perancangan dan implementasi sistem, pengumpulan data serta evaluasi dan analisis.
+Pada bab ini dijelaskan mengenai tahapan penelitian, seperti yang ditunjukkan pada Tabel \ref{tab:tahapan_penelitian}, yang meliputi studi literatur, perancangan dan implementasi sistem, serta evaluasi dan analisis.
 
 \begin{table}
 \centering
@@ -16,8 +16,6 @@ Pada bab ini dijelaskan mengenai tahapan penelitian, seperti yang ditunjukkan pa
 Studi literatur & Mesin pencari buku dan jurnal elektronik & Latar belakang masalah, rumusan masalah, rangkuman penelitian terkait dan ide rancangan sistem \\
 \hline
 Perancangan dan pengimplentasian sistem & Java, Python, Git, editor kode & Sistem Open IE \\
-\hline
-Pengumpulan data & Python, Java & Dataset dan model \textit{classifier} \\
 \hline
 Evaluasi dan analisis & Python & Tabel hasil, diagram hasil, kesimpulan dan saran \\
 \hline
@@ -34,15 +32,14 @@ Pada tahap ini \saya~mengumpulkan dan menelaah dokumen ilmiah seperti \textit{pa
 \section{Rancangan dan Implementasi Sistem}
 %-----------------------------------------------------------------------------%
 
-As shown in the flowchart Figure \ref{fig:program_flowchart}, our system is composed of four main components: \textbf{NLP pipeline}, \textbf{triple candidate generator}, \textbf{triple selector} and \textbf{token expander}. Each of them are explained further in following subsections.
-
 Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia yang mengadaptasi beberapa teknik pada sistem \textit{open IE} pada penelitian terkait. Rancangan sistem ini berisi empat modul utama, seperti yang ditunjukkan pada Gambar \ref{fig:program_flowchart}, yaitu \textbf{NLP pipeline}, \textbf{triple candidate generator}, \textbf{triple selector} dan \textbf{token expander}. Terdapat tiga fase atau langkah untuk melakukan ekstraksi \textit{triple} menggunakan sistem ini:
 
 \begin{enumerate}
-	\item Label (\textit{label}): membangun data latih untuk untuk \textit{triple selector} dengan menganotasi manual hasil ekstraksi dari \textit{triple candidate generator}
-	\item Belajar (\textit{learn}): melatih \textit{classifier} untuk mengekstrak himpunan \textit{triple} dari kalimat menggunakan data dari fase Label.
-	\item Ekstrak (\textit{extract}): mengekstrak himpunan \textit{triple} dari kalimat menggunakan \textit{classifier} yang telah dilatih pada fase Belajar
+	\item Label (\textit{label}): membangun data latih untuk untuk \textit{triple selector} dengan menganotasi manual kandidat \textit{triple} yang dihasilkan oleh \textit{triple candidate generator} dan \textit{NLP pipeline}.  
+	\item Belajar (\textit{learn}): melatih \textit{triple selector} untuk mengekstrak himpunan \textit{triple} dari kalimat menggunakan data dari fase Label. Hasil dari fase ini adalah model yang dipakai pada fase berikutnya.
+	\item Ekstrak (\textit{extract}): mengekstrak himpunan \textit{triple} dari kalimat menggunakan \textit{NLP pipeline}, \textit{triple candidate generator}, \textit{token expander} dan \textit{triple selector} yang telah dilatih pada fase Belajar. Alur kerja pada fase ini ditunjukkan pada Gambar \ref{fig:program_flowchart}.
 \end{enumerate}
+
 
 
 \begin{figure}
@@ -54,30 +51,31 @@ Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia ya
 
 \subsection{NLP Pipeline}
 
-The NLP pipeline is a series of NLP tasks that annotates one or more sentences and saves them in CONLL-U\footnote{CONLL-U format description \url{http://universaldependencies.org/format.html}} format, a token-based sentence annotation format containing lemma, POS tag, dependency relation and a slot for additional annotation. The pipeline assumes that each sentence in the input document is separated by new line so preprocessing may be required. The detail of each model the pipeline are described below:
+\textit{NLP pipeline} adalah modul yang berisi serangkaian \textit{NLP task} yang menganotasi kalimat bahasa Indonesia dan menyimpannya sebagai dokumen dengan format CoNLL-U. Modul ini menerima dokumen teks yang berisi satu atau lebih kalimat yang dipisahkan oleh karakter baris baru (\textit{newline}) dan menghasilkan dokumen teks berisi kalimat yang telah dipotong menjadi \textit{token} dan diberi anotasi dengan format CoNLL-U. \textit{NLP task} yang terdapat pada rangkaian ini adalah sebagai berikut:
 
 \begin{enumerate}
 
-\item Tokenizer \\
-We use default tokenizer provided by Stanford Core NLP, \verb|PTBTokenizer| \citep{manningptbtokenizer}, which mimics Penn Treebank 3 tokenizer\footnote{Penn Treebank 3 \url{https://catalog.ldc.upenn.edu/LDC99T42}}. While this tokenizer provides many options to modify its behavior, we stick to default configuration that split sentence by whitelines to get the tokens.\\
+\item \textit{Tokenizer} \\
+\textit{Tokenizer} yang digunakan pada rangkaian ini adalah yang disediakan pustaka \textit{Stanford Core NLP}, \verb|PTBTokenizer| \citep{manningptbtokenizer}. \textit{Tokenizer} berbasis aturan (\textit{rule-based}) ini mengikuti \textit{tokenizer} yang digunakan untuk menghasilkan \textit{Penn Treebank 3}\footnote{\textit{Penn Treebank 3} \url{https://catalog.ldc.upenn.edu/LDC99T42}} (\textit{treebank} bahasa Inggris). Meskipun \textit{tokenizer} ini menyediakan opsi untuk menyesuaikan proses dengan bahasa lain, di penelitian ini kami hanya menggunakan opsi standar untuk memotong kalimat berdasarkan \textit{whiteline} untuk mendapatkan \textit{token}.
 
-\item Part of Speech Tagger \\
-We trained default Stanford Core NLP \verb|MaxentTagger| \citep{toutanova2003feature} with Indonesian universal POS tag dataset which we convert from dependency parsing dataset\footnote{UD Indonesian dataset \url{https://github.com/UniversalDependencies/UD_Indonesian}}. This POS tagger uses Max Entropy (multi-class logistic regression) classifier which yields \textbf{93.68\%} token accuracy and \textbf{63.91\%} sentence accuracy when trained using 5,036 sentences and tested with 559 sentences from the dataset. \\
+\textit{Part of Speech Tagger} (\textit{POS tagger}) yang digunakan pada rangkaian ini adalah, \verb|MaxentTagger| \citep{toutanova2003feature}, yang juga merupakan bagian dari pustaka \textit{Stanford Core NLP}. \textit{POS tagger} berbasis \textit{multi-class logistic regression} ini dilatih dengan data yang diperoleh dengan mengekstraksi \textit{POS tag} dari 5.036 kalimat \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia\footnote{UD \textit{treebank} Indonesia \url{https://github.com/UniversalDependencies/UD_Indonesian}}. Hasil pengujian model \textit{POS tagger} ini, menggunakan 559 kalimat lain dari sumber yang sama, mencapai akurasi per token \textbf{93.68\%} dan akurasi per kalimat \textbf{63.91\%} (seluruh token dalam kalimat dianotasi dengan \textit{POS tag} yang benar).
 
-\item Lemmatizer \\
-The lemmatizer used in this pipeline, \verb|IndonesianLemmaAnnotator|, is implemented based on an existing Indonesian rule-based Lemmatizer \citep{suhartono2014lemmatization} with some improvements:
+\item \textit{Lemmatizer} \\
+\textit{Lemmatizer} yang digunakan pada rangkaian ini diadaptasi dari \textit{lemmatizer} bahasa Indonesia berbasis aturan \citep{suhartono2014lemmatization} dan diberi nama \verb|IndonesianLemmaAnnotator|. Adaptasi dilakukan dengan melakukan perubahan berikut:
 
 \begin{itemize}
-\item Ability to process a sentence instead of a token
-\item Usage of in-memory database to speed up dictionary lookup
-\item Reimplementation in Java language and integration with Stanford Core NLP annotator API to improve reusability
+\item Kemampuan untuk memproses tidak hanya kata tapi juga kalimat
+\item Peningkatan kecepatan dengan penggunaan \textit{in-memory database}
+\item Meningkatan \textit{reusability} dengan implementasi ulang menggunakan Java serta integrasi dengan pustaka \textit{Stanford Core NLP}
 \end{itemize}
 
-This lemmatizer yields \textbf{99\%} accuracy when tested using dataset of 5,638 token-lemma pairs\footnote{Indonesian Lemmatizer \url{https://github.com/davidchristiandy/lemmatizer}}. We use lemma as one of the features for NER classifier. \\
+\textit{Lemmatizer} ini mencapai akurasi \textbf{99\%} saat diuji dengan 5.638 pasangan kata dan \textit{lemma} bahasa Indonesia dari \cite{suhartono2014lemmatization}.
 
-\item Named-Entity Recognizer (NER)
+\item \textit{Named-Entity Recognizer} (NER)
 
 Stanford NLP \verb|CRFClassifier| \citep{finkel2005incorporating}, a linear chain Conditional Random Field (CRF) sequence models, is trained using a dataset containing 3,535 Indonesian sentences with 5 entity class: Person, Organization, Location, Quantity and Time. When tested using 426 sentences, this models achieves 0.86 precision, 0.85 recall and \textbf{0.86} F1-score. The dataset itself is a combination between dataset from Faculty of Computer Science, University of Indonesia and a public dataset\footnote{Indonesian NER \url{https://github.com/yusufsyaifudin/indonesia-ner}}. \\
+
+
 
 \item Dependency Parser
 
