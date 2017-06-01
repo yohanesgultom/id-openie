@@ -46,7 +46,7 @@ Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan di
 
 \end{enumerate}
 
-Eksperimen ini dilakukan dengan menjalankan program \verb|classifier.py| (di direktori yang sama dengan pustaka utama \verb|tripletools.py|) dengan input data fitur yang sudah dinormalisasi dengan format \textit{comma separated value} (CSV) \verb|triple-selector.train.csv| pada \textit{terminal}:
+Eksperimen ini dilakukan dengan menjalankan program \verb|classifier.py| (di direktori yang sama dengan pustaka utama \verb|tripletools.py|) dengan input \textit{dataset} fitur yang sudah dinormalisasi dengan format \textit{comma separated value} (CSV) \verb|triple-selector.train.csv| pada \textit{terminal}:
 
 \begin{verbatim}
 	$ python classifier.py --best triple-selector.train.csv
@@ -105,8 +105,53 @@ Hasil eksperimen tersebut ditunjukkan pada Tabel \ref{tab:system_extraction_time
 \section{Analisis}
 %-----------------------------------------------------------------------------%
 
-The first experiment shows that all classifiers are still having problem learning the pattern of triples when cross-validated using $k=3$ which means two thirds of our dataset is insufficient to cover the patterns in other one third part. The dataset also suffers unbalance 1:11 ratio of positive and negative samples which is caused by lack of efficiency in triple candidates generator. To solve this issue, we plan to annotate more sentences to increase the coverage and improve the efficiency of triple candidates generator. The low performance of linear logistic regression indicates that this problem is not linearly separable. The random forest performs better than other nonlinear models (SVM and MLP) because it is easily tuned to balance the precision and recall by changing the number and the depth of decision trees.
+%The first experiment shows that all classifiers are still having problem learning the pattern of triples when cross-validated using $k=3$ which means two thirds of our dataset is insufficient to cover the patterns in other one third part. The dataset also suffers unbalance 1:11 ratio of positive and negative samples which is caused by lack of efficiency in triple candidates generator. To solve this issue, we plan to annotate more sentences to increase the coverage and improve the efficiency of triple candidates generator. The low performance of linear logistic regression indicates that this problem is not linearly separable. The random forest performs better than other nonlinear models (SVM and MLP) because it is easily tuned to balance the precision and recall by changing the number and the depth of decision trees.
 
-We are also aware that the heuristics used in triple candidates generator and token expander are still limited to explicit pattern. For instance, triple candidate generator can not extract relations \textit{(kecamatan Kejajar, terletak di, Jawa Tengah)} and \textit{(Jawa Tengah, terletak di, Indonesia)} from the sentence in Figure \ref{fig:example_io_openie} yet. In the future research, we plan to improve the model to extract implicit patterns while keeping the number of negative candidates. The token expander is having problem in expanding token to implicitly expected clauses such as \textit{"seorang pelatih sepak bola"} from \textit{"seorang pelatih dan pemain sepak bola"} or \textit{"satu buah torpedo"} from \textit{"satu atau dua buah torpedo"}. We expect there will be more patterns that need to be considered in order to properly expand the token so further research on effective model to achieve this is required. Also, in order to properly evaluate the performance of these components, we need to create test datasets for both triple candidates generator and token expander.
+Hasil eksperimen pertama di mana nilai $F_1$ tertinggi hanya 0.58, mengindikasikan bahwa semua model mengalami kesulitan untuk mempelajari pola \textit{triples} dari \textit{dataset} yang diberikan. Kemungkinan penyebab hasil ini adalah masalah pada model (pemilihan fitur atau algoritma) atau kualitas \textit{dataset} yang digunakan (konflik pola atau ketidaklengkapan pola \textit{dataset}). Untuk memastikan penyebab dari hasil eksperimen pertama ini, \saya~melakukan eksperimen tambahan yaitu menguji tiap model \textit{triple selector} menggunakan \textit{dataset} latih (data yang sama). Hasil cukup baik yang ditunjukkan pada Gambar \ref{fig:models_performance_training} dan Tabel \ref{tab:models_performance_training}, di mana $F_1$ tertinggi \textbf{0.83}, \textit{recall} tertinggi \textbf{0.96} dan \textit{precision} tertinggi \textbf{0.88}, menunjukkan bahwa fitur yang dipilih dan model yang digunakan tidak memiliki masalah (kecuali model linier, \textit{logistic regression}). Oleh karena itu \saya~berargumen bahwa masalah utama terdapat pada \textit{dataset} yang digunakan, yaitu tidak cukupnya pola $\nicefrac{2}{3}$ data yang dipakai melatih untuk mengenali pola sisa $\nicefrac{1}{3}$ data yang dipakai untuk menguji.
 
-Additionally, through the second experiment, we also find that our system average extraction performance is 0.014 seconds/sentence (for 5,593 sentences document) which is still comparable to TextRunner\citep{banko2007open}. Therefore, in contrast to the argument proposed in the related work\citep{banko2007open}\citep{etzioni2011open}, this experiment shows that the heavy linguistic tasks such as dependency parsing doesn't cause performance drawback in big document, assuming the average number of sentences in document do not exceed 5,593.
+\begin{figure}
+	\includegraphics[width=\textwidth]{../images/models_performance_training.png}
+	\caption{Diagram hasil eksperimen perbandingan model \textit{supervised learning} untuk \textit{triple selector} dengan menggunakan data latih sebagai data uji}
+	\label{fig:models_performance_training}
+\end{figure}
+
+\begin{table}
+\caption{Hasil eksperimen perbandingan model \textit{supervised learning} untuk \textit{triple selector} dengan menggunakan data latih sebagai data uji}
+	\label{tab:models_performance_training}
+	\centering
+	\begin{tabular}{p{5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm}}
+		\hline
+		\textbf{Model} & \textbf{\textit{Precision}} & \textbf{\textit{Recall}} & \textbf{$F_1$} \\
+		\hline
+		Logistic Regression & 0.70 & 0.29 & 0.41 \\
+		SVM & \textbf{0.88} & 0.53 & 0.66 \\
+		MLP & 0.80 & 0.60 & 0.68 \\
+		Random Forest & 0.73 & \textbf{0.96} & \textbf{0.83} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Selain disebabkan oleh kurangnya jumlah kalimat yang dianotasi, permasalahan pada \textit{dataset} \textit{triple selector} ini juga tentu dipengaruhi oleh kemampuan \textit{triple candidate generator} untuk menghasilkan jumlah kandidat \textit{triple} valid (data positif) yang sebanding jumlahnya dengan kandidat yang tidak valid (data negatif). \saya~berpendapat bahwa, selain menambah data, ada minimal dua solusi yang dapat dilakukan untuk meningkatkan kualitas \textit{dataset}, yaitu:
+
+\begin{enumerate}
+	\item Mengekstrak \textit{triple} implisit dari kalimat \\
+	Module \textit{triple candidate generator} pada penelitian ini baru menangani \textit{triple} yang memiliki struktur yang eksplisit sehingga jumlah data positif sangat sedikit. Dengan menambah pola \textit{triple} yang dapat dibangkitkan, \textit{dataset} akan lebih seimbang dan memiliki pola lebih banyak \citep{schmitz2012open}. Contoh \textit{triple} eksplisit yang perlu ditangani lebih jauh:
+	\begin{itemize}
+		\item \textit{Triple} \textit{(kecamatan Kejajar, terletak di, Jawa Tengah)} dari kalimat asal "\textit{Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.}"		
+		\item \textit{Triple} \textit{(Sukarno, adalah, Presiden)} dari kalimat asal "\textit{Presiden pertama Indonesia Sukarno lahir di Surabaya.}"
+	\end{itemize} 
+	
+	\item Mengurangi ekstraksi \textit{triple} invalid dari kalimat \\
+	Rasio perbandingan data positif dan negatif pada \textit{dataset} adalah 1:11. Hal ini menunjukkan bahwa proses pembangkitan kandidat \textit{triple} ini masih bisa dibuat lebih efisien. Salah satu teknik yang bisa digunakan adalah membuat aturan yang lebih spesifik atau melatih \textit{classifier} untuk mengekstrak frase \textit{self-contained} \citep{angeli2015leveraging}.
+	
+\end{enumerate}
+
+%The token expander is having problem in expanding token to implicitly expected clauses such as \textit{"seorang pelatih sepak bola"} from \textit{"seorang pelatih dan pemain sepak bola"} or \textit{"satu buah torpedo"} from \textit{"satu atau dua buah torpedo"}. We expect there will be more patterns that need to be considered in order to properly expand the token so further research on effective model to achieve this is required. Also, in order to properly evaluate the performance of these components, we need to create test datasets for both triple candidates generator and token expander.
+
+Hal menarik yang ditemukan dari hasil eksperimen pertama adalah \textit{random forest}, yang mewakili \textit{ensemble classifier}, merupakan pemodelan yang paling cocok dibandingkan pemodelan linier (\textit{logistic regression}), nonlinier dengan optimalisasi margin (SVM) dan jaringan syaraf tiruan (MLP). \saya~menyimpulkan bahwa dibutuhkan pemodelan yang keseimbangan antara \textit{precision} dan \textit{recall}-nya relatif mudah disesuaikan untuk module \textit{triple selector}. Sekalipun tidak memiliki \textit{precision} setinggi SVM, \textit{Random forest} lebih unggul karena penyesuaian jumlah dan kedalaman \textit{tree} memudahkan penyeimbangan \textit{precision} dan \textit{recall} yang menghasilkan $F_1$ yang paling baik. Potensi SVM yang mampu mencapai \textit{precision} yang paling tinggi ini juga mungkin bisa dimanfaatkan dengan melakukan \textit{bagging} \citep{breiman1996bagging} SVM dan \textit{random forest} untuk meningkatkan kinerja lebih jauh.
+
+
+%Additionally, through the second experiment, we also find that our system average extraction performance is 0.014 seconds/sentence (for 5,593 sentences document) which is still comparable to TextRunner\citep{banko2007open}. Therefore, in contrast to the argument proposed in the related work\citep{banko2007open}\citep{etzioni2011open}, this experiment shows that the heavy linguistic tasks such as dependency parsing doesn't cause performance drawback in big document, assuming the average number of sentences in document do not exceed 5,593.
+
+Sebagai tambahan, hasil eksperimen kedua menunjukkan bahwa waktu rata-rata 0.014 detik/kalimat yang dibutuhkan sistem \textit{open IE} untuk mengekstrak \textit{triple} dari dokumen yang berukuran sedang (5,593 kalimat), cukup sebanding dengan sistem lain seperti \textsc{TextRunner} yang membutuhkan 0.036 detik/kalimat \citep{banko2007open}. Hal ini menunjukkan bahwa penggunaan fitur \textit{heavy linguistic} cukup efisien juga digunakan pada dokumen yang berukuran sedang. Kekurangan dari sistem ini tentu ada pada ekstraksi pada dokumen dengan kalimat sedikit. Selain itu juga kedepannya perlu dikaji sejauh skalabilitas sistem ini dengan melakukan ekstraksi pada dokumen yang lebih besar.
+

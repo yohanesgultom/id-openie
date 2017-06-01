@@ -23,7 +23,7 @@ Jika \textsc{ReVerb} memperbaiki masalah pada ekstraksi relasi, \textsc{R2A2} be
 \label{fig:arglearner_architecture}
 \end{figure}
 
-Penelitian berikutnya memperkenalkan \textsc{Ollie} (\textit{Open Language Learning for Information Extraction}) \citep{schmitz2012open} yang menjadikan \textsc{ReVerb} sebagai salah satu modulnya. \textsc{Ollie} menggunakan \textsc{ReVerb} untuk mencari sejumlah (\textit{open pattern})/\textit{template} sebagai panduan untuk mengekstrak \textit{triple} dari kalimat. Perbedaan lain sistem ini dengan pendahulunya adalah relasi yang diekstrak tidak hanya dari kata kerja (\textit{verb}) tetapi bisa juga diekstrak secara implisit dari kata benda (\textit{noun}), kata sifat (\textit{adjective}) \citep{schmitz2012open}. Selain itu \textsc{Ollie} juga menambahkan modul untuk melakukan analisis dan penambahan informasi kontekstual pada hasil ekstraksi sehingga presisi lebih tinggi. Dua modul utama ini diajukan untuk memperbaiki kekurangan dari \textsc{ReVerb} yaitu pembatasan relasi hanya pada kata kerja (\textit{verb}) dan pengabaian konteks kalimat \citep{schmitz2012open}. Proses pelabelan (\textit{labeling}) data latih dan ekstraksi \textsc{Ollie} ditunjukkan pada Gambar \ref{fig:ollie_architecture}.
+Penelitian berikutnya memperkenalkan \textsc{Ollie} (\textit{Open Language Learning for Information Extraction}) \citep{schmitz2012open} yang menjadikan \textsc{ReVerb} sebagai salah satu modulnya. \textsc{Ollie} menggunakan \textsc{ReVerb} untuk mencari sejumlah (\textit{open pattern})/\textit{template} sebagai panduan untuk mengekstrak \textit{triple} dari kalimat. Perbedaan lain sistem ini dengan pendahulunya adalah relasi yang diekstrak tidak hanya dari kata kerja (\textit{verb}) tetapi bisa juga diekstrak secara implisit dari kata benda (\textit{noun}), kata sifat (\textit{adjective}) \citep{schmitz2012open}. Selain itu \textsc{Ollie} juga menambahkan modul untuk melakukan analisis dan penambahan informasi kontekstual pada hasil ekstraksi sehingga presisi lebih tinggi. Dua modul utama ini diajukan untuk memperbaiki kekurangan dari \textsc{ReVerb} yaitu pembatasan relasi hanya pada kata kerja (\textit{verb}) dan pengabaian konteks kalimat \citep{schmitz2012open}. Proses pelabelan (\textit{labeling}) \textit{dataset} dan ekstraksi \textsc{Ollie} ditunjukkan pada Gambar \ref{fig:ollie_architecture}.
 
 \begin{figure}
 \centering
@@ -58,8 +58,8 @@ Salah satu riset terbaru memperkenalkan model sistem \textit{open IE} yang mengg
 Meskipun menggunakan modul dan teknik yang berbeda-beda, model sistem \textit{open IE} umumnya menjalankan proses yang dapat dibagi menjadi tiga langkah/fase \citep{etzioni2011open}:
 
 \begin{enumerate}
-	\item Label (\textit{label}): membangun data latih untuk \textit{classifier} baik secara manual atau otomatis.
-	\item Belajar (\textit{learn}): melatih \textit{classifier} untuk mengekstrak himpunan \textit{triple} dari kalimat menggunakan data dari fase Label.
+	\item Label (\textit{label}): membangun \textit{dataset} untuk \textit{classifier} baik secara manual atau otomatis.
+	\item Belajar (\textit{learn}): melatih \textit{classifier} untuk mengekstrak himpunan \textit{triple} dari kalimat menggunakan \textit{dataset} dari fase Label.
 	\item Ekstrak (\textit{extract}): mengekstrak himpunan \textit{triple} dari kalimat menggunakan \textit{classifier} yang telah dilatih pada fase Belajar
 \end{enumerate}
 
@@ -206,7 +206,7 @@ Sementara himpunan \textit{dependency relation} yang dipakai adalah:
 \section{\textit{Supervised Learning}}
 %-----------------------------------------------------------------------------%
 
-\textit{Supervised learning} adalah teknik \textit{machine learning} yang mempelajari pola dari data yang telah diberi label atau dikelompokkan \citep{mohri2012foundations}. Metode \textit{supervised learning} dapat dibagi menjadi dua, yaitu deskriptif (\textit{descriptive learning}) dan generatif (\textit{generative learning}). Pada \textit{descriptive learning} mencari fungsi untuk memetakan data $x$ ke label $y$ atau probabilitas posterior (\textit{posterior probability}) $p(y|x)$ (contoh: \textit{logistic regression}, \textit{support vector machine}, \textit{multi-layer perceptron}, dsb.) sedangkan \textit{generative learning} mencari probabilitas gabungan (\textit{joint probability}) $p(x,y)$ lebih dulu sebelum menggunakan \textit{Bayes Rules} untuk menghitung $p(y|x)$ (contoh: \textit{naive bayes classifier}, \textit{decision tree}, dsb.) \citep{ng2002discriminative}. Penelitian ini membandingkan empat buah model klasifikasi biner yang dihasilkan oleh metode-metode berikut:
+\textit{Supervised learning} adalah teknik \textit{machine learning} yang mempelajari pola dari \textit{dataset} yang telah diberi label atau dikelompokkan \citep{mohri2012foundations}. Metode \textit{supervised learning} dapat dibagi menjadi dua, yaitu deskriptif (\textit{descriptive learning}) dan generatif (\textit{generative learning}). Pada \textit{descriptive learning} mencari fungsi untuk memetakan data $x$ ke label $y$ atau probabilitas posterior (\textit{posterior probability}) $p(y|x)$ (contoh: \textit{logistic regression}, \textit{support vector machine}, \textit{multi-layer perceptron}, dsb.) sedangkan \textit{generative learning} mencari probabilitas gabungan (\textit{joint probability}) $p(x,y)$ lebih dulu sebelum menggunakan \textit{Bayes Rules} untuk menghitung $p(y|x)$ (contoh: \textit{naive bayes classifier}, \textit{decision tree}, dsb.) \citep{ng2002discriminative}. Penelitian ini membandingkan empat buah model klasifikasi biner yang dihasilkan oleh metode-metode berikut:
 
 \subsection{\textit{Logistic Regression}}
 

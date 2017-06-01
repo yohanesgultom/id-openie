@@ -35,8 +35,8 @@ Pada tahap ini \saya~mengumpulkan dan menelaah dokumen ilmiah seperti \textit{pa
 Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia yang mengadaptasi beberapa teknik pada sistem \textit{open IE} pada penelitian terkait. Rancangan sistem ini berisi empat modul utama, seperti yang ditunjukkan pada Gambar \ref{fig:program_flowchart}, yaitu \textbf{NLP pipeline}, \textbf{triple candidate generator}, \textbf{triple selector} dan \textbf{token expander}. Terdapat tiga fase atau langkah untuk melakukan ekstraksi \textit{triple} menggunakan sistem ini:
 
 \begin{enumerate}
-	\item Label (\textit{label}): membangun data latih untuk untuk \textit{triple selector} dengan menganotasi manual kandidat \textit{triple} yang dihasilkan oleh \textit{triple candidate generator} dan \textit{NLP pipeline}.  
-	\item Belajar (\textit{learn}): melatih \textit{triple selector} untuk mengekstrak himpunan \textit{triple} dari kalimat menggunakan data dari fase Label. Hasil dari fase ini adalah model yang dipakai pada fase berikutnya.
+	\item Label (\textit{label}): membangun \textit{dataset} untuk untuk \textit{triple selector} dengan menganotasi manual kandidat \textit{triple} yang dihasilkan oleh \textit{triple candidate generator} dan \textit{NLP pipeline}.  
+	\item Belajar (\textit{learn}): melatih \textit{triple selector} untuk mengekstrak himpunan \textit{triple} dari kalimat menggunakan \textit{dataset} dari fase Label. Hasil dari fase ini adalah model yang dipakai pada fase berikutnya.
 	\item Ekstrak (\textit{extract}): mengekstrak himpunan \textit{triple} dari kalimat menggunakan \textit{NLP pipeline}, \textit{triple candidate generator}, \textit{token expander} dan \textit{triple selector} yang telah dilatih pada fase Belajar. Alur kerja pada fase ini ditunjukkan pada Gambar \ref{fig:program_flowchart}.
 \end{enumerate}
 
@@ -58,7 +58,7 @@ Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia ya
 \item \textit{Tokenizer} \\
 \textit{Tokenizer} yang digunakan pada rangkaian ini adalah yang disediakan pustaka \textit{Stanford Core NLP}, \verb|PTBTokenizer| \citep{manningptbtokenizer}. \textit{Tokenizer} berbasis aturan (\textit{rule-based}) ini mengikuti \textit{tokenizer} yang digunakan untuk menghasilkan \textit{Penn Treebank 3}\footnote{\textit{Penn Treebank 3} \url{https://catalog.ldc.upenn.edu/LDC99T42}} (\textit{treebank} bahasa Inggris). Meskipun \textit{tokenizer} ini menyediakan opsi untuk menyesuaikan proses dengan bahasa lain, di penelitian ini kami hanya menggunakan opsi standar untuk memotong kalimat berdasarkan \textit{whiteline} untuk mendapatkan \textit{token}.
 
-\textit{Part of Speech Tagger} (\textit{POS tagger}) yang digunakan pada rangkaian ini adalah, \verb|MaxentTagger| \citep{toutanova2003feature}, yang juga merupakan bagian dari pustaka \textit{Stanford Core NLP}. \textit{POS tagger} berbasis \textit{multi-class logistic regression} ini dilatih dengan data yang diperoleh dengan mengekstraksi \textit{POS tag} dari 5,036 kalimat \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia\footnote{UD \textit{treebank} Indonesia \url{https://github.com/UniversalDependencies/UD_Indonesian}}. Hasil pengujian model \textit{POS tagger} ini, menggunakan 559 kalimat lain dari sumber yang sama, mencapai akurasi per token \textbf{93.68\%} dan akurasi per kalimat \textbf{63.91\%} (seluruh token dalam kalimat dianotasi dengan \textit{POS tag} yang benar).
+\textit{Part of Speech Tagger} (\textit{POS tagger}) yang digunakan pada rangkaian ini adalah, \verb|MaxentTagger| \citep{toutanova2003feature}, yang juga merupakan bagian dari pustaka \textit{Stanford Core NLP}. \textit{POS tagger} berbasis \textit{multi-class logistic regression} ini dilatih dengan \textit{dataset} yang diperoleh dengan mengekstraksi \textit{POS tag} dari 5,036 kalimat \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia\footnote{UD \textit{treebank} Indonesia \url{https://github.com/UniversalDependencies/UD_Indonesian}}. Hasil pengujian model \textit{POS tagger} ini, menggunakan 559 kalimat lain dari sumber yang sama, mencapai akurasi per token \textbf{93.68\%} dan akurasi per kalimat \textbf{63.91\%} (seluruh token dalam kalimat dianotasi dengan \textit{POS tag} yang benar).
 
 \item \textit{Lemmatizer} \\
 \textit{Lemmatizer} yang digunakan pada rangkaian ini diadaptasi dari \textit{lemmatizer} bahasa Indonesia berbasis aturan \citep{suhartono2014lemmatization} dan diberi nama \verb|IndonesianLemmaAnnotator|. Adaptasi dilakukan dengan melakukan perubahan berikut:
@@ -72,10 +72,10 @@ Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia ya
 \textit{Lemmatizer} ini mencapai akurasi \textbf{99\%} saat diuji dengan 5.638 pasangan kata dan \textit{lemma} bahasa Indonesia dari \cite{suhartono2014lemmatization}.
 
 \item \textit{Named-Entity Recognizer} (NER) \\
-\textit{Named-entity recognizer} (NER) yang digunakan dalam rangkaian ini adalah \verb|CRFClassifier| \citep{finkel2005incorporating} dari pustaka \textit{Stanford Core NLP}. NER berbasis \textit{Conditional Random Field (CRF) sequence models} ini dilatih dan diuji menggunakan data yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik\footnote{NER Indonesia \url{https://github.com/yusufsyaifudin/indonesia-ner}}. Data ini berisi kalimat-kalimat yang setiap \textit{token}-nya yang relevan sudah diberi anotasi dari lima kelas: \textit{Person}, \textit{Organization}, \textit{Quantity} dan \textit{Time}. Hasil pelatihan dengan 3,535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, \textit{recall} 0.85 dan \textit{$F_1$-score} \textbf{0.86}.
+\textit{Named-entity recognizer} (NER) yang digunakan dalam rangkaian ini adalah \verb|CRFClassifier| \citep{finkel2005incorporating} dari pustaka \textit{Stanford Core NLP}. NER berbasis \textit{Conditional Random Field (CRF) sequence models} ini dilatih dan diuji menggunakan \textit{dataset} yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik\footnote{NER Indonesia \url{https://github.com/yusufsyaifudin/indonesia-ner}}. \textit{dataset} ini berisi kalimat-kalimat yang setiap \textit{token}-nya yang relevan sudah diberi anotasi dari lima kelas: \textit{Person}, \textit{Organization}, \textit{Quantity} dan \textit{Time}. Hasil pelatihan dengan 3,535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, \textit{recall} 0.85 dan \textit{$F_1$-score} \textbf{0.86}.
 
 \item \textit{Dependency Parser} \\
-\textit{Dependency parser} yang digunakan dalam rangkaian ini adalah salah satu modul dalam pustaka \textit{Standford Core NLP}, yaitu \verb|nndep.DependencyParser| \citep{chen2014fast}. \textit{Dependency parser} ini berbasiskan jaringan syaraf tiruan (\textit{artificial neural network}) yang mempelajari pola transisi antar \textit{token} dalam kalimat dalam membentuk \textit{dependency tree}. Data yang digunakan untuk melatih dan menguji \textit{dependency parser} ini diperoleh dari \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia (sama dengan yang digunakan untuk \textit{POS tagger}). Model yang dihasilkan dengan melatih \textit{dependency parser} menggunakan 5,036 kalimat bahasa Indonesia ini mencapai nilai \textbf{70\%} UAS (\textit{Unlabeled Attachment Score}) dan \textbf{46\%} LAS (\textit{Labeled Attachment Score}) ketika diuji dengan 559 kalimat.
+\textit{Dependency parser} yang digunakan dalam rangkaian ini adalah salah satu modul dalam pustaka \textit{Standford Core NLP}, yaitu \verb|nndep.DependencyParser| \citep{chen2014fast}. \textit{Dependency parser} ini berbasiskan jaringan syaraf tiruan (\textit{artificial neural network}) yang mempelajari pola transisi antar \textit{token} dalam kalimat dalam membentuk \textit{dependency tree}. \textit{\textit{dataset}set} yang digunakan untuk melatih dan menguji \textit{dependency parser} ini diperoleh dari \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia (sama dengan yang digunakan untuk \textit{POS tagger}). Model yang dihasilkan dengan melatih \textit{dependency parser} menggunakan 5,036 kalimat bahasa Indonesia ini mencapai nilai \textbf{70\%} UAS (\textit{Unlabeled Attachment Score}) dan \textbf{46\%} LAS (\textit{Labeled Attachment Score}) ketika diuji dengan 559 kalimat.
 
 \end{enumerate}
 
@@ -141,7 +141,7 @@ Contoh aplikasi aturan \textit{triple candidate generator} pada contoh dokumen C
 \item (desa, terletak, Indonesia)
 \end{itemize}
 
-Untuk melatih modul \textit{triple selector} yang dapat memilih kandidat \textit{triple} yang valid, dibangun data pelatihan dengan melakukan pelabelan manual pada 1,611 kandidat \textit{triple} (132 positif dan 1,479 negatif) yang dihasilkan \textit{triple candidate generator} dari 42 kalimat berformat CoNLL-U. Himpunan kalimat tersebut merupakan sebagian dari data \textit{universal dependency} Indonesia yang ditambahkan anotasi \textit{named-entity} secara manual.
+Untuk melatih modul \textit{triple selector} yang dapat memilih kandidat \textit{triple} yang valid, dibangun \textit{dataset} dengan melakukan pelabelan manual pada 1,611 kandidat \textit{triple} (132 positif dan 1,479 negatif) yang dihasilkan \textit{triple candidate generator} dari 42 kalimat berformat CoNLL-U. Himpunan kalimat tersebut merupakan sebagian dari \textit{dataset} \textit{universal dependency} Indonesia yang ditambahkan anotasi \textit{named-entity} secara manual.
 
 Pada fase Ekstrak, \textit{triple candidate generator} juga digunakan untuk menghasilkan kandidat \textit{triple} dari dokumen CoNLL-U yang tidak berlabel seperti yang digambarkan pada Gambar \ref{fig:program_flowchart}. Hasil dari modul ini kemudian akan diseleksi oleh \textit{triple selector} yang telah dilatih pada fase Belajar. Lebih jauh mengenai \textit{triple} selector akan dijelaskan di subbab berikutnya.
 
@@ -157,10 +157,10 @@ Metode yang digunakan untuk membangun \textit{classifier} pada modul ini adalah 
 \item Jumlah fitur maksimum  (\verb|max_features|): 4 (akar dari jumlah total fitur)
 \item Kedalaman maksimum  (\verb|max_depth|): 8
 \item Jumlah pohon (\verb|n_estimators|): 20
-\item Bobot kelas (\verb|class_weight|): \textit{balanced} (sesuai rasio kelas pada data)
+\item Bobot kelas (\verb|class_weight|): \textit{balanced} (sesuai rasio kelas pada \textit{dataset})
 \end{itemize}
 
-Konfigurasi ini ditemukan dengan menggunakan algoritma \textit{grid search} \citep{wasserman2015grid}, algoritma pencarian menyeluruh (\textit{exhaustive}) terhadap sejumlah himpunan \textit{hyperparameter} untuk mengoptimalkan metrik evaluasi tertentu. Algoritma ini digunakan untuk mencari konfigurasi yang menghasilkan \textit{$F_1$ score} terbaik untuk \textit{random forest} dengan data latih yang ada.
+Konfigurasi ini ditemukan dengan menggunakan algoritma \textit{grid search} \citep{wasserman2015grid}, algoritma pencarian menyeluruh (\textit{exhaustive}) terhadap sejumlah himpunan \textit{hyperparameter} untuk mengoptimalkan metrik evaluasi tertentu. Algoritma ini digunakan untuk mencari konfigurasi yang menghasilkan \textit{$F_1$ score} terbaik untuk \textit{random forest} dengan data yang ada.
 
 Untuk melakukan klasifikasi, 17 fitur berbasis \textit{POS tag}, \textit{named-entity} dan \textit{dependency relation} diekstrak dari masing-masing kandidat \textit{triple} dengan rincian pada Tabel \ref{tab:models_features}. Berbeda dengan \textsc{TextRunner} atau \textsc{ReVerb} \citep{banko2007open} \citep{etzioni2011open} yang lebih memilih menggunakan \textit{shallow syntactic features}, \textit{classifier} pada sistem ini menggunakan \textit{heavy linguistic features} seperti \textit{dependency relation} untuk mengoptimalkan \textit{precision} dan \textit{recall}.
 
@@ -192,7 +192,7 @@ Untuk melakukan klasifikasi, 17 fitur berbasis \textit{POS tag}, \textit{named-e
 \end{tabular}
 \end{table}
 
-Pada fase Belajar, data kandidat \textit{triple} yang telah diberi label di fase Label diekstrak menjadi 17 fitur yang dijelaskan di Tabel \ref{tab:models_features} dan dinormalisasi menggunakan pustaka \verb|StandardScaler| dari \textit{sckit-learn}. Data fitur yang telah dinormalisasi tersebut dipakai untuk melatih \textit{classifier} dan hasilnya juga disimpan dalam berkas biner (\textit{binary file}) untuk digunakan pada fase Ekstrak.
+Pada fase Belajar, data kandidat \textit{triple} yang telah diberi label di fase Label diekstrak menjadi 17 fitur yang dijelaskan di Tabel \ref{tab:models_features} dan dinormalisasi menggunakan pustaka \verb|StandardScaler| dari \textit{sckit-learn}. \textit{Dataset} berisi fitur yang telah dinormalisasi tersebut dipakai untuk melatih \textit{classifier} dan hasilnya juga disimpan dalam berkas biner (\textit{binary file}) untuk digunakan pada fase Ekstrak.
 
 \subsection{\textit{Token Expander}}
 
@@ -259,7 +259,7 @@ Evaluasi sistem \textit{open IE} ini akan difokuskan pada modul \textit{triple s
 
 \subsubsection{Eksperimen Model \textit{Triple Selector}}
 
-Pada eksperimen ini akan dibandingkan kinerja empat buah model \textit{supervised learning} untuk melakukan klasifikasi \textit{triple} untuk menentukan apakah \textit{random forest} \citep{wasserman2015grid} adalah model yang paling cocok. Empat buah model tersebut adalah \textit{linear logistic regression}  \citep{fan2008liblinear}, \textit{polynomial support vector machine} (SVM) \citep{chang2011libsvm}, \textit{multi-layer perceptron} (MLP) \citep{hinton1989connectionist} dan \textit{random forest} sendiri. Keempat model ini akan dilatih dan diuji dengan metode \textit{k-fold cross-validation} menggunakan data yang telah dijelaskan pada subbab \ref{Triple Candidate Generator}. Karena data yang digunakan memiliki rasio kelas positif dan negatif yang tidak seimbang, maka digunakan $k = 3$ pada \textit{cross-validation} untuk mencegah adanya potongan (\textit{fold}) data yang hanya terdiri dari kelas negatif.
+Pada eksperimen ini akan dibandingkan kinerja empat buah model \textit{supervised learning} untuk melakukan klasifikasi \textit{triple} untuk menentukan apakah \textit{random forest} \citep{wasserman2015grid} adalah model yang paling cocok. Empat buah model tersebut adalah \textit{linear logistic regression}  \citep{fan2008liblinear}, \textit{polynomial support vector machine} (SVM) \citep{chang2011libsvm}, \textit{multi-layer perceptron} (MLP) \citep{hinton1989connectionist} dan \textit{random forest} sendiri. Keempat model ini akan dilatih dan diuji dengan metode \textit{k-fold cross-validation} menggunakan \textit{dataset} yang telah dijelaskan pada subbab \ref{Triple Candidate Generator}. Karena \textit{dataset} yang digunakan memiliki rasio kelas positif dan negatif yang tidak seimbang, maka digunakan $k = 3$ pada \textit{cross-validation} untuk mencegah adanya potongan (\textit{fold}) \textit{dataset} yang hanya terdiri dari kelas negatif.
 
 Metrik yang akan dibandingkan pada eksperimen ini adalah \textit{precision}, \textit{recall} dan \textit{$F_1$ score} hanya untuk kelas positif (\textit{triple} valid) karena pada \textit{open IE} data negatif tidak diperlukan. Karena untuk \textit{task} klasifikasi \textit{triple} ini \textit{precision} dan \textit{recall} sama-sama penting, maka metrik yang dipandang lebih penting adalah rerata dari dua metrik tersebut, yaitu \textit{$F_1$-score} \citep{angeli2015leveraging}. Persamaan untuk menghitung \textit{precision}, \textit{recall} dan \textit{$F_1$-score} untuk data positif ditunjukkan secara berurutan pada persamaan \ref{eq:precision}, \ref{eq:recall} dan \ref{eq:f1}.
 
@@ -281,9 +281,9 @@ Metrik yang akan dibandingkan pada eksperimen ini adalah \textit{precision}, \te
 Pada eksperimen ini diukur waktu eksekusi total sistem \textit{open IE} yang diajukan pada tiga dokumen input yang memiliki jumlah kalimat yang bervariasi. Tujuan dari eksperimen ini adalah mengukur efisiensi sistem secara umum dan membandingkannya dengan penelitian terkait. Dokumen yang digunakan sebagai input pada eksperimen ini adalah:
 
 \begin{enumerate}
-\item Dokumen berisi 2 kalimat dari dataset pelatihan
+\item Dokumen berisi 2 kalimat dari \textit{dataset} pelatihan
 \item Dokumen berisi 138 kalimat dari proposal penelitian
-\item Dokumen berisi 5,593 dari dataset pelatihan
+\item Dokumen berisi 5,593 dari \textit{dataset} pelatihan
 \end{enumerate}
 
 \subsection{Analisis}
