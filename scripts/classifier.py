@@ -45,6 +45,7 @@ experiments = [
         'model': MLPClassifier(max_iter=1000),
         'params': [
             {
+                'activation': ['relu'],
                 'hidden_layer_sizes': [(20, 10)],
                 'random_state': [77]
             }

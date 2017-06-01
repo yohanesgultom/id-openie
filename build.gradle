@@ -25,6 +25,9 @@ distributions {
             }
             from('data') {
                 include('plain.txt')
+                include('doc1.txt')
+                include('doc2.txt')
+                include('doc3.txt')
             }
             from('.') {
                 include('README.md')

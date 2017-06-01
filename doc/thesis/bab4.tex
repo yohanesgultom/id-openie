@@ -14,17 +14,45 @@ Dua eksperimen pada penelitian ini dilakukan pada \textit{notebook} dengan siste
 Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan diuji menggunakan data kandidat \textit{triple} yang sudah diberikan label, diekstraksi menjadi 17 fitur dan dinormalisasi. Metode yang digunakan untuk melatih dan menguji adalah \textit{k-fold} \textit{cross-validation} \citep{kohavi1995study} dengan $k = 3$. Empat model yang dibandingkan beserta dengan konfigurasinya adalah sebagai berikut:
 
 \begin{enumerate}
-	\item Linear Logistic Regression \citep{fan2008liblinear}:
+
+	\item Linear Logistic Regression
 	\begin{itemize}
-		\item \textit{Solver}/\textit{cost function}: \verb|liblinear|
-		\item \textit{Penalty}/\textit{regulazier}: \verb|l2|
+		\item Solver (cost function): \verb|liblinear|
+		\item Penalty (regularizer): \verb|l2|
 	\end{itemize}
-	\item Polynomial Support Vector Machine (SVM)\citep{chang2011libsvm} (nonlinear model)
-	\item Multi-Layer Perceptron (MLP)\citep{hinton1989connectionist} with 2 hidden layers (20 and 10 ReLU\citep{nair2010rectified} neurons)
-	\item Random Forest\citep{wasserman2015grid} (ensemble decision trees)
+
+	\item Polynomial Support Vector Machine (SVM)
+	\begin{itemize}
+		\item Kernel: \verb|poly|
+		\item Degree: \verb|5|
+	\end{itemize}
+
+	\item ReLU Multi-Layer Perceptron (MLP)
+	\begin{itemize}
+		\item Hidden layers: \verb|(20, 10)|
+		\item Activation: \verb|relu| \citep{nair2010rectified}
+		\item Max. iteration: \verb|1000|
+	\end{itemize}
+	
+	\item Random Forest
+	\begin{itemize}
+		\item Max. depth: \verb|8|
+		\item Number of estimators: \verb|20|
+		\item Min. samples split: \verb|5|
+		\item Criterion: \verb|gini| \citep{mingers1989empirical}
+		\item Max. features: \verb|auto| (pembulatan akar dari jumlah total fitur)
+		\item Class weight: \verb|balanced| (sesuai rasio kelas)
+	\end{itemize}
+
 \end{enumerate}
 
-We use the manually annotated triple selector dataset described in Section \ref{Triple Candidates Generator} to cross-validate\citep{kohavi1995study} (k-Fold with $k=3$) the four classifiers. Since open IE systems requires both precision and recall\citep{angeli2015leveraging}, we choose F1 score to determine the best classifier for triple selector. The result of this experiment is shown by Figure \ref{fig:models_performance} and Table \ref{tab:models_performance} where Random Forest achieves the highest F1 score 0.58.
+Eksperimen ini dilakukan dengan menjalankan program \verb|classifier.py| (di direktori yang sama dengan pustaka utama \verb|tripletools.py|) dengan input data fitur yang sudah dinormalisasi dengan format \textit{comma separated value} (CSV) \verb|triple-selector.train.csv| pada \textit{terminal}:
+
+\begin{verbatim}
+	$ python classifier.py --best triple-selector.train.csv
+\end{verbatim}
+
+Hasil dari eksperimen pertama ini dapat dilihat pada Tabel \ref{tab:models_performance} dan visualisasinya pada Gambar \ref{fig:models_performance} di mana \textit{random forest} mencapai nilai \textit{recall} dan $F_1$ tertinggi, yaitu \textbf{0.58}. Sedangkan nilai \textit{precision} tertinggi, \textbf{0.68}, dicapai oleh SVM. 
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{../images/models_performance.png}
@@ -36,9 +64,9 @@ We use the manually annotated triple selector dataset described in Section \ref{
 \caption{Hasil eksperimen perbandingan model \textit{supervised learning} untuk \textit{triple selector}}
 	\label{tab:models_performance}
 	\centering
-	\begin{tabular}{l r r r}
+	\begin{tabular}{p{5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm}}
 		\hline
-		\textbf{Model} & \textbf{P} & \textbf{R} & \textbf{F1} \\
+		\textbf{Model} & \textbf{\textit{Precision}} & \textbf{\textit{Recall}} & \textbf{$F_1$} \\
 		\hline
 		Logistic Regression & 0.64 & 0.28 & 0.36 \\
 		SVM & \textbf{0.68} & 0.41 & 0.51 \\
@@ -48,15 +76,23 @@ We use the manually annotated triple selector dataset described in Section \ref{
 	\end{tabular}
 \end{table}
 
-In the second experiment, we evaluate the performance of our system by extracting triples from three documents with different number of sentences, measuring the total execution time and calculating the average execution time per sentence. The result in Table \ref{tab:system_extraction_time} shows that the lowest execution time (or fastest execution time) is 0.014 seconds when processing document of 5,593 sentences.
+Pada eksperimen kedua, sistem \textit{open IE} dipakai untuk mengekstrak \textit{triple} dari tiga buah dokumen dengan ukuran bervariasi. Metrik utama pada eksperimen ini adalah waktu total eksekusi yang dipakai untuk menghitung waktu eksekusi rata-rata per kalimat. Sebagai tambahan, diamati juga jumlah \textit{triple} yang dapat diekstraksi dari tiap dokumen. Eksperimen ini dilakukan dengan menjalankan program utama \verb|extract_triples.py| untuk setiap dokumen (\verb|doc1.txt|, \verb|doc2.txt|, \verb|doc3.txt|) yang berisi satu kalimat per baris:
+
+\begin{verbatim}
+	$ python extract_triples.py -f tsv doc1.txt
+	$ python extract_triples.py -f tsv doc2.txt
+	$ python extract_triples.py -f tsv doc3.txt
+\end{verbatim}
+
+Hasil eksperimen tersebut ditunjukkan pada Tabel \ref{tab:system_extraction_time} di mana waktu eksekusi rata-rata per kalimat \textbf{0.014 detik/kalimat} dicapai untuk ukuran dokumen terbesar 5,593 kalimat. Dapat dilihat bahwa rata-rata waktu yang dibutuhkan untuk memproses satu kalimat semakin menurun seiring dengan bertambahnya jumlah kalimat pada dokumen. Rata-rata jumlah \textit{triple} yang diekstraksi dari setiap dokumen adalah \textbf{3.3 \textit{triple}/kalimat}.
 
 \begin{table}
-	\caption{System end-to-end extraction time}
+	\caption{Waktu eksekusi sistem \textit{open IE} \textit{end-to-end}}
 	\label{tab:system_extraction_time}
 	\centering
-	\begin{tabular}{l p{1.2cm} p{1.2cm} p{1.2cm}}
+	\begin{tabular}{p{4cm} p{2.5cm} p{2.5cm} p{2.5cm}}
 		\hline
-		\textbf{Sentences} & \textbf{Triples Extracted} & \textbf{Total Time (s)} & \textbf{Time per Sentence (s)} \\
+		\textbf{Jumlah kalimat} & \textbf{\textit{Triple}} & \textbf{Total (detik)} & \textbf{Per kalimat (detik)} \\
 		\hline
 		2 & 7 & 6.1 & 0.800 \\
 		138 & 429 & 11.3 & 0.082 \\
@@ -64,7 +100,6 @@ In the second experiment, we evaluate the performance of our system by extractin
 		\hline
 	\end{tabular}
 \end{table}
-
 
 %-----------------------------------------------------------------------------%
 \section{Analisis}

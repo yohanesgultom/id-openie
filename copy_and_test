@@ -2,7 +2,7 @@
 
 distname=id-openie-1.0
 distdir=build/distributions/$distname
-testfile=$1
+testfile="${1:-doc1.txt}"
 
 cp scripts/tripletools.py $distdir
 cp scripts/extract_triples.py $distdir
