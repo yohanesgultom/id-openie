@@ -72,14 +72,14 @@ Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia ya
 \textit{Lemmatizer} ini mencapai akurasi \textbf{99\%} saat diuji dengan 5.638 pasangan kata dan \textit{lemma} bahasa Indonesia dari \cite{suhartono2014lemmatization}.
 
 \item \textit{Named-Entity Recognizer} (NER) \\
-\textit{Named-entity recognizer} (NER) yang digunakan dalam rangkaian ini adalah \verb|CRFClassifier| \citep{finkel2005incorporating} dari pustaka \textit{Stanford Core NLP}. NER berbasis \textit{Conditional Random Field (CRF) sequence models} ini dilatih dan diuji menggunakan data yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik\footnote{NER Indonesia \url{https://github.com/yusufsyaifudin/indonesia-ner}}. Data ini berisi kalimat-kalimat yang setiap \textit{token}-nya yang relevan sudah diberi anotasi dari lima kelas: \textit{Person}, \textit{Organization}, \textit{Quantity} dan \textit{Time}. Hasil pelatihan dengan 3.535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, \textit{recall} 0.85 dan \textit{F1-score} \textbf{0.86}.
+\textit{Named-entity recognizer} (NER) yang digunakan dalam rangkaian ini adalah \verb|CRFClassifier| \citep{finkel2005incorporating} dari pustaka \textit{Stanford Core NLP}. NER berbasis \textit{Conditional Random Field (CRF) sequence models} ini dilatih dan diuji menggunakan data yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik\footnote{NER Indonesia \url{https://github.com/yusufsyaifudin/indonesia-ner}}. Data ini berisi kalimat-kalimat yang setiap \textit{token}-nya yang relevan sudah diberi anotasi dari lima kelas: \textit{Person}, \textit{Organization}, \textit{Quantity} dan \textit{Time}. Hasil pelatihan dengan 3.535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, \textit{recall} 0.85 dan \textit{$F_1$-score} \textbf{0.86}.
 
 \item \textit{Dependency Parser} \\
 \textit{Dependency parser} yang digunakan dalam rangkaian ini adalah salah satu modul dalam pustaka \textit{Standford Core NLP}, yaitu \verb|nndep.DependencyParser| \citep{chen2014fast}. \textit{Dependency parser} ini berbasiskan jaringan syaraf tiruan (\textit{artificial neural network}) yang mempelajari pola transisi antar \textit{token} dalam kalimat dalam membentuk \textit{dependency tree}. Data yang digunakan untuk melatih dan menguji \textit{dependency parser} ini diperoleh dari \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia (sama dengan yang digunakan untuk \textit{POS tagger}). Model yang dihasilkan dengan melatih \textit{dependency parser} menggunakan 5.036 kalimat bahasa Indonesia ini mencapai nilai \textbf{70\%} UAS (\textit{Unlabeled Attachment Score}) dan \textbf{46\%} LAS (\textit{Labeled Attachment Score}) ketika diuji dengan 559 kalimat.
 
 \end{enumerate}
 
-Estimasi kinerja dari modul \textit{NLP pipeline} ini dihitung dari rata-rata kinerja \textit{POS tagger} (\textit{sentence accuracy}), \textit{NER} (\textit{F1-score}) dan \textit{dependency parser} (LAS), yaitu \textbf{65.30\%}. Kinerja \textit{tokenizer} dan \textit{lemmatizer} tidak diperhitungkan karena dianggap sudah terwakili oleh \textit{NLP task} yang lain. Hasil dari \textit{NLP pipeline} ini adalah dokumen berisi anotasi setiap kalimat dengan format CoNLL-U seperti contoh pada Gambar \ref{fig:conllu_example}. Dokumen ini menjadi input bagi modul \textit{triple candidate generator} yang akan dijelaskan berikutnya. 
+Estimasi kinerja dari modul \textit{NLP pipeline} ini dihitung dari rata-rata kinerja \textit{POS tagger} (\textit{sentence accuracy}), \textit{NER} (\textit{$F_1$-score}) dan \textit{dependency parser} (LAS), yaitu \textbf{65.30\%}. Kinerja \textit{tokenizer} dan \textit{lemmatizer} tidak diperhitungkan karena dianggap sudah terwakili oleh \textit{NLP task} yang lain. Hasil dari \textit{NLP pipeline} ini adalah dokumen berisi anotasi setiap kalimat dengan format CoNLL-U seperti contoh pada Gambar \ref{fig:conllu_example}. Dokumen ini menjadi input bagi modul \textit{triple candidate generator} yang akan dijelaskan berikutnya. 
 
 \begin{figure}
 \centering
@@ -160,7 +160,7 @@ Metode yang digunakan untuk membangun \textit{classifier} pada modul ini adalah 
 \item Bobot kelas (\verb|class_weight|): \textit{balanced} (sesuai rasio kelas pada data)
 \end{itemize}
 
-Konfigurasi ini ditemukan dengan menggunakan algoritma \textit{grid search} \citep{wasserman2015grid}, algoritma pencarian menyeluruh (\textit{exhaustive}) terhadap sejumlah himpunan \textit{hyperparameter} untuk mengoptimalkan metrik evaluasi tertentu. Algoritma ini digunakan untuk mencari konfigurasi yang menghasilkan \textit{F1 score} terbaik untuk \textit{random forest} dengan data latih yang ada.
+Konfigurasi ini ditemukan dengan menggunakan algoritma \textit{grid search} \citep{wasserman2015grid}, algoritma pencarian menyeluruh (\textit{exhaustive}) terhadap sejumlah himpunan \textit{hyperparameter} untuk mengoptimalkan metrik evaluasi tertentu. Algoritma ini digunakan untuk mencari konfigurasi yang menghasilkan \textit{$F_1$ score} terbaik untuk \textit{random forest} dengan data latih yang ada.
 
 Untuk melakukan klasifikasi, 17 fitur berbasis \textit{POS tag}, \textit{named-entity} dan \textit{dependency relation} diekstrak dari masing-masing kandidat \textit{triple} dengan rincian pada Tabel \ref{tab:models_features}. Berbeda dengan \textsc{TextRunner} atau \textsc{ReVerb} \citep{banko2007open} \citep{etzioni2011open} yang lebih memilih menggunakan \textit{shallow syntactic features}, \textit{classifier} pada sistem ini menggunakan \textit{heavy linguistic features} seperti \textit{dependency relation} untuk mengoptimalkan \textit{precision} dan \textit{recall}.
 
@@ -194,9 +194,9 @@ Untuk melakukan klasifikasi, 17 fitur berbasis \textit{POS tag}, \textit{named-e
 
 Pada fase Belajar, data kandidat \textit{triple} yang telah diberi label di fase Label diekstrak menjadi 17 fitur yang dijelaskan di Tabel \ref{tab:models_features} dan dinormalisasi menggunakan pustaka \verb|StandardScaler| dari \textit{sckit-learn}. Data fitur yang telah dinormalisasi tersebut dipakai untuk melatih \textit{classifier} dan hasilnya juga disimpan dalam berkas biner (\textit{binary file}) untuk digunakan pada fase Ekstrak.
 
-\subsection{Token Expander}
+\subsection{\textit{Token Expander}}
 
-Instead of using lightweight noun phrase chunker \citep{banko2007open}, our system uses rule-based token expander to extract relation or argument clauses. While having different objective and approach, this token expander works similarly to Clause Selector in Stanford Open IE \citep{angeli2015leveraging} where the algorithm starts from a token then decides whether to expand to its dependents. Instead of using machine learning model like Clause Selector, it uses simple heuristics based on syntactical features (POS tag, dependency relation and named-entity) described in Table \ref{tab:token_expansion_rules_s_o} and Table \ref{tab:token_expansion_rules_p} to determine whether to: (1) expand a token to its dependent, (2) ignore the dependent or (3) remove the token itself. For example, token expander will expand check-marked triples in Section \ref{Triple Candidate Generator} into:
+Modul \textit{token expander} adalah berfungsi mengekspansi \textit{token} pada \textit{triple} menjadi kata, kata majemuk atau frase sehingga makna \textit{triple} menjadi lebih jelas. Contoh ekspansi \textit{token} terhadap lima kandidat \textit{triple} yang valid pada subbab \ref{Triple Candidate Generator} adalah:
 
 \begin{itemize}
 \item (Sembungan, adalah, desa)
@@ -206,61 +206,86 @@ Instead of using lightweight noun phrase chunker \citep{banko2007open}, our syst
 \item (Sembungan, terletak di, Indonesia)
 \end{itemize}
 
+Jika \textsc{TextRunner} menggunakan \textit{noun phrase chunker} \citep{banko2007open} untuk menemukan frase sebagai kandidat argumen (subjek atau objek), \textit{token expander} menggunakan 11 aturan berbasis \textit{POS tag}, \textit{named-entity} dan \textit{dependency relation} yang dirinci pada Tabel \ref{tab:token_expansion_rules_s_o}. Perbedaan lain dengan \textit{TextRunner} adalah modul ini digunakan juga untuk mengekspansi negasi \textit{token} predikat dengan aturan pada Tabel \ref{tab:token_expansion_rules_p}. Modul ini menelusuri setiap \textit{dependent} dari sebuah \textit{token} dan memutuskan apakah akan (1) melakukan ekspansi (\textit{expand}) ke \textit{dependent} tersebut, (2) mengabaikan (\textit{ignore}) \textit{dependent} tersebut, atau (3) membuang (\textit{remove}) \textit{dependent} tersebut. Sekalipun memiliki tujuan dan teknik yang berbeda dengan \textit{clause selector} pada \textsc{Stanford Open IE} \citep{angeli2015leveraging}, modul ini sama-sama membentuk frase dengan menelusuri \textit{dependent} dan memutuskan apakah sebuah \textit{dependent} merupakan bagian dari frase yang sama atau berbeda.
+
+
 % Token expansion rules for Subject or Object token
-\begin{table}[!t]
-\renewcommand{\arraystretch}{1.5}
-\caption{Token expansion rules for Subject or Object token}
+\begin{table}
+\caption{Aturan ekspansi untuk \textit{token} subjek atau objek}
 \label{tab:token_expansion_rules_s_o}
 \centering
-\begin{tabular}{r p{6cm} l}
+\begin{tabular}{r p{10cm} l}
 \hline
-\textbf{\#} & \textbf{Condition for Subject or Object Token} & \textbf{Action} \\
+\textbf{\#} & \textbf{Kondisi untuk \textit{token} subjek atau objek} & \textbf{Aksi} \\
 \hline
-1 & If dependent's relation to the token  is either “compound”, “name”  or “amod” & Expand \\
-2 & If dependent has same named entity as the token & Expand \\
-3 & If dependent and the token are wrapped by quotes or double quotes  & Expand \\
-4 & If the head is a sentence root & Ignore \\
-5 & If dependent's POS tag is CONJ or its form is either “,” (comma) or “/” (slash) & Ignore \\
-6 & If dependent's POS tag is either “VERB” or “ADP” & Ignore \\
-7 & If dependent has at least one dependent with “ADP” POS tag & Ignore \\
-8 & If the first or last token in expansion result has “CONJ” or “ADP” POS tag & Remove \\
-9 & If the first or last index of expansion result is an incomplete parentheses symbol & Remove \\
-10 & If the last index of expansion result is “yang” & Remove \\
-11 & Else & Ignore \\
+1 & Jika relasi \textit{dependent} di antara()["compound", "name", "amod") & Ekspansi \\
+2 & Jika \textit{dependent} memiliki \textit{named-entity} yang sama dengan \textit{token}  & Ekspansi \\
+3 & Jika \textit{dependent} dan token berada dalam kutipan (\textit{quote}) & Ekspansi \\
+4 & Jika \textit{token} merupakan \textit{root} kalimat & Abaikan \\
+5 & Jika \textit{POS tag} dependent CONJ atau termasuk simbol (",", "/) & Abaikan \\
+6 & Jika \textit{POS tag} dependent termasuk ("VERB", "ADP")  & Abaikan \\
+7 & Jika \textit{dependent} memiliki \textit{dependent} dengan \textit{POS tag} "ADP" & Abaikan \\
+8 & Jika \textit{POS tag} \textit{dependent} di antara ("CONJ", "ADP") dan berada di depan frase & Buang \\
+9 & Jika \textit{dependent} merupakan tanda kurung yang tidak lengkap & Buang \\
+10 & Jika \textit{dependent} merupakan kata "yang" diakhir frase & Buang \\
+11 & Lain-lain & Abaikan \\
 \hline
 \end{tabular}
 \end{table}
 
-\begin{table}[!t]
-\renewcommand{\arraystretch}{1.5}
-\caption{Token expansion rules for Predicate token}
+\begin{table}
+\caption{Aturan ekspansi untuk \textit{token} predikat}
 \label{tab:token_expansion_rules_p}
 \centering
-\begin{tabular}{r p{6cm} l}
+\begin{tabular}{r p{10cm} l}
 \hline
-\textbf{\#} & \textbf{Condition for Predicate Token} & \textbf{Action} \\
+\textbf{\#} & \textbf{Kondisi untuk \textit{token} predikat} & \textbf{Aksi} \\
 \hline
-1 & If dependent is “tidak” & Expand \\
-2 & Else & Ignore \\
+1 & Jika \textit{dependent} adalah "tidak" & Ekspansi \\
+2 & Lain-lain & Abaikan \\
 \hline
 \end{tabular}
 \end{table}
 
-During the label step, token expander is used to make manual annotation process easier. We label a triple candidate as valid only if it makes sense after being expanded to clause. For example, \textit{(Sembungan, terletak, kecamatan)} doesn't seem to make sense before expanded to \textit{(Sembungan, terletak di, kecamatan Kejajar)}.
-
-
-%Kamus lemma \url{https://github.com/davidchristiandy/lemmatizer} (5,638 kata uji)
-%
-%Dataset POS tagging \url{https://github.com/UniversalDependencies/UD_Indonesian} (5,036 kalimat latih + 559 kalimat uji)
-%
-%Dataset NER Kelas NLP Fasilkom, UI, 2016 \url{https://github.com/yohanesgultom/knowledge-extractor-id} (1,700 kalimat latih  + 426 kalimat uji, 3 kelas entitas: Person, Organization, Location) \url{https://github.com/yusufsyaifudin/indonesia-ner} (1,835 kalimat latih, 5 kelas entitas: Person, Organization, Location, Quantity, Time)
-%
-%Dataset Dependency parsing \url{https://github.com/UniversalDependencies/UD_Indonesian} (5,036 kalimat latih + 559 kalimat uji)
-%
-%Dataset triple selector, anotasi manual dari sebagian dataset dependency parsing
+Pada fase Label, \textit{token expander} digunakan untuk mengekspansi kandidat \textit{triple} yang dihasilkan \textit{triple candidate generator} sehingga lebih mudah dimengerti manusia. Sedangkan pada fase Ekstrak, modul ini mengekspansi \textit{triple} yang telah dipilih oleh \textit{triple selector} sehingga maknanya lebih jelas. Implementasi dari modul ini dibuat dengan \textit{Python}, yaitu pada fungsi \verb|flatten_node| dalam berkas \verb|tripletools.py| yang juga dilampirkan.
 
 %-----------------------------------------------------------------------------%
 \section{Evaluasi dan Analisis}
 %-----------------------------------------------------------------------------%
 
-Untuk mengevaluasi kinerja dari algoritma \textit{supervised learning} dilakukan proses validasi silang (\textit{cross validation}) menggunakan data yang sudah diketahui kelasnya.
+\subsection{Evaluasi}
+
+Evaluasi sistem \textit{open IE} ini akan difokuskan pada modul \textit{triple selector} karena modul ini ditopang oleh modul \textit{triple candidate generator} dan \textit{token expander} yang, bersama dengan \textit{triple selector}, merupakan pusat kontribusi dari penelitian ini. Selain karena tidak banyak kontribusi yang diberikan melalui modul \textit{NLP pipeline}, kinerja dari modul ini tidak dievaluasi secara khusus melainkan hanya akan dievaluasi secara tidak langsung pada evaluasi efisiensi sistem \textit{open IE} ini. Evaluasi pada penelitian ini akan dibagi menjadi dua eksperimen:
+
+\subsubsection{Eksperimen Model \textit{Triple Selector}}
+
+Pada eksperimen ini akan dibandingkan kinerja empat buah model \textit{supervised learning} untuk melakukan klasifikasi \textit{triple} untuk menentukan apakah \textit{random forest} adalah model yang paling cocok. Empat buah model tersebut adalah \textit{linear logistic regression}, \textit{polynomial support vector machine} (SVM), \textit{multi-layer perceptron} (MLP) dan \textit{random forest} sendiri. Keempat model ini akan dilatih dan diuji dengan metode \textit{k-fold cross-validation} menggunakan data yang telah dijelaskan pada subbab \ref{Triple Candidate Generator}. Karena data yang digunakan memiliki rasio kelas positif dan negatif yang tidak seimbang, maka digunakan $k = 3$ pada \textit{cross-validation} untuk mencegah adanya potongan (\textit{fold}) data yang hanya terdiri dari kelas negatif.
+
+Metrik yang akan dibandingkan pada eksperimen ini adalah \textit{precision}, \textit{recall} dan \textit{$F_1$ score} hanya untuk kelas positif (\textit{triple} valid) karena pada \textit{open IE} data negatif tidak diperlukan. Karena untuk \textit{task} klasifikasi \textit{triple} ini \textit{precision} dan \textit{recall} sama-sama penting, maka metrik yang dipandang lebih penting adalah rerata dari dua metrik tersebut, yaitu \textit{$F_1$-score}. Persamaan untuk menghitung \textit{precision}, \textit{recall} dan \textit{$F_1$-score} untuk data positif ditunjukkan secara berurutan pada persamaan \ref{eq:precision}, \ref{eq:recall} dan \ref{eq:f1}.
+
+\noindent \begin{align}\label{eq:precision}
+	\textit{precision}_+ = \frac{|\textit{selected valid triples}|}{|\textit{selected triples}|}
+\end{align}
+
+\noindent \begin{align}\label{eq:recall}
+	\textit{recall}_+ = \frac{|\textit{selected valid triples}|}{|\textit{valid triples}|}
+\end{align}
+
+\noindent \begin{align}\label{eq:f1}
+	F_{1} = 2 \cdot \frac{\textit{precision}_+ \cdot \textit{recall}_+ }{ \textit{precision}_+ \, + \, \textit{recall}_+}
+\end{align}
+
+
+\subsubsection{Eksperimen Waktu Ekstraksi \textit{Triple}}
+
+Pada eksperimen ini diukur waktu eksekusi total sistem \textit{open IE} yang diajukan pada tiga dokumen input yang memiliki jumlah kalimat yang bervariasi. Tujuan dari eksperimen ini adalah mengukur efisiensi sistem secara umum dan membandingkannya dengan penelitian terkait. Dokumen yang digunakan sebagai input pada eksperimen ini adalah:
+
+\begin{enumerate}
+\item Dokumen berisi 2 kalimat dari dataset pelatihan
+\item Dokumen berisi 138 kalimat dari proposal penelitian
+\item Dokumen berisi 5.593 dari dataset pelatihan
+\end{enumerate}
+
+\subsection{Analisis}
+
+Analisis akan dilakukan terhadap hasil eksperimen yang telah dijelaskan di atas dengan tujuan mengukur pencapaian pada penelitian ini relatif terhadap penelitian-penelitian terkait, memapaparkan alasan di balik hasil eksperimen yang diperoleh serta mencari alternatif perbaikan atau peningkatan yang dapat dilakukan pada penelitian ini ke depannya.
