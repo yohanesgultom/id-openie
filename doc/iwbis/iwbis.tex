@@ -355,7 +355,7 @@ We use Random Forest\cite{breiman2001random}, an ensemble method that aggregate 
 \item Class weight: balanced (prediction probability is multiplied by the ratio of training samples)
 \end{itemize}
 
-We discover the configuration by using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters, to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidate Generator}. 
+We discover the configuration by using Grid Search\cite{wasserman2015grid}, an exhaustive search algorithm to find optimal hyper-parameters for certain evaluation metric. We use this algorithm to find the best F1 score for Random Forest classifier using dataset described in Section \ref{Triple Candidate Generator}. 
 
 We extract 17 features described in Table \ref{table_models_features} from each triple candidates. These features are based on POS tag, named-entity and dependency relation, instead of shallow syntactic features used by TextRunner or ReVerb\cite{banko2007open}\cite{etzioni2011open}. Every nominal feature are also encoded and normalized along with the whole dataset by removing the mean and scaling to unit variance in order to improve the precision and recall of the classifier.
 
