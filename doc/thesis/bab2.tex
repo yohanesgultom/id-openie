@@ -120,9 +120,22 @@ Algoritma \textit{POS tagging} umumnya dapat dikelompokkan menjadi dua: berbasis
 
 \subsection{CoNLL-U}
 
-CoNLL-U\footnote{CoNLL-U \url{http://universaldependencies.org/format.html}} adalah format anotasi yang dikembangkan berdasarkan CoNLL-X, format yang disepakati dalam \textit{Conference on Computational Natural Language Learning} ke sepuluh, yang menggunakan himpunan \textit{POS tag} dan \textit{dependency relation} yang berlaku untuk banyak bahasa atau universal \citep{nivre2016universal}.
+CoNLL-U\footnote{CoNLL-U \url{http://universaldependencies.org/format.html}} adalah format anotasi yang dikembangkan berdasarkan CoNLL-X, format yang disepakati dalam \textit{Conference on Computational Natural Language Learning} ke sepuluh, yang menggunakan himpunan \textit{POS tag} dan \textit{dependency relation} yang berlaku untuk banyak bahasa atau universal \citep{nivre2016universal}. Format \textit{CoNLL-U} ini menggunakan sepuluh buah kolom dengan rincian sebagai berikut:
 
-Himpunan \textit{POS tag} yang dipakai pada CoNLL-U adalah:
+\begin{enumerate}
+	\item ID: Indeks \textit{token} dalam kalimat (mulai dari 1)
+	\item FORM: Bentuk asli dari \textit{token}
+	\item LEMMA: Bentuk kamus dari \textit{token}
+	\item UPOSTAG: \textit{POS tag} universal
+	\item XPOSTAG: \textit{POS tag} spesifik untuk bahasa tertentu
+	\item FEATS: Fitur tambahan atau spesifik untuk bahasa tertentu
+	\item HEAD: ID \textit{token} yang merupaka kepala (\textit{head}) dari \textit{token} ini (0 untuk akar atau \textit{head} kalimat)
+	\item DEPREL: \textit{dependency relation} universal
+	\item DEPS: \textit{dependency graph} khusus atau spesifik untuk bahasa tertentu
+	\item MISC: Anotasi tambahan yang belum tercakup di anotasi lainnya, contoh: \textit{named-entitiy}
+\end{enumerate}
+
+Sedangkan himpunan \textit{POS tag} yang dipakai pada CoNLL-U adalah:
 \begin{multicols}{2}
 	\begin{enumerate}
 		\item ADJ: \textit{adjective}

@@ -51,7 +51,7 @@ Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia ya
 
 \subsection{NLP Pipeline}
 
-\textit{NLP pipeline} adalah modul yang berisi serangkaian \textit{NLP task} yang menganotasi kalimat bahasa Indonesia dan menyimpannya sebagai dokumen dengan format CoNLL-U. Modul ini menerima dokumen teks yang berisi satu atau lebih kalimat yang dipisahkan oleh karakter baris baru (\textit{newline}) dan menghasilkan dokumen teks berisi kalimat yang telah dipotong menjadi \textit{token} dan diberi anotasi dengan format CoNLL-U. \textit{NLP task} yang terdapat pada rangkaian ini adalah sebagai berikut:
+\textit{NLP pipeline} adalah modul yang berisi serangkaian \textit{NLP task} yang menganotasi kalimat bahasa Indonesia dan menyimpannya sebagai dokumen dengan format CoNLL-U. Modul ini menerima dokumen teks yang berisi satu atau lebih kalimat yang dipisahkan oleh karakter baris baru (\textit{newline}) dan menghasilkan dokumen teks berisi kalimat yang telah dipotong menjadi \textit{token} dan diberi anotasi dengan format CoNLL-U. Rangkaian ini diimplementasikan menggunakan pustaka \textit{Stanford Core NLP} dan didistribusikan dalam format \textit{Java Archieve} (JAR) sehingga mudah dintegrasikan dengan modul lain. \textit{NLP task} yang terdapat pada rangkaian ini adalah sebagai berikut:
 
 \begin{enumerate}
 
@@ -72,23 +72,19 @@ Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia ya
 \textit{Lemmatizer} ini mencapai akurasi \textbf{99\%} saat diuji dengan 5.638 pasangan kata dan \textit{lemma} bahasa Indonesia dari \cite{suhartono2014lemmatization}.
 
 \item \textit{Named-Entity Recognizer} (NER)
+\textit{Named-entity recognizer} (NER) yang digunakan dalam rangkaian ini adalah \verb|CRFClassifier| \citep{finkel2005incorporating} dari pustaka \textit{Stanford Core NLP}. NER berbasis \textit{Conditional Random Field (CRF) sequence models} ini dilatih dan diuji menggunakan data yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik\footnote{NER Indonesia \url{https://github.com/yusufsyaifudin/indonesia-ner}}. Data ini berisi kalimat-kalimat yang setiap \textit{token}-nya yang relevan sudah diberi anotasi dari lima kelas: \textit{Person}, \textit{Organization}, \textit{Quantity} dan \textit{Time}. Hasil pelatihan dengan 3.535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, \textit{recall} 0.85 dan \textit{F1-score} \textbf{0.86}.
 
-Stanford NLP \verb|CRFClassifier| \citep{finkel2005incorporating}, a linear chain Conditional Random Field (CRF) sequence models, is trained using a dataset containing 3,535 Indonesian sentences with 5 entity class: Person, Organization, Location, Quantity and Time. When tested using 426 sentences, this models achieves 0.86 precision, 0.85 recall and \textbf{0.86} F1-score. The dataset itself is a combination between dataset from Faculty of Computer Science, University of Indonesia and a public dataset\footnote{Indonesian NER \url{https://github.com/yusufsyaifudin/indonesia-ner}}. \\
-
-
-
-\item Dependency Parser
-
-We relied on Stanford NLP \verb|nndep.DependencyParser| \citep{chen2014fast}, to annotate dependency relation of each token in the sentence. We train this transition-based neural network model using a Indonesian universal dependencies dataset of 5,036 sentences and 3,093 Indonesian word embedding\footnote{Indonesian word embedding \url{https://github.com/yohanesgultom/id-openie/blob/master/data/parser-id.embed}} (vector representation of words). Tested with 559 sentences, this model scores \textbf{70\%} UAS (Unlabeled Attachment Score) and \textbf{46\%} LAS (Labeled Attachment Score).
+\item \textit{Dependency Parser}
+\textit{Dependency parser} yang digunakan dalam rangkaian ini adalah salah satu modul dalam pustaka \textit{Standford Core NLP}, yaitu \verb|nndep.DependencyParser| \citep{chen2014fast}. \textit{Dependency parser} ini berbasiskan jaringan syaraf tiruan (\textit{artificial neural network}) yang mempelajari pola transisi antar \textit{token} dalam kalimat dalam membentuk \textit{dependency tree}. Data yang digunakan untuk melatih dan menguji \textit{dependency parser} ini diperoleh dari \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia (sama dengan yang digunakan untuk \textit{POS tagger}). Model yang dihasilkan dengan melatih \textit{dependency parser} menggunakan 5.036 kalimat bahasa Indonesia ini mencapai nilai \textbf{70\%} UAS (\textit{Unlabeled Attachment Score}) dan \textbf{46\%} LAS (\textit{Labeled Attachment Score}) ketika diuji dengan 559 kalimat.
 
 \end{enumerate}
 
-The output of the pipeline is a CONLL-U document containing annotated sentence such as Figure \ref{fig:conllu_example}. The document becomes an input for next model, the triple candidate generator which is described in Section \ref{Triple Candidate Generator}. Since the annotations that are directly used by following process are POS tag, named entity and dependency relation, we estimate that the accuracy of this NLP pipeline is \textbf{65.30\%} which comes from the average of POS tagger sentence accuracy, NER F1-score (in percent) and dependency parser LAS. Additionally, this pipeline is built by extending Stanford Core NLP classes and packaged as single Java program (JAR) to improve reusability.
+Estimasi kinerja dari modul \textit{NLP pipeline} ini dihitung dari rata-rata kinerja \textit{POS tagger} (\textit{sentence accuracy}), \textit{NER} (\textit{F1-score}) dan \textit{dependency parser} (LAS), yaitu \textbf{65.30\%}. Kinerja \textit{tokenizer} dan \textit{lemmatizer} tidak diperhitungkan karena dianggap sudah terwakili oleh \textit{NLP task} yang lain. Hasil dari \textit{NLP pipeline} ini adalah dokumen berisi anotasi setiap kalimat dengan format CoNLL-U seperti contoh pada Gambar \ref{fig:conllu_example}. Dokumen ini menjadi input bagi modul \textit{triple candidate generator} yang akan dijelaskan berikutnya. 
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.35]{../images/conllu_example.png}
-\caption{Example of CONLL-U sentence annotation format}
+\caption{Contoh format CoNLL-U untuk sebuah kalimat}
 \label{fig:conllu_example}
 \end{figure}
 
