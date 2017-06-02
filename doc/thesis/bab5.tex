@@ -9,10 +9,33 @@ Pada bab ini dijelaskan kesimpulan penelitian ini dan saran untuk pengembangan p
 \section{Kesimpulan}
 %-----------------------------------------------------------------------------%
 
-This paper introduces an open domain information extraction system for Indonesian text using basic NLP pipelines and combination of heuristics and machine learning models. The system is able to extract meaningful domain-independent relations from Indonesian sentences to be used as document representation or document understanding task. Additionally, the source code and datasets are published openly\footnote{Paper source code \url{https://github.com/yohanesgultom/id-openie}} to improve research reproducibility.
+%This paper introduces an open domain information extraction system for Indonesian text using basic NLP pipelines and combination of heuristics and machine learning models. The system is able to extract meaningful domain-independent relations from Indonesian sentences to be used as document representation or document understanding task. Additionally, the source code and datasets are published openly\footnote{Paper source code \url{https://github.com/yohanesgultom/id-openie}} to improve research reproducibility.
+
+Melalui penelitian ini telah diajukan rancangan sistem \textit{open IE} untuk bahasa Indonesia yang menggunakan \textit{NLP pipeline} dan kombinasi model heuristik dan \textit{supervised learning}. Sekalipun belum mencapai akurasi yang tinggi, implementasi sistem ini mampu mengekstraksi \textit{triple} dari teks atau dokumen bahasa Indonesia secara otomatis dalam waktu yang sebanding dengan sistem dari penelitian terkait. Pada penelitian ini juga dibangun \textit{dataset} untuk seleksi \textit{triple} dan dikumpulkan himpunan \textit{dataset} untuk \textit{NLP task} bahasa Indonesia yang dapat digunakan untuk penelitian terkait. Semua kode sumber dan \textit{dataset} penelitian ini juga dipublikasikan pada repositori publik\footnote{Repositori penelitian \url{github.com/yohanesgultom/id-openie}} untuk memudahkan replikasi. Kesimpulan yang dapat diambil berdasarkan evaluasi dan analisis dalam penelitian ini adalah:
+
+\begin{enumerate}
+	\item Kombinasi \textit{NLP pipeline} dasar (\textit{POS tagging}, \textit{lemmatization}, \textit{NER} dan \textit{dependency parsing}) berbasis \textit{Universal Dependency}, model heuristik dan \textit{supervised learning} dapat melakukan \textit{open domain information extraction} (\textit{open IE}) dalam format \textit{triple} (subjek, predikat, objek) dari teks bahasa Indonesia secara otomatis.
+	
+	\item Model \textit{supervised-learning} yang paling sesuai untuk melakukan seleksi \textit{triple} berdasarkan fitur berbasis \textit{POS tag}, \textit{named-entity} dan \textit{dependency relation} adalah \textit{random forest}, yang merupakan \textit{ensemble classifier}. Model ini mencapai nilai $F_1$ 0.58, yang lebih tinggi dari tiga model linier dan nonlinier lain yang diujikan.
+	
+	\item Sistem \textit{open IE} yang diajukan dapat melakukan ekstraksi 19,403 \textit{triple} dari dokumen yang terdiri atas 5,593 kalimat bahasa Indonesia dalam waktu 78.6 detik atau 0.014 detik/kalimat. Dapat disimpulkan bahwa sistem ini cukup efisien untuk digunakan pada dokumen berukuran sedang.
+\end{enumerate}
+
 
 %-----------------------------------------------------------------------------%
 \section{Saran}
 %-----------------------------------------------------------------------------%
 
-In the future, we plan to improve the performance of our system finding better heuristics for triple candidates generator to reduce the negative samples. We also plan adding more training data for triple selector to improve the precision and recall score. We also need to create dataset for triple candidates generator and token expander in order to properly evaluate further improvement of both components. We also consider adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and including them as features and/or heuristics may also improve the overall performance of the system.
+%In the future, we plan to improve the performance of our system finding better heuristics for triple candidates generator to reduce the negative samples. We also plan adding more training data for triple selector to improve the precision and recall score. We also need to create dataset for triple candidates generator and token expander in order to properly evaluate further improvement of both components. We also consider adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and including them as features and/or heuristics may also improve the overall performance of the system.
+
+Berdasarkan hasil analisis, berikut adalah saran pengembangan penelitian ini ke depannya:
+
+\begin{enumerate}
+	\item Memperbaiki kualitas \textit{dataset} untuk melatih \textit{triple selector} dengan menambah lebih banyak data.
+	
+	\item Mengembangkan \textit{triple candidate generator} untuk bisa mengekstraksi kandidat \textit{triple} implisit dan mengurangi kandidat \textit{triple} yang invalid.
+	
+	\item Menggunakan kombinasi antara \textit{ensemble classifier} seperti \textit{random forest} dan \textit{classifier} berpresisi tinggi seperti SVM sebagai \textit{triple selector} untuk meningkatkan \textit{precision} dan \textit{$F_1$ score}.
+	
+	\item Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar serta membangun \textit{dataset} untuk bisa mengevaluasi keseluruhan sistem secara lebih \textit{reliable}.
+\end{enumerate}

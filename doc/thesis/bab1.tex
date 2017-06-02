@@ -6,11 +6,11 @@
 %-----------------------------------------------------------------------------%
 \section{Latar Belakang}
 %-----------------------------------------------------------------------------%
-Di masa sekarang ketersediaan dokumen digital berbahasa natural seperti berita, jurnal dan buku elektronik (\textit{e-book}) sudah sangat banyak dan terus meningkat dengan cepat karena didorong oleh meningkatnya pemanfaatan komputer, \textit{smartphone} dan \textit{internet}. Jumlah dokumen digital tersebut telah melampaui batas kemampuan manusia untuk memproses secara manual sehingga menimbulkan kebutuhan akan proses otomatis untuk melakukannya \citep{banko2007open}. Salah satu proses yang dikembangkan adalah \textit{information extraction} (IE) yang secara selektif menyusun dan mengkombinasikan data yang ditemukan di dalam teks atau dokumen menjadi informasi\citep{cowie1996information}.
+Di masa sekarang ketersediaan dokumen digital berbahasa natural seperti berita, jurnal dan buku elektronik (\textit{e-book}) sudah sangat banyak dan terus meningkat dengan cepat karena didorong oleh meningkatnya pemanfaatan komputer, \textit{smartphone} dan \textit{internet}. Jumlah dokumen digital tersebut telah melampaui batas kemampuan manusia untuk memproses secara manual sehingga menimbulkan kebutuhan akan proses otomatis untuk melakukannya \citep{banko2007open}. Salah satu proses yang dikembangkan adalah \textit{information extraction} (IE) yang secara selektif menyusun dan mengkombinasikan data yang ditemukan di dalam teks atau dokumen menjadi informasi \citep{cowie1996information}.
 
-Meskipun \textit{IE} sudah mampu manusia untuk memproses dokumen digital dengan lebih efisien, metode yang digunakan umumnya hanya berlaku untuk kelompok dokumen yang homogen atau berada dalam satu domain (\textit{closed-domain}). Hal ini terjadi karena umumnya teknik yang dipakai dibuat sedemikian rupa untuk memanfaatkan pola tertentu pada teks atau dokumen\citep{cowie1996information}. Sebagai contoh untuk mengekstraksi nama penulis dari berita elektronik, salah satu cara paling mudah adalah mencari nama orang di awal atau akhir dokumen. Cara yang sama tidak bisa digunakan untuk mencari nama penulis dari dokumen lain seperti jurnal karena struktur dokumen yang berbeda. Hal ini mendorong berkembangnya metode lain yang mampu mengekstraksi informasi dari berbagai domain (\textit{open domain}) yang disebut \textit{open domain information extraction} (\textit{open IE}) \citep{banko2007open}.
+Meskipun \textit{IE} sudah mampu manusia untuk memproses dokumen digital dengan lebih efisien, metode yang digunakan umumnya hanya berlaku untuk kelompok dokumen yang homogen atau berada dalam satu domain (\textit{closed-domain}). Hal ini terjadi karena umumnya teknik yang dipakai dibuat sedemikian rupa untuk memanfaatkan pola tertentu pada teks atau dokumen \citep{cowie1996information}. Sebagai contoh untuk mengekstraksi nama penulis dari berita elektronik, salah satu cara paling mudah adalah mencari nama orang di awal atau akhir dokumen. Cara yang sama tidak bisa digunakan untuk mencari nama penulis dari dokumen lain seperti jurnal karena struktur dokumen yang berbeda. Hal ini mendorong berkembangnya metode lain yang mampu mengekstraksi informasi dari berbagai domain (\textit{open domain}) yang disebut \textit{open domain information extraction} (\textit{open IE}) \citep{banko2007open}.
 
-Seiring dengan berkembangnya waktu, beberapa sistem \textit{open IE} sudah dikembangkan \citep{schmitz2012open} untuk bahasa Inggris. Bahkan penelitian terkait melaporkan kesuksesan aplikasi open IE untuk \textit{task} \textit{question answering} \citep{fader2011identifying} dan \textit{information retrieval} \citep{etzioni2011search}. Akan tetapi karena sistem open IE menggunakan satu atau lebih \textit{task natural language processing} (NLP) dan aturan/heuristik yang hanya berlaku untuk bahasa tertentu, maka sistem yang berkembang tidak dapat dipakai untuk memproses teks atau dokumen dalam bahasa lain seperti bahasa Indonesia. Oleh karena itu dalam penelitian ini, \saya~memperkenalkan sistem open IE untuk bahasa Indonesia.
+Seiring dengan berkembangnya waktu, beberapa sistem \textit{open IE} sudah dikembangkan untuk bahasa Inggris \citep{banko2007open,schmitz2012open,angeli2015leveraging}. Bahkan penelitian terkait melaporkan kesuksesan aplikasi \textit{open IE} untuk \textit{task} \textit{question answering} \citep{fader2011identifying} dan \textit{information retrieval} \citep{etzioni2011search}. Akan tetapi karena sistem \textit{open IE} menggunakan satu atau lebih \textit{task natural language processing} (NLP) dan aturan/heuristik yang hanya berlaku untuk bahasa tertentu, maka sistem yang berkembang tidak dapat dipakai untuk memproses teks atau dokumen dalam bahasa lain seperti bahasa Indonesia. Oleh karena itu dalam penelitian ini, \saya~memperkenalkan sistem \textit{open IE} untuk bahasa Indonesia.
 
 \begin{figure}
 	\begin{mdframed}
@@ -25,7 +25,7 @@ Seiring dengan berkembangnya waktu, beberapa sistem \textit{open IE} sudah dikem
 	\label{fig:example_io_openie}
 \end{figure}
 
-Sistem open IE yang \saya~ajukan bertujuan untuk mengekstrak sejumlah \textit{triple} dari satu atau lebih teks bahasa Indonesia seperti contoh pada Gambar \ref{fig:example_io_openie}. Sistem ini terdiri dari sebuah NLP \textit{pipeline}, pembangkit kandidat \textit{triple} (\textit{triple candidate generator}), pengembang token (\textit{token expander}) dan sebuah model \textit{machine learning} untuk memilih \textit{triple} (\textit{triple selector}). Untuk melatih model \textit{triple selector} tersebut, \saya~juga membuat dataset berisi 1.611 kandidat \textit{triple} bahasa Indonesia yang valid dan yang tidak valid. Sistem ini diharapkan dapat menjadi referensi dalam pengembangan open IE untuk bahasa Indonesia dan juga digunakan untuk kebutuhan aplikasi yang lebih kompleks seperti pendeteksian plagiarisme, \textit{question answering} dan \textit{knowledge extraction}.
+Sistem open IE yang \saya~ajukan bertujuan untuk mengekstrak sejumlah \textit{triple} dari satu atau lebih teks bahasa Indonesia seperti contoh pada Gambar \ref{fig:example_io_openie}. Sistem ini terdiri dari sebuah NLP \textit{pipeline}, pembangkit kandidat \textit{triple} (\textit{triple candidate generator}), pengembang token (\textit{token expander}) dan sebuah model \textit{supervised learning} untuk memilih \textit{triple} (\textit{triple selector}). Untuk melatih model \textit{triple selector} tersebut, \saya~juga membuat dataset berisi 1.611 kandidat \textit{triple} bahasa Indonesia yang valid dan yang tidak valid. Sistem ini diharapkan dapat menjadi referensi dalam pengembangan open IE untuk bahasa Indonesia dan juga digunakan untuk kebutuhan aplikasi yang lebih kompleks seperti pendeteksian plagiarisme, \textit{question answering} dan \textit{knowledge extraction}.
 
 %-----------------------------------------------------------------------------%
 \section{Permasalahan}
@@ -70,42 +70,40 @@ Tujuan dan manfaat dari penelitian ini adalah:\\
 \textbf{Tujuan}
 
 \begin{enumerate}
-\item Merancang sistem open IE untuk teks bahasa Indonesia.
-
-\item Mengimplementasikan sistem open IE untuk teks bahasa Indonesia.
+\item Merancang dan mengimplementasikan sistem \textit{open IE} untuk teks bahasa Indonesia.
+\item Mengumpulkan dan membangun \textit{dataset} yang diperlukan oleh sistem \textit{open IE} bahasa Indonesia.
+\item Mencari model \textit{supervised learning} yang sesuai \textit{sistem open IE} bahasa Indonesia.
 \end{enumerate}
 
 \textbf{Manfaat}
 
 \begin{enumerate}
-\item Menghasilkan sistem \textit{open IE} yang dapat digunakan untuk mengekstrak entitas relasi dan argumen/entitas dalam format \textit{triple} dari teks bahasa Indonesia
+\item Menghasilkan sistem \textit{open IE} yang dapat digunakan untuk mengekstrak entitas relasi dan argumen/entitas dalam format \textit{triple} dari teks bahasa Indonesia.
 
-\item Memberikan acuan untuk pengembangan sistem \textit{open IE} untuk bahasa Indonesia
+\item Memberikan acuan untuk pengembangan sistem \textit{open IE} untuk bahasa Indonesia.
 
-\item Memberikan kontribusi terhadap perkembangan sumber daya bahasa (\textit{language resources}) Indonesia
+\item Memberikan kontribusi terhadap perkembangan sumber daya bahasa (\textit{language resources}) Indonesia.
 \end{enumerate}
 
 %-----------------------------------------------------------------------------%
 \section{Sistematika Penulisan}
 %-----------------------------------------------------------------------------%
 Sistematika penulisan laporan adalah sebagai berikut:
+
 \begin{itemize}
 	\item Bab 1 \babSatu \\
-	Bab ini akan menjelaskan mengenai latar belakang permasalahan, rumusan
-masalah, tujuan, manfaat dan batasan penelitian.
+	Bab ini akan menjelaskan mengenai latar belakang permasalahan, rumusan masalah, tujuan, manfaat dan batasan penelitian.
 	
 	\item Bab 2 \babDua \\
 	Bab ini akan menjelaskan landasan teori yang digunakan pada penelitian ini serta memaparkan kajian pustaka terhadap penelitian-penelitian terkait.
 	
 	\item Bab 3 \babTiga \\
-	Bab ini akan menjelaskan mengenai tahapan, rancangan \& implementasi sistem, pengumpulan \& pengolahan data dan teknik evaluasi yang digunakan pada penelitian ini.
+	Bab ini akan menjelaskan mengenai tahapan, rancangan \& implementasi sistem, evaluasi dan analisis yang digunakan pada penelitian ini.
 	
 	\item Bab 4 \babEmpat \\
-	Bab ini akan menjelaskan tentang hasil eksperimen dan analisis hasil
-eksperimen.
+	Bab ini akan menjelaskan tentang hasil eksperimen dan analisis hasil eksperimen.
 	
 	\item Bab 5 \babLima \\
-	Bab ini akan menjelaskan tentang kesimpulan dari penelitian yang telah
-dilakukan dan saran untuk penelitian berikutnya.
+	Bab ini akan menjelaskan tentang kesimpulan dari penelitian yang telah dilakukan dan saran untuk penelitian berikutnya.
 \end{itemize}
 
