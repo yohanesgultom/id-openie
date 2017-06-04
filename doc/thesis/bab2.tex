@@ -122,7 +122,7 @@ Algoritma \textit{POS tagging} umumnya dapat dikelompokkan menjadi dua: berbasis
 
 \subsection{CoNLL-U}
 
-CoNLL-U\footnote{CoNLL-U \url{http://universaldependencies.org/format.html}} adalah format anotasi yang dikembangkan berdasarkan CoNLL-X, format yang disepakati dalam \textit{Conference on Computational Natural Language Learning} ke sepuluh, yang menggunakan himpunan \textit{POS tag} dan \textit{dependency relation} yang berlaku untuk banyak bahasa atau universal \citep{nivre2016universal}. Format \textit{CoNLL-U} ini menggunakan sepuluh buah kolom dengan rincian sebagai berikut:
+CoNLL-U\footnote{CoNLL-U \url{http://universaldependencies.org/format.html}} adalah format anotasi berbasis \textit{token} (\textit{token-based}) yang menggunakan himpunan \textit{POS tag} dan \textit{dependency relation} yang berlaku untuk banyak bahasa atau universal \citep{nivre2016universal} (terlampir). CoNLL-U merupakan pengembangan dari CoNLL-X, format yang disepakati dalam \textit{Conference on Computational Natural Language Learning} ke sepuluh dan juga dijadikan format standar oleh \textit{dependency parser} pada \textit{Stanford Core NLP}. Setiap \textit{token} pada CoNLL-U memiliki sepuluh kolom atau atribut:
 
 \begin{enumerate}
 	\item ID: Indeks \textit{token} dalam kalimat (mulai dari 1)
@@ -136,73 +136,6 @@ CoNLL-U\footnote{CoNLL-U \url{http://universaldependencies.org/format.html}} ada
 	\item DEPS: \textit{dependency graph} khusus atau spesifik untuk bahasa tertentu
 	\item MISC: Anotasi tambahan yang belum tercakup di anotasi lainnya, contoh: \textit{named-entitiy}
 \end{enumerate}
-
-Sedangkan himpunan \textit{POS tag} yang dipakai pada CoNLL-U adalah:
-\begin{multicols}{2}
-	\begin{enumerate}
-		\item ADJ: \textit{adjective}
-		\item ADP: \textit{adposition}
-		\item ADV: \textit{adverb}
-		\item AUX: \textit{auxiliary}
-		\item CCONJ: \textit{coordinating conjunction}
-		\item DET: \textit{determiner}
-		\item INTJ: \textit{interjection}
-		\item NOUN: \textit{noun}
-		\item NUM: \textit{numeral}
-		\item PART: \textit{particle}
-		\item PRON: \textit{pronoun}
-		\item PROPN: \textit{proper noun}
-		\item PUNCT: \textit{punctuation}
-		\item SCONJ: \textit{subordinating conjunction}
-		\item SYM: \textit{symbol}
-		\item VERB: \textit{verb}
-		\item X: \textit{other}
-	\end{enumerate}
-\end{multicols}
-
-Sementara himpunan \textit{dependency relation} yang dipakai adalah:
-
-\begin{multicols}{2}
-	\begin{enumerate}
-		\item acl: \textit{clausal modifier of noun (adjectival clause)}
-		\item advcl: \textit{adverbial clause modifier}
-		\item advmod: \textit{adverbial modifier}
-		\item amod: \textit{adjectival modifier}
-		\item appos: \textit{appositional modifier}
-		\item aux: \textit{auxiliary}
-		\item case: \textit{case marking}
-		\item cc: \textit{coordinating conjunction}
-		\item ccomp: \textit{clausal complement}
-		\item clf: \textit{classifier}
-		\item compound: \textit{compound}
-		\item conj: \textit{conjunct}
-		\item cop: \textit{copula}
-		\item csubj: \textit{clausal subject}
-		\item dep: \textit{unspecified dependency}
-		\item det: \textit{determiner}
-		\item discourse: \textit{discourse element}
-		\item dislocated: \textit{dislocated elements}
-		\item expl: \textit{expletive}
-		\item fixed: \textit{fixed multiword expression}
-		\item flat: \textit{flat multiword expression}
-		\item goeswith: \textit{goes with}
-		\item iobj: \textit{indirect object}
-		\item list: \textit{list}
-		\item mark: \textit{marker}
-		\item nmod: \textit{nominal modifier}
-		\item nsubj: \textit{nominal subject}
-		\item nummod: \textit{numeric modifier}
-		\item obj: \textit{object}
-		\item obl: \textit{oblique nominal}
-		\item orphan: \textit{orphan}
-		\item parataxis: \textit{parataxis}
-		\item punct: \textit{punctuation}
-		\item reparandum: \textit{overridden disfluency}
-		\item root: \textit{root}
-		\item vocative: \textit{vocative}
-		\item xcomp: \textit{open clausal complement}
-	\end{enumerate}
-\end{multicols}
 
 %-----------------------------------------------------------------------------%
 \section{\textit{Supervised Learning}}
