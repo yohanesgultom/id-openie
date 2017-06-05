@@ -18,7 +18,7 @@ Melalui penelitian ini telah diajukan rancangan sistem \textit{open IE} untuk ba
 	
 	\item Model \textit{supervised-learning} yang paling sesuai untuk melakukan seleksi \textit{triple} berdasarkan fitur berbasis \textit{POS tag}, \textit{named-entity} dan \textit{dependency relation} adalah \textit{random forest}, yang merupakan \textit{ensemble classifier}. Model ini mencapai nilai $F_1$ 0.58, yang lebih tinggi dari tiga model linier dan nonlinier lain yang diujikan.
 	
-	\item Sistem \textit{open IE} yang diajukan dapat melakukan ekstraksi 19,403 \textit{triple} dari dokumen yang terdiri atas 5,593 kalimat bahasa Indonesia dalam waktu 78.6 detik atau 0.014 detik/kalimat. Dapat disimpulkan bahwa sistem ini cukup efisien untuk digunakan pada dokumen berukuran sedang.
+	\item Sistem \textit{open IE} yang diajukan dapat melakukan ekstraksi 19,403 \textit{triple} dari dokumen yang terdiri atas 5,593 kalimat bahasa Indonesia dalam waktu 78.6 detik atau 0.014 detik/kalimat. Dapat disimpulkan bahwa sistem ini cukup efisien untuk digunakan pada dokumen berukuran lebih besar dari 138 kalimat dan kurang dari 5,593 kalimat.
 \end{enumerate}
 
 
@@ -37,5 +37,5 @@ Berdasarkan hasil analisis, berikut adalah saran pengembangan penelitian ini ke 
 	
 	\item Menggunakan kombinasi antara \textit{ensemble classifier} seperti \textit{random forest} dan \textit{classifier} berpresisi tinggi seperti SVM sebagai \textit{triple selector} untuk meningkatkan \textit{precision} dan \textit{$F_1$ score}.
 	
-	\item Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar serta membangun \textit{dataset} untuk bisa mengevaluasi keseluruhan sistem secara lebih \textit{reliable}.
+	\item Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar (berisi lebih banyak kaliat) serta membangun \textit{dataset} untuk bisa mengevaluasi keseluruhan sistem secara lebih \textit{reliable}.
 \end{enumerate}
