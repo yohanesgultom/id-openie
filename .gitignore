@@ -34,3 +34,4 @@ src/test/resources/*
 !src/test/resources/plain.txt
 !scripts/PennTreeBankToUniversal.csv
 !build/distributions/*.zip
+!doc/presentation/*.json
