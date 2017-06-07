@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Presentation</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section>
+					<h2><em>Open Domain Information Extraction</em> dari Teks Bahasa Indonesia</h2>
+					<p>Yohanes Gultom - 1506706345</p>
+				</section>
+
+				<section>
+					<h2>Permasalahan</h2>
+					<p>Input</p>
+					<pre><code class="nohighlight" data-trim>
+Sembungan adalah sebuah desa yang terletak di kecamatan
+Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
+					</code></pre>
+					<p>Output</p>
+					<pre><code class="nohighlight" data-trim>
+(Sembungan, adalah, desa)
+(Sembungan, terletak di, kecamatan Kejajar)
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Latar Belakang</h2>
+					<table>
+						<thead>
+							<tr>
+								<th></th>
+								<th style="text-align: center;">Information Extraction</th>
+								<th style="text-align: center; color: #f8f99a;">Open IE</th>
+								<th style="text-align: center;">Knowledge Extraction</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th>Domain</th>
+								<td style="text-align: center;">Tertutup</td>
+								<td style="text-align: center; color: #f8f99a;">Terbuka</td>
+								<td style="text-align: center;">Terbuka</td>
+							</tr>
+							<tr>
+								<th>Format</th>
+								<td style="text-align: center;">Tergantung domain</td>
+								<td style="text-align: center; color: #f8f99a;">Triples</td>
+								<td style="text-align: center;">RDF Triples</td>
+							</tr>
+							<tr>
+								<th>Ontologi</th>
+								<td style="text-align: center;">Tidak tersedia</td>
+								<td style="text-align: center; color: #f8f99a;">Opsional</td>
+								<td style="text-align: center;">Wajib</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
