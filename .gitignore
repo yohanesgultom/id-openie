@@ -35,3 +35,6 @@ src/test/resources/*
 !scripts/PennTreeBankToUniversal.csv
 !build/distributions/*.zip
 !doc/presentation/*.json
+doc/presentation/*.md
+doc/presentation/*.yml
+doc/presentation/test
