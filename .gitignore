@@ -37,4 +37,5 @@ src/test/resources/*
 !doc/presentation/*.json
 doc/presentation/*.md
 doc/presentation/*.yml
-doc/presentation/test
+!doc/presentation/test/
+!doc/presentation/lib/
