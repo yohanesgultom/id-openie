@@ -20,6 +20,20 @@
 			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
 			document.getElementsByTagName( 'head' )[0].appendChild( link );
 		</script>
+
+		<style>
+			.yellow {
+				color: yellow !important;
+			}
+
+			.grey {
+				color: grey !important;
+			}
+
+			.centr {
+				text-align: center !important;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="reveal">
@@ -27,11 +41,27 @@
 
 				<section>
 					<h2><em>Open Domain Information Extraction</em> dari Teks Bahasa Indonesia</h2>
-					<p>Yohanes Gultom - 1506706345</p>
+					<small>
+						Oleh: Yohanes Gultom - 1506706345<br/>
+						Pembimbing: Ir. Wahyu Catur Wibowo M.Sc., Ph.D.
+					</small>
 				</section>
 
 				<section>
-					<h2>Permasalahan</h2>
+					<h2>Pendahuluan</h2>
+				</section>
+
+				<section>
+					<h3>Latar Belakang</h3>
+					<ul>
+						<li class="fragment">Kebutuhan akan proses ekstraksi informasi <span class="yellow">otomatis</span> dari dokumen <span class="yellow">lintas domain</span></li>
+						<li class="fragment"><em>Open domain information extraction</em> (<em class="yellow">open IE</em>) dapat mengekstrak informasi dari dokumen lintas domain</li>
+						<li class="fragment">Belum ada sistem <em>open IE</em> untuk <span class="yellow">bahasa Indonesia</span></li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Masalah</h3>
 					<p>Input</p>
 					<pre><code class="nohighlight" data-trim>
 Sembungan adalah sebuah desa yang terletak di kecamatan
@@ -45,38 +75,203 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h2>Latar Belakang</h2>
+					<h3>Open Domain Information Extraction</h3>
 					<table>
 						<thead>
-							<tr>
+							<tr class="fragment">
 								<th></th>
-								<th style="text-align: center;">Information Extraction</th>
-								<th style="text-align: center; color: #f8f99a;">Open IE</th>
-								<th style="text-align: center;">Knowledge Extraction</th>
+								<th><span class="grey">Information Extraction</span></th>
+								<th>Open IE</th>
+								<th><span class="grey">Knowledge Extraction</span></th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr class="fragment">
 								<th>Domain</th>
-								<td style="text-align: center;">Tertutup</td>
-								<td style="text-align: center; color: #f8f99a;">Terbuka</td>
-								<td style="text-align: center;">Terbuka</td>
+								<td title="(Cowie and Lehnert, 1996)"><span class="grey">Tertutup</span></td>
+								<td title="(Banko et al., 2007)">Terbuka</td>
+								<td title="(Auer et al., 2007)"><span class="grey">Terbuka</span></td>
 							</tr>
-							<tr>
+							<tr class="fragment">
 								<th>Format</th>
-								<td style="text-align: center;">Tergantung domain</td>
-								<td style="text-align: center; color: #f8f99a;">Triples</td>
-								<td style="text-align: center;">RDF Triples</td>
+								<td title="(Cowie and Lehnert, 1996)"><span class="grey">Tergantung domain</span></td>
+								<td title="(Banko et al., 2007)">Triples</td>
+								<td title="(Auer et al., 2007; Exner and Nugues, 2014)"><span class="grey">RDF Triples</span></td>
 							</tr>
-							<tr>
+							<tr class="fragment">
 								<th>Ontologi</th>
-								<td style="text-align: center;">Tidak tersedia</td>
-								<td style="text-align: center; color: #f8f99a;">Opsional</td>
-								<td style="text-align: center;">Wajib</td>
+								<td title="(Cowie and Lehnert, 1996)"><span class="grey">Tidak tersedia</span></td>
+								<td title="(Etzioni et al., 2011)">Opsional</td>
+								<td title="(Auer et al., 2007)"><span class="grey">Wajib</span></td>
 							</tr>
 						</tbody>
 					</table>
 				</section>
+
+				<section>
+					<h3>Penelitian Terkait</h3>
+					<ol>
+						<li class="fragment">TextRunner (Banko et al., 2007)</li>
+						<li class="fragment">ReVerb (Fader et al., 2011)</li>
+						<li class="fragment">R2A2 (Etzioni et al., 2011)</li>
+						<li class="fragment">Ollie (Schmitz et al., 2012)</li>
+						<li class="fragment">Stanford Open IE (Angeli et al., 2015)</li>
+					</ol>
+				</section>
+
+				<section>
+					<h2>Rancangan Sistem</h2>
+				</section>
+
+				<section>
+					<h3>Rancangan Sistem</h3>
+					<img src="image/program_flowchart.png" />
+				</section>
+
+				<section>
+					<h3>NLP Pipeline</h3>
+					<img src="image/program_flowchart_nlp_pipeline.png" />
+				</section>
+
+				<section>
+					<h3>NLP Pipeline</h3>
+					<ol>
+						<li class="fragment">PTBTokenizer (Manning et al., 2014)</li>
+						<li class="fragment">MaxentTagger (Toutanova et al., 2003)</li>
+						<li class="fragment">Indonesian Lemmatizer (Suhartono, 2014)</li>
+						<li class="fragment">Named-Entity CRFClassifier (Finkel et al., 2005)</li>
+						<li class="fragment">Transition-Based Neural Network Dependency Parser (Chen and Manning, 2014)</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>CoNLL-U</h3>
+					<p>Format anotasi <em>token-based</em> yang menggunakan <em>universal POS tag</em> dan <em>universal dependency relation</em> (Nivre et al., 2016)</p>
+				</section>
+
+				<section>
+					<h3>CoNLL-U</h3>
+					<ol style="font-size: 25pt">
+						<li>ID: Indeks token dalam kalimat</li>
+						<li>FORM: Bentuk asli dari token</li>
+						<li>LEMMA: Bentuk kamus dari token</li>
+						<li>UPOSTAG: POS tag universal</li>
+						<li>XPOSTAG: POS tag spesifik untuk bahasa tertentu</li>
+						<li>FEATS: Fitur tambahan atau spesifik untuk bahasa tertentu</li>
+						<li>HEAD: ID token yang merupakan kepala (head) dari token ini</li>
+						<li>DEPREL: dependency relation universal</li>
+						<li>DEPS: dependency graph khusus atau spesifik untuk bahasa tertentu</li>
+						<li>MISC: Anotasi tambahan yang belum tercakup di anotasi lainnya</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>CoNLL-U</h3>
+					<img src="image/conllu_example.png" />
+				</section>
+
+				<section>
+					<h3>Triple Candidate Generator</h3>
+					<img src="image/program_flowchart_triple_candidate_generator.png" />
+				</section>
+
+				<section>
+					<h3>Triple Candidate Generator</h3>
+				</section>
+
+				<section>
+					<h3>Triple Selector</h3>
+					<img src="image/program_flowchart_triple_selector.png" />
+				</section>
+
+				<section>
+					<h3>Triple Selector</h3>
+				</section>
+
+				<section>
+					<h3>Token Expander</h3>
+					<img src="image/program_flowchart_token_expander.png" />
+				</section>
+
+				<section>
+					<h3>Token Expander</h3>
+				</section>
+
+				<section>
+					<h2>Demo Hasil Implementasi</h2>
+				</section>
+
+				<section>
+					<h3>Implementasi</h3>
+					<ul>
+						<li>Implementasi dengan Java &amp; Python dengan pustaka utama Stanford Core NLP dan Sckit-Learn</li>
+						<li>Repositori publik: <a target="_blank" href="https://github.com/yohanesgultom/id-openie">https://github.com/yohanesgultom/id-openie</a></li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Hasil Evaluasi &amp; Analisis</h2>
+				</section>
+
+				<section>
+					<small>k-Fold Cross Validation (k = 3)</small>
+					<img src="image/models_performance.png" />
+				</section>
+
+				<section>
+					<small>Validasi dengan Data Latih</small>
+					<img src="image/models_performance_training.png" />
+				</section>
+
+				<section>
+					<h3>Uji Waktu Proses</h3>
+					<table>
+						<thead>
+							<th>Jumlah kalimat</th>
+							<th>Triple</th>
+							<th>Total (detik)</th>
+							<th>Per kalimat (detik)</th>
+						</thead>
+						<tbody>
+							<tr><td>2</td><td>7</td><td>6.1</td><td>0.800</td></tr>
+							<tr><td>138</td><td>429</td><td>11.3</td><td>0.082</td></tr>
+							<tr><td>5,593</td><td>19,403</td><td>78.6</td><td class="yellow">0.014</td></tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h2>Penutup</h2>
+				</section>
+
+				<section>
+					<h3>Kesimpulan</h3>
+					<ol style="font-size: 17pt">
+						<li>Kombinasi <em>NLP pipeline</em> dasar (<em>POS tagging</em>, <em>lemmatization</em>, <em>NER</em> dan <em>dependency parsing</em>) berbasis <em>Universal Dependency</em>, model heuristik dan <em>supervised learning</em> dapat melakukan <em>open domain information extraction</em> (<em>open IE</em>) dalam format <em>triple</em> (subjek, predikat, objek) dari teks bahasa Indonesia secara otomatis</li>
+
+						<li>Model <em>supervised-learning</em> yang paling sesuai untuk melakukan seleksi <em>triple</em> berdasarkan fitur berbasis <em>POS tag</em>, <em>named-entity</em> dan <em>dependency relation</em> adalah <em>random forest</em>, yang merupakan <em>ensemble classifier</em>. Model ini mencapai nilai $F_1$ 0.58, yang lebih tinggi dari tiga model linier dan nonlinier lain yang diujikan</li>
+
+						<li>Sistem <em>open IE</em> yang diajukan dapat melakukan ekstraksi 19,403 <em>triple</em> dari dokumen yang terdiri atas 5,593 kalimat bahasa Indonesia dalam waktu 78.6 detik atau 0.014 detik/kalimat. Dapat disimpulkan bahwa sistem ini cukup efisien untuk digunakan pada dokumen berukuran lebih besar dari 138 kalimat dan kurang dari 5,593 kalimat.</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Saran</h3>
+					<ol style="font-size: 17pt">
+						<li>Memperbaiki kualitas <em>dataset</em> untuk melatih <em>triple selector</em> dengan menambah lebih banyak data</li>
+
+						<li>Mengembangkan <em>triple candidate generator</em> untuk bisa mengekstraksi kandidat <em>triple</em> implisit dan mengurangi kandidat <em>triple</em> yang invalid</li>
+
+						<li>Menggunakan kombinasi antara <em>ensemble classifier</em> seperti <em>random forest</em> dan <em>classifier</em> berpresisi tinggi seperti SVM sebagai <em>triple selector</em> untuk meningkatkan <em>precision</em> dan <em>$F_1$ score</em></li>
+
+						<li>Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar (berisi lebih banyak kaliat) serta membangun <em>dataset</em> untuk bisa mengevaluasi keseluruhan sistem secara lebih <em>reliable</em></li>
+					</ol>
+				</section>
+
+				<section>
+					<h2>Sekian &amp; Terima Kasih</h2>
+				</section>
+
 			</div>
 		</div>
 
@@ -92,7 +287,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				progress: true,
 				history: true,
 				center: true,
-				transition: 'slide', // none/fade/slide/convex/concave/zoom
+				transition: 'fade', // none/fade/slide/convex/concave/zoom
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
