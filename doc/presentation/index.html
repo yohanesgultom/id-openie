@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 		<title>Presentation</title>
-
+		<base href="/">
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/black.css">
 
@@ -109,14 +109,54 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h3>Penelitian Terkait</h3>
+					<h3>Tiga langkah/fase open IE</h3>
+					<p>(Etzioni et al., 2011)</p>
 					<ol>
-						<li class="fragment">TextRunner (Banko et al., 2007)</li>
-						<li class="fragment">ReVerb (Fader et al., 2011)</li>
-						<li class="fragment">R2A2 (Etzioni et al., 2011)</li>
-						<li class="fragment">Ollie (Schmitz et al., 2012)</li>
-						<li class="fragment">Stanford Open IE (Angeli et al., 2015)</li>
+						<li><strong>Label</strong> (<em>label</em>): membangun dataset klasifikasi <em>triple</em></li>
+						<li><strong>Belajar</strong> (<em>learn</em>): melatih <em>classifier</em> untuk mengekstrak triple dari kalimat</li>
+						<li><strong>Ekstrak</strong> (<em>extract</em>): mengekstrak triple dari kalimat menggunakan <em>classifier</em></li>
 					</ol>
+				</section>
+
+				<section>
+					<table style="font-size: 25pt">
+						<thead>
+							<tr style="font-size: 25pt">
+								<th>Fase</th>
+								<th>TextRunner (Banko et al., 2007)</th>
+								<th>ReVerb (Fader et al., 2011)</th>
+								<th>R2A2 (Etzioni et al., 2011)</th>
+								<th>Olthe (Schmitz et al., 2012)</th>
+								<th>Stanford Open IE (Angeth et al., 2015)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th>Label</th>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<th>Learn</th>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<th>Extract</th>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
 				</section>
 
 				<section>
@@ -227,10 +267,12 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					<h3>Uji Waktu Proses</h3>
 					<table>
 						<thead>
-							<th>Jumlah kalimat</th>
-							<th>Triple</th>
-							<th>Total (detik)</th>
-							<th>Per kalimat (detik)</th>
+							<tr>
+								<th>Jumlah kalimat</th>
+								<th>Triple</th>
+								<th>Total (detik)</th>
+								<th>Per kalimat (detik)</th>
+							</tr>
 						</thead>
 						<tbody>
 							<tr><td>2</td><td>7</td><td>6.1</td><td>0.800</td></tr>
