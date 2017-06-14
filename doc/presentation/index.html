@@ -136,15 +136,15 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr class="fragment">
 								<th>Label</th>
 								<td><small>NP chunker + dependency parser + aturan (otomatis)</small></td>
 								<td><small>NP chunker + aturan sintaktik &amp; leksikal + anotasi relasi (manual) </small></td>
 								<td><small>ReVerb + anotasi argumen (manual)</small></td>
 								<td><small>ReVerb + dependency parser + anotasi <em>open pattern</em> (manual)</small></td>
-								<td><small>Dependency parser + anotasi <em>clause splitter</em></small></td>
+								<td><small>Dependency parser + anotasi <em>clause splitter</em> (manual)</small></td>
 							</tr>
-							<tr>
+							<tr class="fragment">
 								<th>Belajar</th>
 								<td><small>NP chunker + NBC</small></td>
 								<td><small>NP chunker + aturan + logistic regression</small></td>
@@ -152,7 +152,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 								<td><small>Dependency parser + open pattern learning</small></td>
 								<td><small>Dependency parser + logistic regression</small></td>
 							</tr>
-							<tr>
+							<tr class="fragment">
 								<th>Ekstrak</th>
 								<td><small>NP chunker + NBC + normalization + merging</small></td>
 								<td><small>NP chunker + rules + logistic regression</small></td>
@@ -167,6 +167,16 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				<section>
 					<h2>Rancangan Sistem</h2>
 				</section>
+
+				<section>
+					<h3>Rancangan Sistem</h3>
+					<ol>
+						<li class="fragment" title="Mirip (Fader et al., 2011) tapi dengan NER dan NP chunker diganti dengan aturan"><strong>Label</strong><div>Dependency parser + NER + aturan + anotasi <em>triple</em> (manual)</div></li>
+						<li class="fragment" title="Mirip (Banko et al., 2007) tapi menggunakan random forest"><strong>Belajar</strong><div>Dependency parser + NER + aturan + random forest</div></li>
+						<li class="fragment" title="Mirip (Banko et al., 2007) tapi menggunakan random forest dan hanya merging sederhana tanpa normalization"><strong>Ekstrak</strong><div>Dependency parser + NER + aturan + random forest</div></li>
+					</ol>
+				</section>
+
 
 				<section>
 					<h3>Rancangan Sistem</h3>
