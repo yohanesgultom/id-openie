@@ -42,6 +42,19 @@
 			#open-ie-paradigm thead th {
 				text-align: center;
 			}
+
+			#triple-selector-rules {
+				font-size: 20pt;
+			}
+
+			#triple-selector-rules th {
+				vertical-align: middle;
+			}
+
+			#triple-selector-rules thead th {
+				text-align: center;
+			}
+
 		</style>
 	</head>
 	<body>
@@ -232,7 +245,6 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 						<img src="image/conllu_example.png" />
 					</section>
 
-
 					<section>
 						<h3>CoNLL-U</h3>
 						<ol style="font-size: 25pt">
@@ -302,62 +314,49 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h3>Aturan Pembangkitan Kandidat <em>Triple</em></h3>
-					<table style="font-size: 25pt">
+					<h4>Aturan Pembangkitan Kandidat <em>Triple</em></h4>
+					<table id="triple-selector-rules">
 						<thead>
-						<tr class="header">
-						<th align="left"><strong>Jenis</strong></th>
-						<th align="left"><strong>Kondisi</strong></th>
-						</tr>
+							<tr>
+								<th><strong>Jenis</strong></th>
+								<th><strong>Kondisi</strong></th>
+							</tr>
 						</thead>
 						<tbody>
-						<tr class="odd">
-						<td align="left">Subjek</td>
-						<td align="left"><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</td>
-						</tr>
-						<tr class="even">
-						<td align="left"></td>
-						<td align="left"><em>Token</em> bukan termasuk (“yang”, “adalah”)</td>
-						</tr>
-						<tr class="odd">
-						<td align="left"></td>
-						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</td>
-						</tr>
-						<tr class="even">
-						<td align="left"></td>
-						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</td>
-						</tr>
-						<tr class="odd">
-						<td align="left">Predikat</td>
-						<td align="left">Posisi <em>token</em> setelah Subjek</td>
-						</tr>
-						<tr class="even">
-						<td align="left"></td>
-						<td align="left"><em>POS tag</em> <em>token</em> termasuk (VERB, AUX)</td>
-						</tr>
-						<tr class="odd">
-						<td align="left">Objek</td>
-						<td align="left">Posisi <em>token</em> setelah Subjek dan Predikat</td>
-						</tr>
-						<tr class="even">
-						<td align="left"></td>
-						<td align="left"><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</td>
-						</tr>
-						<tr class="odd">
-						<td align="left"></td>
-						<td align="left"><em>Token</em> bukan termasuk (“yang”, “adalah”)</td>
-						</tr>
-						<tr class="even">
-						<td align="left"></td>
-						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</td>
-						</tr>
-						<tr class="odd">
-						<td align="left"></td>
-						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</td>
-						</tr>
+							<tr>
+								<th>Subjek</th>
+								<td>
+									<ul>
+										<li><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</li>
+										<li><em>Token</em> bukan termasuk (“yang”, “adalah”)</li>
+										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</li>
+										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<th>Predikat</th>
+								<td>
+									<ul>
+										<li>Posisi <em>token</em> setelah Subjek</li>
+										<li><em>POS tag</em> <em>token</em> termasuk (VERB, AUX)</li>
+									</ul>
+								</td>
+							</tr>
+							<tr>
+								<th>Objek</th>
+								<td>
+									<ul>
+										<li>Posisi <em>token</em> setelah Subjek dan Predikat</li>
+										<li><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</li>
+										<li><em>Token</em> bukan termasuk (“yang”, “adalah”)</li>
+										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</li>
+										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</li>
+									</ul>
+								</td>
+							</tr>
 						</tbody>
-						</table>
-
+					</table>
 				</section>
 
 				<section>
