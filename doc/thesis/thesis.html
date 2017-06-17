@@ -1,0 +1,1739 @@
+<p><img src="pics/makara.png" alt="image" width="94" /></p>
+<p><span> <strong>UNIVERSITAS INDONESIA<br />
+</strong></span></p>
+<p><span><strong></strong></span><br />
+<span><strong></strong></span></p>
+<p><span><strong></strong></span><br />
+<span><strong><span>1506706345</span></strong></span><br />
+</p>
+<p><span> <strong>FAKULTAS<br />
+PROGRAM STUDI<br />
+DEPOK<br />
+</strong></span></p>
+<p><img src="pics/makara.png" alt="image" width="94" /></p>
+<p><span> <strong>UNIVERSITAS INDONESIA<br />
+</strong></span></p>
+<p><span><strong></strong></span><br />
+<span><strong></strong></span><br />
+<span><strong>Diajukan sebagai salah satu syarat untuk memperoleh gelar<br />
+<span>Magister Ilmu Komputer</span></strong></span><br />
+<span><strong></strong></span><br />
+<span><strong><span>1506706345</span></strong></span><br />
+</p>
+<p><span> <strong>FAKULTAS<br />
+PROGRAM STUDI<br />
+DEPOK<br />
+</strong></span></p>
+<h1 id="abstrak" class="unnumbered">Abstrak</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">Nama</td>
+<td align="left">:</td>
+<td align="left"><span>Yohanes Gultom</span></td>
+</tr>
+<tr class="even">
+<td align="left">Program Studi</td>
+<td align="left">:</td>
+<td align="left"><span>Magister Ilmu Komputer</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Judul</td>
+<td align="left">:</td>
+<td align="left"><span><em>Open Domain Information Extraction</em> Otomatis dari Teks Bahasa Indonesia</span></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>Banyaknya jumlah dokumen digital yang tersedia saat ini sudah melebihi kapasitas manusia untuk memprosesnya secara manual. Hal ini mendorong munculnya kebutuhan akan metode ekstrasi informasi (<em>information extraction</em>) otomatis dari teks atau dokumen digital dari berbagai domain (<em>open domain</em>). Sayangnya, setiap sistem <em>open domain information extraction</em> (<em>open IE</em>) yang ada saat ini hanya berlaku untuk satu bahasa tertentu saja dan belum ada sistem <em>open IE</em> untuk bahasa Indonesia yang dipublikasikan. Pada penelitian ini <span>Penulis</span> memperkenalkan sebuah sistem untuk mengekstraksi relasi antar entitas dari teks bahasa Indonesia dari berbagai domain. Sistem ini menggunakan sebuah NLP <em>pipeline</em>, pembangkit kandidat <em>triple</em> (<em>triple candidates generator</em>) dan pengembang token (<em>token expander</em>) berbasis aturan serta pemilih <em>triple</em> berbasis <em>supervised learning</em>. Setelah melakukan <em>cross-validation</em> terhadap empat kandidat model: <em>logistic regression</em>, SVM, MLP dan <em>Random Forest</em>, <span>Penulis</span>menemukan bahwa <em>Random Forest</em> adalah <em>classifier</em> yang terbaik untuk dijadikan <em>triple selector</em> denan skor F1 0.58 (<em>precision</em> 0.62 dan <em>recall</em> 0.58). Penyebab utama skor yang masih rendah ini adalah aturan pembangkitan kandidat yang masih sederhana dan kualitas <em>dataset</em> yang masih rendah.<br />
+</p>
+<p>Kata Kunci:<br />
+<em>information extraction</em>, <em>open domain</em>, <em>natural language processing</em>, <em>supervised learning</em>, bahasa Indonesia<br />
+</p>
+<h1 id="abstract" class="unnumbered">ABSTRACT</h1>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">:</td>
+<td align="left"><span>Yohanes Gultom</span></td>
+</tr>
+<tr class="even">
+<td align="left">Program</td>
+<td align="left">:</td>
+<td align="left"><span>Magister Ilmu Komputer</span></td>
+</tr>
+<tr class="odd">
+<td align="left">Title</td>
+<td align="left">:</td>
+<td align="left"><span>Automatic Open Domain Information Extraction from Indonesian Text</span></td>
+</tr>
+</tbody>
+</table>
+<p><br />
+</p>
+<p>The vast amount of digital documents, that have surpassed human processing capability, calls for an automatic information extraction method from any text document regardless of their domain. Unfortunately, open domain information extraction (open IE) systems are language-specific and there is no published system for Indonesian language. This paper introduces a system to extract entity relations from Indonesian text in triple format using an NLP pipeline, rule-based candidates generator, token expander and supervised-learning-based triple selector. We cross-validate four candidates: logistic regression, SVM, MLP, Random Forest using our dataset to discover that Random Forest is the best classifier for the triple selector achieving 0.58 F1 score (0.62 precision and 0.58 recall). The low score is largely due to the simplistic candidate generation rules and the low quality of dataset.<br />
+</p>
+<p>Keywords:<br />
+information extraction, open domain, natural language processing, supervised learning, Indonesian language</p>
+<h1 id="chap:babSatu"></h1>
+<h2 id="latar-belakang">Latar Belakang</h2>
+<p>Di masa sekarang ketersediaan dokumen digital berbahasa natural seperti berita, jurnal dan buku elektronik (<em>e-book</em>) sudah sangat banyak dan terus meningkat dengan cepat karena didorong oleh meningkatnya pemanfaatan komputer, <em>smartphone</em> dan <em>internet</em>. Jumlah dokumen digital tersebut telah melampaui batas kemampuan manusia untuk memproses secara manual sehingga menimbulkan kebutuhan akan proses otomatis untuk melakukannya <span class="citation">(Banko et al. 2007)</span>. Salah satu proses yang dikembangkan adalah <em>information extraction</em> (IE) yang secara selektif menyusun dan mengkombinasikan data yang ditemukan di dalam teks atau dokumen menjadi informasi <span class="citation">(Cowie and Lehnert 1996)</span>.</p>
+<p>Meskipun <em>IE</em> sudah mampu manusia untuk memproses dokumen digital dengan lebih efisien, metode yang digunakan umumnya hanya berlaku untuk kelompok dokumen yang homogen atau berada dalam satu domain (<em>closed-domain</em>). Hal ini terjadi karena umumnya teknik yang dipakai dibuat sedemikian rupa untuk memanfaatkan pola tertentu pada teks atau dokumen <span class="citation">(Cowie and Lehnert 1996)</span>. Sebagai contoh, salah satu cara paling sederhana untuk mengekstraksi nama penulis dari berita elektronik adalah mencari nama orang di awal atau akhir dokumen. Cara yang sama tidak bisa digunakan untuk mencari nama penulis dari dokumen lain seperti jurnal karena struktur dokumen yang berbeda. Hal ini mendorong berkembangnya metode lain yang mampu mengekstraksi informasi dari berbagai domain (<em>open domain</em>) yang disebut <em>open domain information extraction</em> (<em>open IE</em>) <span class="citation">(Banko et al. 2007)</span>.</p>
+<p>Seiring dengan berkembangnya waktu, beberapa sistem <em>open IE</em> sudah dikembangkan untuk bahasa Inggris <span class="citation">(Banko et al. 2007; Schmitz et al. 2012; Angeli, Premkumar, and Manning 2015)</span>. Bahkan penelitian terkait melaporkan kesuksesan aplikasi <em>open IE</em> untuk <em>task</em> <em>question answering</em> <span class="citation">(Fader, Soderland, and Etzioni 2011)</span> dan <em>information retrieval</em> <span class="citation">(Etzioni 2011)</span>. Akan tetapi karena sistem <em>open IE</em> menggunakan satu atau lebih <em>task natural language processing</em> (NLP) dan aturan/heuristik yang hanya berlaku untuk bahasa tertentu, maka sistem yang dikembangkan untuk bahasa Inggris tidak dapat dipakai untuk memproses teks atau dokumen dalam bahasa lain seperti bahasa Indonesia. Oleh karena itu dalam penelitian ini <span>Penulis</span> memperkenalkan sistem <em>open IE</em> untuk bahasa Indonesia.</p>
+<p><strong>Input</strong><br />
+“Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.”<br />
+<strong>Output</strong><br />
+1. (Sembungan, adalah, desa)<br />
+2. (Sembungan, terletak di, kecamatan Kejajar)</p>
+<p>Sistem open IE yang <span>Penulis</span> ajukan bertujuan untuk mengekstrak sejumlah <em>triple</em> (satu relasi dan dua argumen/entitas) dari satu atau lebih kalimat bahasa Indonesia seperti contoh pada Gambar [fig:example_io_openie]. Sistem ini terdiri dari sebuah <em>NLP pipeline</em>, pembangkit kandidat <em>triple</em> (<em>triple candidate generator</em>), pengembang token (<em>token expander</em>) dan sebuah model <em>supervised learning</em> untuk memilih <em>triple</em> (<em>triple selector</em>). Untuk melatih model <em>triple selector</em> tersebut, <span>Penulis</span> juga membuat dataset berisi 1,611 kandidat <em>triple</em> bahasa Indonesia yang valid dan yang tidak valid. Sistem ini diharapkan dapat menjadi referensi dalam pengembangan open IE untuk bahasa Indonesia dan juga digunakan untuk kebutuhan aplikasi yang lebih kompleks seperti pendeteksian plagiarisme, <em>question answering</em> dan <em>knowledge extraction</em>.</p>
+<h2 id="permasalahan">Permasalahan</h2>
+<p>Pada bagian ini akan dijelaskan mengenai definisi permasalahan yang ingin diselesaikan pada penelitian ini serta batasan yang ditetapkan.</p>
+<h3 id="definisi-permasalahan">Definisi Permasalahan</h3>
+<p>Permasalahan yang ditemukan dan ingin diselesaikan pada penelitian ini:</p>
+<ol>
+<li><p>Bagaimana merancang sistem <em>open IE</em> yang cocok untuk bahasa Indonesia?</p></li>
+<li><p>Bagaimana implementasi sistem <em>open IE</em> tersebut?</p></li>
+</ol>
+<h3 id="batasan-permasalahan">Batasan Permasalahan</h3>
+<p>Batasan permasalahan pada penelitian ini adalah:</p>
+<ol>
+<li><p>Penelitian ini hanya berfokus untuk menghasilkan <em>triple</em> yang eksplisit secara sintaktik. Contoh <em>triple</em> yang eksplisit dari kalimat “<em>Universitas Indonesia berada di Depok, Jawa Barat, Indonesia</em>” adalah <em>(Universitas Indonesia, terletak di, Depok)</em>. Sedangkan <em>triple</em> yang implisit seperti <em>(Depok, terletak di, Jawa Barat)</em> belum ditangani pada penelitian ini.</p></li>
+<li><p>Proses dibatasi pada dokumen teks bahasa Indonesia yang setiap barisnya hanya berisi satu kalimat. Praproses yang dibutuhkan untuk menggubah dokumen dari format yang berbeda tidak dibahas di penelitian ini.</p></li>
+<li><p>Algoritma <em>tokenization</em> yang dipakai pada penelitian ini menggunakan aturan untuk bahasa Inggris sehingga belum menangani <em>token</em> khusus untuk bahasa Indonesia (“Ny.”, “Dra.”, “dkk.”, dsb.).</p></li>
+<li><p>Penelitian ini tidak berfokus untuk mengimbangi kinerja sistem sistem <em>open IE</em> untuk bahasa Inggris pada penelitian terkait.</p></li>
+</ol>
+<h2 id="tujuan-dan-manfaat">Tujuan dan Manfaat</h2>
+<p>Tujuan dan manfaat dari penelitian ini adalah:<br />
+<strong>Tujuan</strong></p>
+<ol>
+<li><p>Merancang dan mengimplementasikan sistem <em>open IE</em> untuk teks bahasa Indonesia.</p></li>
+<li><p>Mengumpulkan dan membangun <em>dataset</em> yang diperlukan oleh sistem <em>open IE</em> bahasa Indonesia.</p></li>
+<li><p>Mencari model <em>supervised learning</em> yang sesuai <em>sistem open IE</em> bahasa Indonesia.</p></li>
+</ol>
+<p><strong>Manfaat</strong></p>
+<ol>
+<li><p>Menghasilkan sistem <em>open IE</em> yang dapat digunakan untuk mengekstrak entitas relasi dan argumen/entitas dalam format <em>triple</em> dari teks bahasa Indonesia.</p></li>
+<li><p>Memberikan acuan untuk pengembangan sistem <em>open IE</em> untuk bahasa Indonesia.</p></li>
+<li><p>Memberikan kontribusi terhadap perkembangan sumber daya bahasa (<em>language resources</em>) Indonesia.</p></li>
+</ol>
+<h2 id="sistematika-penulisan">Sistematika Penulisan</h2>
+<p>Sistematika penulisan laporan adalah sebagai berikut:</p>
+<ul>
+<li><p>Bab 1<br />
+Bab ini akan menjelaskan mengenai latar belakang permasalahan, rumusan masalah, tujuan, manfaat dan batasan penelitian.</p></li>
+<li><p>Bab 2<br />
+Bab ini akan menjelaskan landasan teori yang digunakan pada penelitian ini serta memaparkan kajian pustaka terhadap penelitian-penelitian terkait.</p></li>
+<li><p>Bab 3<br />
+Bab ini akan menjelaskan mengenai tahapan, rancangan &amp; implementasi sistem, evaluasi dan analisis yang digunakan pada penelitian ini.</p></li>
+<li><p>Bab 4<br />
+Bab ini akan menjelaskan tentang hasil eksperimen dan analisis hasil eksperimen.</p></li>
+<li><p>Bab 5<br />
+Bab ini akan menjelaskan tentang kesimpulan dari penelitian yang telah dilakukan dan saran untuk penelitian berikutnya.</p></li>
+</ul>
+<h1 id="chap:babDua"></h1>
+<p>Pada bab ini dijelaskan mengenai penelitian terkait dan berbagai dasar teori yang menunjang penelitian ini.</p>
+<h2 id="penelitian-terkait">Penelitian Terkait</h2>
+<p>Sejak pertama kali diperkenalkan pada tahun 2007 <span class="citation">(Banko et al. 2007)</span>, sudah ada beberapa penelitian mengenai <em>open IE</em> untuk bahasa Inggris yang dipublikasikan. Sistem <em>open IE</em> yang pertama diperkenalkan adalah <span style="font-variant: small-caps;">TextRunner</span> <span class="citation">(Banko et al. 2007)</span>. Sistem ini kemudian dikembangkan oleh sistem-sistem dari penelitian berikutnya yaitu (secara berurutan) <span style="font-variant: small-caps;">ReVerb</span> <span class="citation">(Fader, Soderland, and Etzioni 2011)</span>, <span style="font-variant: small-caps;">R2A2</span> <span class="citation">(Etzioni et al. 2011)</span> dan kemudian <span style="font-variant: small-caps;">Ollie</span> <span class="citation">(Schmitz et al. 2012)</span> . Selain itu, salah satu penelitian terbaru juga memperkenalkan sistem <em>open IE</em> baru, <span style="font-variant: small-caps;">Stanford Open IE</span>, yang berhasil mengungguli kinerja <span style="font-variant: small-caps;">Ollie</span> dalam TAC-KBP 2013 <em>Slot Filling task</em> <span class="citation">(Angeli, Premkumar, and Manning 2015)</span>.</p>
+<p>Sistem <em>open IE</em> yang pertama diperkenalkan adalah <span style="font-variant: small-caps;">TextRunner</span>. Sistem ini didesain untuk mengekstrak informasi secara efisien dari halaman-halaman <em>web</em> di internet yang jumlahnya sangat besar dan memiliki domain yang berbeda-beda <span class="citation">(Banko et al. 2007)</span>. Informasi yang diekstrak merupakan <em>tuple</em> <span class="math inline"><em>t</em> = (<em>e</em><sub><em>i</em></sub>, <em>r</em><sub><em>i</em>, <em>j</em></sub>, <em>e</em><sub><em>j</em></sub>)</span> di mana <span class="math inline"><em>r</em><sub><em>i</em>, <em>j</em></sub></span> adalah relasi antara entitas <span class="math inline"><em>e</em><sub><em>i</em></sub></span> dan <span class="math inline"><em>e</em><sub><em>j</em></sub></span> dalam sebuah kalimat. <span style="font-variant: small-caps;">TextRunner</span> terdiri dari tiga modul utama <span class="citation">(Banko et al. 2007)</span> yaitu: (1) <em>Self-Supervised Learner</em>, modul yang melatih sebuah <em>naive bayes classifier</em> (NBC) untuk mengenali kandidat <em>triple</em> yang valid tanpa memerlukan campur tangan manusia (<em>self-supervised</em>), (2) <em>Single-Pass Extractor</em>, modul yang mengekstrak sejumlah kandidat <em>triple</em> dari setiap kalimat dan menyimpan kandidat yang dianggap valid oleh <em>classifier</em>, dan (3) <em>Redundancy-based Assessor</em>, modul yang menghitung probabilitas kemunculan <em>triple</em> dalam satu dokumen. Sistem ini mampu mengekstrak informasi per kalimat dengan akurasi rata-rata 88% dan mampu memproses 9 juta halaman <em>web</em> dalam 68 <em>CPU hours</em> <span class="citation">(Banko et al. 2007)</span>.</p>
+<p><span style="font-variant: small-caps;">ReVerb</span> adalah sistem <em>open IE</em> yang dikembangkan untuk memperbaiki dua masalah pada pendahulunya, <span style="font-variant: small-caps;">TextRunner</span>. Masalah yang ingin diselesaikan oleh <span style="font-variant: small-caps;">ReVerb</span> adalah inkoherensi hasil ekstraksi (<em>incoherent extractions</em>) dan hasil ekstraksi yang tidak informatif (<em>uninformative extractions</em>) <span class="citation">(Fader, Soderland, and Etzioni 2011)</span>. Untuk mengekstrak <em>triple</em> <span class="math inline"><em>t</em> = (<em>e</em><sub><em>i</em></sub>, <em>r</em><sub><em>i</em>, <em>j</em></sub>, <em>e</em><sub><em>j</em></sub>)</span>, sistem ini menggunakan dua algoritma utama, yaitu (1) <em>Relation Extraction</em>, algoritma yang mengekstrak relasi <span class="math inline"><em>r</em><sub><em>i</em>, <em>j</em></sub></span> menggunakan pembatasan sintaktik dan leksikal yang menyelesaikan dua masalah tersebut, dan (2) <em>Argument Extraction</em>, algoritma yang mencari entitas <span class="math inline"><em>e</em><sub><em>i</em></sub></span> dan <span class="math inline"><em>e</em><sub><em>j</em></sub></span> yang dihubungkan oleh relasi <span class="math inline"><em>r</em><sub><em>i</em>, <em>j</em></sub></span> menggunakan heuristik. <span style="font-variant: small-caps;">ReVerb</span> menerima <em>input</em> berupa kalimat yang telah dianotasi POS-nya % potongan frase kata bendanya (NP <em>chunk</em>) dan menghasilkan <em>output</em> sejumlah <em>triple</em>. Dari hasil pengujian yang dilakukan, <span style="font-variant: small-caps;">ReVerb</span> mencapai <em>precision</em> dan <em>recall</em> yang hampir dua kali lebih baik dari <span style="font-variant: small-caps;">TextRunner</span> <span class="citation">(Fader, Soderland, and Etzioni 2011)</span>.</p>
+<p>Jika <span style="font-variant: small-caps;">ReVerb</span> memperbaiki masalah pada ekstraksi relasi, <span style="font-variant: small-caps;">R2A2</span> berfokus untuk memperbaiki ekstraksi argumen/entitas <span class="citation">(Etzioni et al. 2011)</span>. Jika <span style="font-variant: small-caps;">ReVerb</span> hanya menggunakan aturan atau heuristik untuk mengekstraksi argumen <span class="citation">(Fader, Soderland, and Etzioni 2011)</span>, <span style="font-variant: small-caps;">R2A2</span> menggunakan modul berbasis <em>machine learning</em>, <span style="font-variant: small-caps;">ArgLearner</span>. Modul ini menerima relasi dan kalimat sebagai <em>input</em> dan mengembalikan dua buah argumen sebagai <em>output</em>. Modul ini menggunakan tiga buah <em>classifier</em> berbasiskan <span style="font-variant: small-caps;">REPTree</span> <span class="citation">(Hall et al. 2009)</span> dan <em>sequence labeling</em> CRF <span class="citation">(McCallum 2002)</span> untuk mengekstrak argumen dari kalimat melalui proses yang ditunjukkan pada Gambar [fig:arglearner_architecture] <span class="citation">(Etzioni et al. 2011)</span>.</p>
+<div class="figure">
+<img src="../images/arglearner_architecture.png" alt="Proses pelatihan dan ekstraksi ArgLearner" />
+<p class="caption">Proses pelatihan dan ekstraksi <span style="font-variant: small-caps;">ArgLearner</span><span data-label="fig:arglearner_architecture"></span></p>
+</div>
+<p>Penelitian berikutnya memperkenalkan <span style="font-variant: small-caps;">Ollie</span> (<em>Open Language Learning for Information Extraction</em>) <span class="citation">(Schmitz et al. 2012)</span> yang menjadikan <span style="font-variant: small-caps;">ReVerb</span> sebagai salah satu modulnya. <span style="font-variant: small-caps;">Ollie</span> menggunakan <span style="font-variant: small-caps;">ReVerb</span> untuk mencari sejumlah (<em>open pattern</em>)/<em>template</em> sebagai panduan untuk mengekstrak <em>triple</em> dari kalimat. Perbedaan lain sistem ini dengan pendahulunya adalah relasi yang diekstrak tidak hanya dari kata kerja (<em>verb</em>) tetapi bisa juga diekstrak secara implisit dari kata benda (<em>noun</em>), kata sifat (<em>adjective</em>) <span class="citation">(Schmitz et al. 2012)</span>. Selain itu <span style="font-variant: small-caps;">Ollie</span> juga menambahkan modul untuk melakukan analisis dan penambahan informasi kontekstual pada hasil ekstraksi sehingga presisi lebih tinggi. Dua modul utama ini diajukan untuk memperbaiki kekurangan dari <span style="font-variant: small-caps;">ReVerb</span> yaitu pembatasan relasi hanya pada kata kerja (<em>verb</em>) dan pengabaian konteks kalimat <span class="citation">(Schmitz et al. 2012)</span>. Proses pelabelan (<em>labeling</em>) <em>dataset</em> dan ekstraksi <span style="font-variant: small-caps;">Ollie</span> ditunjukkan pada Gambar [fig:ollie_architecture].</p>
+<div class="figure">
+<img src="../images/ollie_architecture.png" alt="Proses labeling dan ekstraksi pada Ollie" />
+<p class="caption">Proses <em>labeling</em> dan ekstraksi pada <span style="font-variant: small-caps;">Ollie</span><span data-label="fig:ollie_architecture"></span></p>
+</div>
+<p>Salah satu riset terbaru memperkenalkan model sistem <em>open IE</em> yang mengganti penggunaan banyak <em>open pattern</em>/<em>template</em> untuk mengekstrak <em>triple</em> pada <span style="font-variant: small-caps;">Ollie</span> <span class="citation">(Schmitz et al. 2012)</span> dengan hanya enam pola atomik (<em>atomic patterns</em>) <span class="citation">(Angeli, Premkumar, and Manning 2015)</span>. Enam pola atomik itu digunakan untuk mengekstrak <em>triple</em> dari klausa yang <em>self-contained</em> dan <em>maximally compact</em>. Modul ekstraktor <em>inter-clauses</em>, yang menggunakan <em>multinomial logistic regression classifier</em>, bertanggungjawab menghasilkan klausa yang <em>self-contained</em> (independen secara sintaktik dan semantik), dan modul ekstraktor <em>intra-clause</em>, yang menggunakan model <em>natural logic</em> <span class="citation">(MacCartney and Manning 2007)</span>, mengubahnya menjadi klausa yang <em>maximally compact</em> (tidak mengandung kata redundan). Model sistem ini diimplementasikan dalam <span style="font-variant: small-caps;">Stanford Open IE</span>, yang merupakan bagian dari kakas NLP <em>opensource</em>, <em>Stanford Core NLP</em><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<h2 id="open-domain-information-extraction"><em>Open Domain Information Extraction</em></h2>
+<p><em>Open domain information extraction</em> (<em>open IE</em>) adalah proses ekstraksi informasi dari dokumen dalam format <em>triple</em> <span class="math inline">(<em>x</em>, <em>r</em>, <em>y</em>)</span> di mana <span class="math inline"><em>r</em></span> adalah relasi antara dua buah argumen/entitas <span class="math inline"><em>x</em></span> dan <span class="math inline"><em>y</em></span> <span class="citation">(Banko et al. 2007; Etzioni et al. 2011)</span>. Relasi pada <em>triple</em> diambil dari kata kerja (<em>verb</em>) <span class="citation">(Banko et al. 2007; Fader, Soderland, and Etzioni 2011)</span> (contoh: kalimat “<em>Jakarta is the capital of Indonesia</em>” mengandung <em>triple</em> (“Jakarta”, “is the capital of”, “Indonesia”)) atau dari kata lain yang secara implisit merupakan kata kerja <span class="citation">(Schmitz et al. 2012)</span> (contoh: “<em>Indonesian President Joko Widodo was born in Surakarta</em>” mengandung <em>triple</em> (“Joko Widodo”, “be”, “president”)). Sedangkan argumen atau entitas yang diekstrak selalu merupakan frase (<em>noun phrase</em>) seperti yang juga terlihat di contoh. Format <em>triple</em> yang membentuk (subjek, predikat, objek) ini ternyata berlaku umum untuk semua dokumen yang berisi teks bahasa natural sehingga dapat diterapkan pada dokumen dari berbagai domain.</p>
+<p>Format <em>triple</em> yang digunakan <em>open IE</em> memiliki kemiripan dengan format yang lazim digunakan pada <em>knowledge extraction</em> (KE), yaitu <em>Resource Data Format</em> (RDF)<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> <span class="citation">(Auer et al. 2007; Exner and Nugues 2014)</span>. Namun, perbedaannya adalah <em>triple</em> pada <em>open IE</em> umumnya tidak mengikuti seluruh spesifikasi RDF dan tidak memiliki himpunan ontologi tetap. Ringkasan perbandingan antara open IE dan KE ditunjukkan pada Tabel [table_paradigm_comparison].</p>
+<table>
+<caption>Perbandingan antara <span><em>information extraction</em></span> tradisional (IE), <span><em>open domain extraction</em></span> (open IE) dan <span><em>knowledge extraction</em></span> (KE)<span data-label="table_paradigm_comparison"></span></caption>
+<thead>
+<tr class="header">
+<th align="left"><strong>Aspek</strong></th>
+<th align="center"><strong>IE</strong></th>
+<th align="center"><strong>Open IE</strong></th>
+<th align="center"><strong>KE</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Domain</strong></td>
+<td align="center">Tertutup</td>
+<td align="center">Terbuka</td>
+<td align="center">Terbuka</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Format</strong></td>
+<td align="center">Tergantung domain</td>
+<td align="center">Triples</td>
+<td align="center">RDF Triples</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Ontologi</strong></td>
+<td align="center">Tidak tersedia</td>
+<td align="center">Opsional</td>
+<td align="center">Wajib</td>
+</tr>
+</tbody>
+</table>
+<p>Meskipun menggunakan modul dan teknik yang berbeda-beda, model sistem <em>open IE</em> umumnya menjalankan proses yang dapat dibagi menjadi tiga langkah/fase <span class="citation">(Etzioni et al. 2011)</span>:</p>
+<ol>
+<li><p>Label (<em>label</em>): membangun <em>dataset</em> untuk <em>classifier</em> baik secara manual atau otomatis.</p></li>
+<li><p>Belajar (<em>learn</em>): melatih <em>classifier</em> untuk mengekstrak himpunan <em>triple</em> dari kalimat menggunakan <em>dataset</em> dari fase Label.</p></li>
+<li><p>Ekstrak (<em>extract</em>): mengekstrak himpunan <em>triple</em> dari kalimat menggunakan <em>classifier</em> yang telah dilatih pada fase Belajar</p></li>
+</ol>
+<p>Hasil ekstraksi <em>open IE</em> berguna untuk berbagai <em>task</em> seperti <em>question answering</em>, <em>slot filling</em> <span class="citation">(Etzioni et al. 2011)</span>, <em>common sense knowledge acquiring</em> <span class="citation">(Singh et al. 2002)</span> dan <em>information retrieval</em> <span class="citation">(Etzioni 2011)</span>. Selain itu, jika dilihat sebagai representasi teks atau dokumen, himpunan <em>triple</em> dari <em>open IE</em> dapat digunakan sebagai fitur untuk klasifikasi dan <em>clustering</em> teks atau dokumen.</p>
+<h2 id="natural-language-processing"><em>Natural Language Processing</em></h2>
+<p>Pemrosesan bahasa natural atau <em>natural language processing</em> (NLP) tidak bisa dipisahkan dari <em>information extraction</em> <span class="citation">(Banko et al. 2007; Fader, Soderland, and Etzioni 2011; Etzioni et al. 2011; Angeli, Premkumar, and Manning 2015)</span>. Semua model sistem <em>open IE</em> juga selalu membutuhkan informasi yang dihasilkan oleh <em>task</em> NLP seperti <em>part of speech tagging</em>, <em>dependency parsing</em> dan <em>named-entity recognition</em>. Informasi tersebut digunakan sebagai variabel dalam heuristik <em>open IE</em> dan juga sebagai fitur untuk <em>classifier</em>.</p>
+<h3 id="tokenization"><em>Tokenization</em></h3>
+<p><em>Tokenization</em> adalah <em>task</em> NLP yang bertujuan memotong kalimat atau frase menjadi kata-kata (<em>tokens</em>) <span class="citation">(Manning et al. 2008)</span>. Ini merupakan <em>task</em> yang paling dasar dan diperlukan sebelum dapat menjalankan <em>task</em> lainnya seperti <em>lemmatization</em>, <em>POS tagging</em>, dsb. Untuk bahasa yang ditulis secara horizontal dan setiap katanya dipisahkan oleh spasi seperti Inggris dan Indonesia, dapat digunakan algoritma berbasis aturan (<em>rule-based</em>) yang cukup sederhana <span class="citation">(C. Manning et al. 2014)</span>, yaitu memotong kalimat di antara spasi dan memisahkan tanda baca sebagai <em>token</em>. Contoh <em>tokenization</em> dari kalimat “Ibu pergi ke pasar.” adalah senarai <em>token</em> (“Ibu”, “pergi”, “ke”, “pasar”, “.”). Dalam implementasinya pada bahasa tertentu, algoritma tersebut juga disesuaikan untuk menjalankan proses yang berbeda pada <em>token</em> tertentu misalnya gelar atau singkatan yang diikuti titik (“dr.”, “Dra.”, “Ir.”, dsb.).</p>
+<h3 id="part-of-speech-tagging"><em>Part of Speech Tagging</em></h3>
+<p><em>Part of speech</em> (POS) <em>tagging</em> adalah <em>task</em> NLP yang bertujuan menentukan <em>POS tag</em> atau jenis setiap kata pada kalimat <span class="citation">(Jurafsky 2000)</span>. Contoh <em>POS tag</em> dasar adalah kata benda (<em>noun</em>), kata kerja (<em>verb</em>), kata sifat (<em>adjective</em>) dst. Gambar [fig:example_pos_tagging] menunjukkan contoh <em>POS tagging</em> terhadap kalimat sederhana. <em>POS tag</em> dapat digunakan juga oleh <em>NLP task</em> yang lain seperti <em>dependency parsing</em> dan <em>named-entity recognition</em>.</p>
+<p><strong>Input</strong>: “Ibu pergi ke pasar.”<br />
+<strong>Output</strong>: (Ibu, <em>noun</em>) (pergi, <em>verb</em>) (ke, <em>preposition</em>) (pasar, <em>noun</em>) (., <em>punctuation</em>)</p>
+<p>Algoritma <em>POS tagging</em> umumnya dapat dikelompokkan menjadi dua: berbasis aturan (<em>rule-based</em>) dan berbasis stokastik (<em>stochastic-based</em>) <span class="citation">(Jurafsky 2000)</span>. Salah satu algoritma yang menjadi <em>state-of-the-art</em> adalah <em>maximum-entropy-based POS tagger</em> (berbasis stokastik) yaitu <em>tagger</em> yang mempelajari model probabilitas kondisional <em>log-linear</em> (<em>logistic regression</em>) menggunakan metode <em>maximum entropy</em>.</p>
+<h3 id="lemmatization"><em>Lemmatization</em></h3>
+<p><em>Lemmatization</em> adalah <em>task</em> NLP yang bertujuan mengubah kata imbuhan ke bentuk <em>lemma</em> atau bentuk kamus <span class="citation">(Suhartono 2014)</span>. Sekalipun memiliki tujuan yang mirip dengan <em>stemming</em>, <em>lemmatization</em> tidak selalu menghasilkan kata dasar karena menggunakan analisis kosakata dan morfologi yang dapat menghindari terbuangnya <em>derivational affixes</em> <span class="citation">(Manning et al. 2008)</span>. Jika dilakukan <em>stemming</em> dan <em>lemmatization</em> pada <em>token</em> “penjahit” maka yang dihasikan sesuai urutan adalah adalah “jahit” dan “penjahit”. Hal ini bermanfaat untuk mengurangi terbuangnya informasi yang berguna. Algoritma yang dilaporkan efektif untuk bahasa Indonesia adalah algoritma berbasis aturan penghapusan imbuhan (<em>affixes</em>) dan pencarian kamus (<em>dictionary lookup</em>) <span class="citation">(Suhartono 2014)</span>.</p>
+<h3 id="named-entity-recognition"><em>Named-Entity Recognition</em></h3>
+<p><em>Named-entity recognition</em> (NER) adalah <em>task</em> NLP yang mengenali jenis entitas dari <em>token</em> pada kalimat. Jenis entitas yang umumnya dikenali contohnya <em>Person</em> (nama orang), <em>Location</em> (nama lokasi), <em>Organization</em> (nama organisasi atau kelompok), dsb. Algoritma <em>state-of-the-art</em> untuk NER adalah yang berbasis stokastik seperti <em>Conditional Random Field</em> (CRF) dengan fitur-fitur berbasis morfologi, leksikal dan ortografik.</p>
+<p><strong>Input</strong>: “Ibu Budi tinggal di Solo.”<br />
+<strong>Output</strong>: (Ibu) (Budi, <em>Person</em>) (tinggal) (di) (Solo, <em>Location</em>) (.)</p>
+<h3 id="dependency-parsing"><em>Dependency Parsing</em></h3>
+<p><em>Dependency parsing</em> adalah <em>task</em> NLP yang memetakan dan mengenali pohon hubungan antar <em>token</em> dalam kalimat. Masing-masing <em>token</em> dapat memiliki satu atau lebih <em>token</em> yang bergantung padanya (<em>dependents</em>) tapi hanya bisa memiliki satu kepala (<em>head</em>) atau tidak memiliki kepala sama sekali. Salah satu algoritma yang menjadi <em>state-of-the-art</em> untuk <em>dependency parsing</em> adalah algoritma berbasis jaringan syaraf tiruan (<em>neural network</em>) yang mempelajari transisi antar <em>token</em> <span class="citation">(Chen and Manning 2014)</span>.</p>
+<h3 id="conll-u">CoNLL-U</h3>
+<p>CoNLL-U<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a> adalah format anotasi berbasis <em>token</em> (<em>token-based</em>) yang menggunakan himpunan <em>POS tag</em> dan <em>dependency relation</em> yang berlaku untuk banyak bahasa atau universal <span class="citation">(Nivre et al. 2016)</span> (terlampir). CoNLL-U merupakan pengembangan dari CoNLL-X, format yang disepakati dalam <em>Conference on Computational Natural Language Learning</em> ke sepuluh dan juga dijadikan format standar oleh <em>dependency parser</em> pada <em>Stanford Core NLP</em>. Setiap <em>token</em> pada CoNLL-U memiliki sepuluh kolom atau atribut:</p>
+<ol>
+<li><p>ID: Indeks <em>token</em> dalam kalimat (mulai dari 1)</p></li>
+<li><p>FORM: Bentuk asli dari <em>token</em></p></li>
+<li><p>LEMMA: Bentuk kamus dari <em>token</em></p></li>
+<li><p>UPOSTAG: <em>POS tag</em> universal</p></li>
+<li><p>XPOSTAG: <em>POS tag</em> spesifik untuk bahasa tertentu</p></li>
+<li><p>FEATS: Fitur tambahan atau spesifik untuk bahasa tertentu</p></li>
+<li><p>HEAD: ID <em>token</em> yang merupakan kepala (<em>head</em>) dari <em>token</em> ini (0 untuk akar atau <em>head</em> kalimat)</p></li>
+<li><p>DEPREL: <em>dependency relation</em> universal</p></li>
+<li><p>DEPS: <em>dependency graph</em> khusus atau spesifik untuk bahasa tertentu</p></li>
+<li><p>MISC: Anotasi tambahan yang belum tercakup di anotasi lainnya, contoh: <em>named-entitiy</em></p></li>
+</ol>
+<h2 id="supervised-learning"><em>Supervised Learning</em></h2>
+<p><em>Supervised learning</em> adalah teknik <em>machine learning</em> yang mempelajari pola dari <em>dataset</em> yang telah diberi label atau dikelompokkan <span class="citation">(Mohri, Rostamizadeh, and Talwalkar 2012)</span>. Metode <em>supervised learning</em> dapat dibagi menjadi dua, yaitu deskriptif (<em>descriptive learning</em>) dan generatif (<em>generative learning</em>). Pada <em>descriptive learning</em> mencari fungsi untuk memetakan data <span class="math inline"><em>x</em></span> ke label <span class="math inline"><em>y</em></span> atau probabilitas posterior (<em>posterior probability</em>) <span class="math inline"><em>p</em>(<em>y</em>|<em>x</em>)</span> (contoh: <em>logistic regression</em>, <em>support vector machine</em>, <em>multi-layer perceptron</em>, dsb.) sedangkan <em>generative learning</em> mencari probabilitas gabungan (<em>joint probability</em>) <span class="math inline"><em>p</em>(<em>x</em>, <em>y</em>)</span> lebih dulu sebelum menggunakan <em>Bayes Rules</em> untuk menghitung <span class="math inline"><em>p</em>(<em>y</em>|<em>x</em>)</span> (contoh: <em>naive bayes classifier</em>, <em>decision tree</em>, dsb.) <span class="citation">(Ng and Jordan 2002)</span>. Penelitian ini membandingkan empat buah model klasifikasi biner yang dihasilkan oleh metode-metode berikut:</p>
+<h3 id="logistic-regression"><em>Logistic Regression</em></h3>
+<p><em>Logistic regression</em> adalah metode pemodelan deskriptif yang mencari fungsi hipotesis yang memetakan data <span class="math inline"><em>x</em></span> ke kelas <span class="math inline"><em>y</em></span> yang dapat dipisahkan fungsi logistik/<em>sigmoid</em> ([eq:logistic_function]) sesuai kelasnya <span class="math inline">{0, 1}</span> <span class="citation">(Theodoridis 2015)</span> seperti visualisasi pada Gambar [fig:logreg]. Fungsi hipotesis dihasilkan dengan mencari bobot <span class="math inline"><em>θ</em></span> yang dapat meminimumkan <em>cost function</em> ([eq:logreg_cost_function]) menggunakan algoritma <em>gradient descent</em>.</p>
+<div class="figure">
+<img src="../images/logreg.png" alt="Contoh hasil pemetaan (titik merah dan biru) fungsi logistic regression dari fitur x ke kelas y yang dapat dipisahkan oleh fungsi logistik/sigmoid (garis hijau) (sumber: https://florianhartl.com)" />
+<p class="caption">Contoh hasil pemetaan (titik merah dan biru) fungsi <em>logistic regression</em> dari fitur <span class="math inline"><em>x</em></span> ke kelas <span class="math inline"><em>y</em></span> yang dapat dipisahkan oleh fungsi logistik/<em>sigmoid</em> (garis hijau) (sumber: <a href="https://florianhartl.com" class="uri">https://florianhartl.com</a>)<span data-label="fig:logreg"></span></p>
+</div>
+<p><br /><span class="math display">$$\begin{aligned}
+\label{eq:logistic_function}
+	\sigma(t) = {\frac {1}{1+e^{-t}}} \\[0.2cm]
+	\textrm{di mana $t$ adalah fungsi hipotesis, } t = \theta^{T}x \nonumber \end{aligned}$$</span><br /></p>
+<p><br /><span class="math display">$$\begin{aligned}
+\label{eq:logreg_cost_function}
+	L(\theta) = - \sum_{n=1}^{N} \, (y_{n} \ln \sigma(t) \, + \, (1 - y_{n}) \ln (1 - \sigma(t)))\end{aligned}$$</span><br /></p>
+<p><br /><span class="math display">$$\begin{aligned}
+\label{eq:gradient_descent}
+	\theta_{j} &amp;= \theta_{j} - \alpha \frac{\partial}{\partial \theta_{j}} L(\theta) \\ \nonumber 
+	di mana, \theta &amp;= \textrm{bobot} \\ \nonumber 
+			 \alpha &amp;= \textit{learning rate} \\ \nonumber 		 \end{aligned}$$</span><br /></p>
+<h3 id="support-vector-machine"><em>Support Vector Machine</em></h3>
+<p><em>Support vector machine</em> (SVM) merupakan pemodelan yang mencari fungsi <em>hyperplane</em> yang memisahkan data sesuai kelasnya dengan menggunakan <em>decision boundary</em> yang memiliki jarak optimal dengan <em>hyperplane</em> <span class="citation">(Theodoridis 2015)</span> seperti pada Gambar [fig:svm]. Untuk memisahkan data yang tidak terpisahkan secara linier (<em>non-linearly separable</em>), dapat digunakan fungsi <em>kernel</em> untuk memetakan data sehingga bisa bisa dipisahkan secara linier. Salah satu fungsi <em>kernel</em> yang umum digunakan pada <em>task</em> NLP adalah <em>kernel</em> polinomial ([eq:poly_kernel]) <span class="citation">(Joachims 1998)</span>.</p>
+<div class="figure">
+<img src="../images/svm.png" alt="Contoh fungsi linier (garis hijau) dari SVM yang memisahkan dua kelompok data dua dimensi (titik merah dan biru) menggunakan dua support vector (sumber: https://florianhartl.com)" />
+<p class="caption">Contoh fungsi linier (garis hijau) dari SVM yang memisahkan dua kelompok data dua dimensi (titik merah dan biru) menggunakan dua <em>support vector</em> (sumber: <a href="https://florianhartl.com" class="uri">https://florianhartl.com</a>)<span data-label="fig:svm"></span></p>
+</div>
+<p><br /><span class="math display">$$\begin{aligned}
+ \label{eq:poly_kernel}
+K(x,y) &amp;= (x^\mathsf{T} y + c)^{d} \\ \nonumber
+\textrm{di mana, } x &amp;= \textrm{data atau fitur, } \\ \nonumber 
+	y &amp;= \textrm{kelas atau label, } \\ \nonumber
+	d &amp;= \textrm{derajat polinomial, } \\ \nonumber 
+	c &amp;= \textrm{konstanta} \\ \nonumber \end{aligned}$$</span><br /></p>
+<h3 id="multi-layer-perceptron"><em>Multi-Layer Perceptron</em></h3>
+<p><em>Multi-Layer Perceptron</em> (MLP) atau <em>feed-forward neural network</em> adalah pemodelan klasifikasi nonlinier berbasiskan jaringan syaraf tiruan (<em>perceptron</em>) yang memiliki lebih dari satu <em>hidden layer</em> yang berisi sejumlah neuron <span class="citation">(Theodoridis 2015)</span> seperti yang divisualisasikan pada Gambar [fig:mlp]. Nilai <em>output</em> dari suatu neuron ditentukan oleh <em>input</em> <span class="math inline"><em>x</em></span>, bobot (<em>weight</em>) <span class="math inline"><em>w</em></span>, <em>bias</em> <span class="math inline"><em>b</em></span> dan fungsi aktivasi <span class="math inline"><em>f</em></span>, <span class="math inline">$o(\vec{x}) = f(\vec{w} \cdot \vec{x} + \vec{b})$</span> <span class="citation">(Mitchell 1997)</span>. Contoh fungsi aktivasi yang bisa digunakan <span class="citation">(Mitchell 1997)</span> adalah:</p>
+<ol>
+<li><p>Fungsi <em>sign</em> : <span class="math inline"><em>f</em>(<em>x</em>)=1 if <em>x</em> &gt; 0 selain itu − 1</span></p></li>
+<li><p>Fungsi <em>sigmoid/logistic</em> : <span class="math inline">$ f(x)={\frac {1}{1+e^{-x}}} $</span></p></li>
+<li><p>Fungsi <em>tanh</em>: <span class="math inline">$ f(x)=\tanh(x)={\frac {2}{1+e^{-2x}}}-1 $</span></p></li>
+<li><p>Fungsi <em>rectifier</em>: <span class="math inline">$ f(x)=\max(0,x) \citep{nair2010rectified} $</span></p></li>
+</ol>
+<p>MLP dilatih dengan menyesuaikan bobot secara iteratif menggunakan algoritma <em>gradient descent</em> dan <em>backpropagation</em> <span class="citation">(Theodoridis 2015)</span>.</p>
+<div class="figure">
+<img src="../images/mlp.png" alt="Visualisasi MLP dengan input layer {x_1, x_2}, dua hidden layer {{y_1, y_2, y_3}, {z_1, z_2}} dan satu output layer {y} (sumber: (Theodoridis 2015))" />
+<p class="caption">Visualisasi MLP dengan <em>input layer</em> {<span class="math inline"><em>x</em><sub>1</sub>, <em>x</em><sub>2</sub></span>}, dua <em>hidden layer</em> {{<span class="math inline"><em>y</em><sub>1</sub>, <em>y</em><sub>2</sub>, <em>y</em><sub>3</sub></span>}, {<span class="math inline"><em>z</em><sub>1</sub>, <em>z</em><sub>2</sub></span>}} dan satu <em>output layer</em> {<span class="math inline"><em>y</em></span>} (sumber: <span class="citation">(Theodoridis 2015)</span>)<span data-label="fig:mlp"></span></p>
+</div>
+<h3 id="random-forest"><em>Random Forest</em></h3>
+<p><em>Random forest</em> adalah metode <em>bagging</em> lebih dari satu varian <em>decision tree</em> (<em>forest</em>) dengan pemilihan fitur yang acak (<em>random</em>) <span class="citation">(Breiman 2001)</span>. <em>Bagging</em> sendiri adalah metode klasifikasi berdasarkan voting lebih dari satu varian <em>classifier</em> dengan tujuan meningkatkan kemampuan generalisasi <span class="citation">(Breiman 1996)</span>. Sedangkan <em>decision tree</em> adalah pemodelan klasifikasi generatif yang membangun serangkaian tes terhadap data/fitur untuk menolak kemungkinan kelas sampai hanya tersisa satu kelas <span class="citation">(Theodoridis 2015)</span>. Visualisi <em>random forest</em> ditunjukkan pada Gambar [fig:random-forest].</p>
+<div class="figure">
+<img src="../images/random-forest.png" alt="Visualisasi random forest yang memprediksi kelas k untuk data x berdasarkan voting hasil klasifikasi setiap tree \{k_1, k_2, .., k_b\} (sumber: http://wwww.scirp.org)" />
+<p class="caption">Visualisasi <em>random forest</em> yang memprediksi kelas <span class="math inline"><em>k</em></span> untuk data <span class="math inline"><em>x</em></span> berdasarkan voting hasil klasifikasi setiap <em>tree</em> <span class="math inline">{<em>k</em><sub>1</sub>, <em>k</em><sub>2</sub>, ..,<em>k</em><sub><em>b</em></sub>}</span> (sumber: <a href="http://wwww.scirp.org" class="uri">http://wwww.scirp.org</a>)<span data-label="fig:random-forest"></span></p>
+</div>
+<h1 id="chap:babTiga"></h1>
+<p>Pada bab ini dijelaskan mengenai tahapan penelitian, seperti yang ditunjukkan pada Tabel [tab:tahapan_penelitian], yang meliputi studi literatur, perancangan dan implementasi sistem, serta evaluasi dan analisis.</p>
+<table>
+<caption>Tahapan penelitian<span data-label="tab:tahapan_penelitian"></span></caption>
+<thead>
+<tr class="header">
+<th align="left"><strong>Tahapan</strong></th>
+<th align="left"><strong>Alat</strong></th>
+<th align="left"><strong>Hasil</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Studi literatur</td>
+<td align="left">Mesin pencari buku dan jurnal elektronik</td>
+<td align="left">Latar belakang masalah, rumusan masalah, rangkuman penelitian terkait dan ide rancangan sistem</td>
+</tr>
+<tr class="even">
+<td align="left">Perancangan dan pengimplentasian sistem</td>
+<td align="left">Java, Python, Git, editor kode</td>
+<td align="left">Sistem <em>Open IE</em></td>
+</tr>
+<tr class="odd">
+<td align="left">Evaluasi dan analisis</td>
+<td align="left">Python</td>
+<td align="left">Tabel hasil, diagram hasil, kesimpulan dan saran</td>
+</tr>
+</tbody>
+</table>
+<h2 id="studi-literatur">Studi Literatur</h2>
+<p>Pada tahap ini <span>Penulis</span> mengumpulkan dan menelaah dokumen ilmiah seperti <em>paper</em> dan artikel elektronik terkait <em>open IE</em> untuk memahami topik ini secara lebih mendalam dan mengetahui pencapaian penelitian-penelitian terkait. Pencarian dilakukan digunakan menggunakan mesin pencari<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a><a href="#fn5" class="footnoteRef" id="fnref5"><sup>5</sup></a> jurnal dan artikel ilmiah elektronik nasional dan internasional. Hasil penelaahan ini berupa latar belakang dan rumusan masalah yang dituangkan pada bab [chap:babSatu], rangkuman dan perbandingan sistem <em>open IE</em> pada bab [chap:babDua], serta ide rancangan sistem <em>open IE</em> untuk bahasa Indonesia yang akan dijelaskan pada subbab berikutnya.</p>
+<h2 id="rancangan-dan-implementasi-sistem">Rancangan dan Implementasi Sistem</h2>
+<p>Pada tahap ini <span>Penulis</span> merancang sistem <em>open IE</em> untuk bahasa Indonesia yang mengadaptasi beberapa teknik pada sistem <em>open IE</em> pada penelitian terkait. Rancangan sistem ini berisi empat modul utama, seperti yang ditunjukkan pada Gambar [fig:program_flowchart], yaitu <strong>NLP pipeline</strong>, <strong>triple candidate generator</strong>, <strong>triple selector</strong> dan <strong>token expander</strong>. Terdapat tiga fase atau langkah untuk melakukan ekstraksi <em>triple</em> menggunakan sistem ini:</p>
+<ol>
+<li><p>Label (<em>label</em>): membangun <em>dataset</em> untuk untuk <em>triple selector</em> dengan menganotasi manual kandidat <em>triple</em> yang dihasilkan oleh <em>triple candidate generator</em> dan <em>NLP pipeline</em>.</p></li>
+<li><p>Belajar (<em>learn</em>): melatih <em>triple selector</em> untuk mengekstrak himpunan <em>triple</em> dari kalimat menggunakan <em>dataset</em> dari fase Label. Hasil dari fase ini adalah model yang dipakai pada fase berikutnya.</p></li>
+<li><p>Ekstrak (<em>extract</em>): mengekstrak himpunan <em>triple</em> dari kalimat menggunakan <em>NLP pipeline</em>, <em>triple candidate generator</em>, <em>token expander</em> dan <em>triple selector</em> yang telah dilatih pada fase Belajar. Alur kerja pada fase ini ditunjukkan pada Gambar [fig:program_flowchart].</p></li>
+</ol>
+<div class="figure">
+<img src="../images/program_flowchart.png" alt="Indonesian open domain information extraction flowchart" />
+<p class="caption">Indonesian open domain information extraction flowchart<span data-label="fig:program_flowchart"></span></p>
+</div>
+<h3 id="nlp-pipeline">NLP Pipeline</h3>
+<p><em>NLP pipeline</em> adalah modul yang berisi serangkaian <em>NLP task</em> yang menganotasi kalimat bahasa Indonesia dan menyimpannya sebagai dokumen dengan format CoNLL-U. Modul ini menerima dokumen teks yang berisi satu atau lebih kalimat yang dipisahkan oleh karakter baris baru (<em>newline</em>) dan menghasilkan dokumen teks berisi kalimat yang telah dipotong menjadi <em>token</em> dan diberi anotasi dengan format CoNLL-U. Rangkaian ini diimplementasikan menggunakan pustaka <em>Stanford Core NLP</em>, seperti yang ditunjukkan pada berkas <code>DependencyParser.java</code> pada lampiran, dan didistribusikan dalam format <em>Java Archieve</em> (JAR) sehingga mudah dintegrasikan dengan modul lain. <em>NLP task</em> yang terdapat pada rangkaian ini adalah sebagai berikut:</p>
+<ol>
+<li><p><em>Tokenizer</em><br />
+<em>Tokenizer</em> yang digunakan pada rangkaian ini adalah yang disediakan pustaka <em>Stanford Core NLP</em>, <code>PTBTokenizer</code> <span class="citation">(C. Manning et al. 2014)</span>. <em>Tokenizer</em> berbasis aturan (<em>rule-based</em>) ini mengikuti <em>tokenizer</em> yang digunakan untuk menghasilkan <em>Penn Treebank 3</em><a href="#fn6" class="footnoteRef" id="fnref6"><sup>6</sup></a> (<em>treebank</em> bahasa Inggris). Meskipun <em>tokenizer</em> ini menyediakan opsi untuk menyesuaikan proses dengan bahasa lain, di penelitian ini kami hanya menggunakan opsi standar untuk memotong kalimat berdasarkan <em>whiteline</em> untuk mendapatkan <em>token</em>.</p></li>
+<li><p><em>Part of Speech Tagger</em><br />
+<em>Part of Speech Tagger</em> (<em>POS tagger</em>) yang digunakan pada rangkaian ini adalah, <code>MaxentTagger</code> <span class="citation">(Toutanova et al. 2003)</span>, yang juga merupakan bagian dari pustaka <em>Stanford Core NLP</em>. <em>POS tagger</em> berbasis <em>multi-class logistic regression</em> ini dilatih dengan <em>dataset</em> yang diperoleh dengan mengekstraksi <em>POS tag</em> dari 5,036 kalimat <em>treebank</em> <em>universal dependency</em> (UD) bahasa Indonesia<a href="#fn7" class="footnoteRef" id="fnref7"><sup>7</sup></a>. Hasil pengujian model <em>POS tagger</em> ini, menggunakan 559 kalimat lain dari sumber yang sama, mencapai akurasi per token <strong>93.68%</strong> dan akurasi per kalimat <strong>63.91%</strong> (seluruh token dalam kalimat dianotasi dengan <em>POS tag</em> yang benar).</p></li>
+<li><p><em>Lemmatizer</em><br />
+<em>Lemmatizer</em> yang digunakan pada rangkaian ini diadaptasi dari <em>lemmatizer</em> bahasa Indonesia berbasis aturan <span class="citation">(Suhartono 2014)</span> dan diberi nama <code>IndonesianLemmaAnnotator</code>. Adaptasi dilakukan dengan melakukan perubahan berikut:</p>
+<ul>
+<li><p>Kemampuan untuk memproses tidak hanya kata tapi juga kalimat</p></li>
+<li><p>Peningkatan kecepatan dengan penggunaan <em>in-memory database</em></p></li>
+<li><p>Meningkatan <em>reusability</em> dengan implementasi ulang menggunakan Java serta integrasi dengan pustaka <em>Stanford Core NLP</em></p></li>
+</ul>
+<p><em>Lemmatizer</em> ini mencapai akurasi <strong>99%</strong> saat diuji dengan 5.638 pasangan kata dan <em>lemma</em> bahasa Indonesia dari <span class="citation">(Suhartono 2014)</span>.</p></li>
+<li><p><em>Named-Entity Recognizer</em> (NER)<br />
+<em>Named-entity recognizer</em> (NER) yang digunakan dalam rangkaian ini adalah <code>CRFClassifier</code> <span class="citation">(J. R. Finkel, Grenager, and Manning 2005)</span> dari pustaka <em>Stanford Core NLP</em>. NER berbasis <em>Conditional Random Field (CRF) sequence models</em> ini dilatih dan diuji menggunakan <em>dataset</em> yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik<a href="#fn8" class="footnoteRef" id="fnref8"><sup>8</sup></a>. <em>dataset</em> ini berisi kalimat-kalimat yang setiap <em>token</em>-nya yang relevan sudah diberi anotasi dari lima kelas: <em>Person</em>, <em>Organization</em>, <em>Quantity</em> dan <em>Time</em>. Hasil pelatihan dengan 3,535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, <em>recall</em> 0.85 dan <em><span class="math inline"><em>F</em><sub>1</sub></span>-score</em> <strong>0.86</strong>.</p></li>
+<li><p><em>Dependency Parser</em><br />
+<em>Dependency parser</em> yang digunakan dalam rangkaian ini adalah salah satu modul dalam pustaka <em>Standford Core NLP</em>, yaitu <code>nndep.DependencyParser</code> <span class="citation">(Chen and Manning 2014)</span>. <em>Dependency parser</em> ini berbasiskan jaringan syaraf tiruan (<em>artificial neural network</em>) yang mempelajari pola transisi antar <em>token</em> dalam kalimat dalam membentuk <em>dependency tree</em>. <em><em>dataset</em>set</em> yang digunakan untuk melatih dan menguji <em>dependency parser</em> ini diperoleh dari <em>treebank</em> <em>universal dependency</em> (UD) bahasa Indonesia (sama dengan yang digunakan untuk <em>POS tagger</em>). Model yang dihasilkan dengan melatih <em>dependency parser</em> menggunakan 5,036 kalimat bahasa Indonesia ini mencapai nilai <strong>70%</strong> UAS (<em>Unlabeled Attachment Score</em>) dan <strong>46%</strong> LAS (<em>Labeled Attachment Score</em>) ketika diuji dengan 559 kalimat.</p></li>
+</ol>
+<p>Estimasi kinerja dari modul <em>NLP pipeline</em> ini dihitung dari rata-rata kinerja <em>POS tagger</em> (<em>sentence accuracy</em>), <em>NER</em> (<em><span class="math inline"><em>F</em><sub>1</sub></span>-score</em>) dan <em>dependency parser</em> (LAS), yaitu <strong>65.30%</strong>. Kinerja <em>tokenizer</em> dan <em>lemmatizer</em> tidak diperhitungkan karena dianggap sudah terwakili oleh <em>NLP task</em> yang lain. Hasil dari <em>NLP pipeline</em> ini adalah dokumen berisi anotasi setiap kalimat dengan format CoNLL-U seperti contoh pada Gambar [fig:conllu_example]. Dokumen ini menjadi input bagi modul <em>triple candidate generator</em> yang akan dijelaskan berikutnya.</p>
+<div class="figure">
+<img src="../images/conllu_example.png" alt="Contoh format CoNLL-U untuk sebuah kalimat" />
+<p class="caption">Contoh format CoNLL-U untuk sebuah kalimat<span data-label="fig:conllu_example"></span></p>
+</div>
+<h3 id="Triple Candidate Generator"><em>Triple Candidate Generator</em></h3>
+<p>Modul <em>triple candidate generator</em> berfungsi untuk mengekstrak kandidat <em>triple</em> dari dokumen CoNLL-U yang dihasilkan oleh <em>NLP pipeline</em>. Modul ini menggunakan sejumlah aturan berbasis <em>POS tag</em> dan <em>dependency relation</em> yang ditampilkan pada Tabel [tab:triple_candidate_generation_rules] untuk mengekstrak kandidat <em>triple</em> dari tiap kalimat pada dokumen. Berbeda dengan <span style="font-variant: small-caps;">TextRunner</span> <span class="citation">(Banko et al. 2007)</span> yang menghasilkan hanya menentukan kandidat yang valid secara otomatis, kandidat yang dihasilkan modul ini tidak semuanya valid sehingga diperlukan pelabelan oleh manusia (pada fase Label) atau pelabelan otomatis oleh <em>classifier</em> (pada fase Extract) seperti pada <span style="font-variant: small-caps;">Stanford Open IE</span> <span class="citation">(Angeli, Premkumar, and Manning 2015)</span>. Modul ini diimplementasikan menggunakan bahasa pemrograman <em>opensource</em> <em>Python</em><a href="#fn9" class="footnoteRef" id="fnref9"><sup>9</sup></a> dengan fungsi utama <code>extract_triples_by_combinations</code> pada berkas <code>tripletools.py</code> yang disertakan pada lampiran.</p>
+<table>
+<caption>Aturan pembangkitan kandidat <em>triple</em><span data-label="tab:triple_candidate_generation_rules"></span></caption>
+<thead>
+<tr class="header">
+<th align="left"><strong>Jenis</strong></th>
+<th align="left"><strong>Kondisi</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Subjek</td>
+<td align="left"><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><em>Token</em> bukan termasuk (“yang”, “adalah”)</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</td>
+</tr>
+<tr class="odd">
+<td align="left">Predikat</td>
+<td align="left">Posisi <em>token</em> setelah Subjek</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><em>POS tag</em> <em>token</em> termasuk (VERB, AUX)</td>
+</tr>
+<tr class="odd">
+<td align="left">Objek</td>
+<td align="left">Posisi <em>token</em> setelah Subjek dan Predikat</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><em>Token</em> bukan termasuk (“yang”, “adalah”)</td>
+</tr>
+<tr class="even">
+<td align="left"></td>
+<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</td>
+</tr>
+</tbody>
+</table>
+<p>Contoh aplikasi aturan <em>triple candidate generator</em> pada contoh dokumen CoNLL-U pada Gambar [fig:conllu_example] akan menghasilkan 17 kandidat <em>triple</em> di mana hanya 5 di antaranya merupkan kandidat yang valid (ditandai dengan centang ()):</p>
+<ul>
+<li><p>(Sembungan, adalah, desa)</p></li>
+<li><p>(Sembungan, adalah, terletak)</p></li>
+<li><p>(Sembungan, adalah, kecamatan)</p></li>
+<li><p>(Sembungan, adalah, kabupaten)</p></li>
+<li><p>(Sembungan, adalah, Jawa)</p></li>
+<li><p>(Sembungan, adalah, Tengah)</p></li>
+<li><p>(Sembungan, adalah, Indonesia)</p></li>
+<li><p>(Sembungan, terletak, kecamatan)</p></li>
+<li><p>(Sembungan, terletak, kabupaten)</p></li>
+<li><p>(Sembungan, terletak, Jawa)</p></li>
+<li><p>(Sembungan, terletak, Tengah)</p></li>
+<li><p>(Sembungan, terletak, Indonesia)</p></li>
+<li><p>(desa, terletak, kecamatan)</p></li>
+<li><p>(desa, terletak, kabupaten)</p></li>
+<li><p>(desa, terletak, Jawa)</p></li>
+<li><p>(desa, terletak, Tengah)</p></li>
+<li><p>(desa, terletak, Indonesia)</p></li>
+</ul>
+<p>Untuk melatih modul <em>triple selector</em> yang dapat memilih kandidat <em>triple</em> yang valid, dibangun <em>dataset</em> dengan melakukan pelabelan manual pada 1,611 kandidat <em>triple</em> (132 positif dan 1,479 negatif) yang dihasilkan <em>triple candidate generator</em> dari 42 kalimat berformat CoNLL-U. Himpunan kalimat tersebut merupakan sebagian dari <em>dataset</em> <em>universal dependency</em> Indonesia yang ditambahkan anotasi <em>named-entity</em> secara manual.</p>
+<p>Pada fase Ekstrak, <em>triple candidate generator</em> juga digunakan untuk menghasilkan kandidat <em>triple</em> dari dokumen CoNLL-U yang tidak berlabel seperti yang digambarkan pada Gambar [fig:program_flowchart]. Hasil dari modul ini kemudian akan diseleksi oleh <em>triple selector</em> yang telah dilatih pada fase Belajar. Lebih jauh mengenai <em>triple</em> selector akan dijelaskan di subbab berikutnya.</p>
+<h3 id="Triple Selector"><em>Triple Selector</em></h3>
+<p>Modul <em>triple selector</em> adalah sebuah <em>supervised-learning classifier</em> yang dilatih untuk menyeleksi kandidat <em>triple</em> yang dihasilkan oleh <em>triple candidate generator</em>. Sebagai contoh, jika diberikan input 17 kandidat <em>triple</em> yang disebutkan pada subbab [Triple Candidate Generator], modul ini akan mengambil lima kandidat <em>triple</em> yang diberi tanda centang () dan mengabaikan yang lainnya.</p>
+<p>Metode yang digunakan untuk membangun <em>classifier</em> pada modul ini adalah <em>random forest</em> <span class="citation">(Breiman 2001)</span>, yang merupakan metode <em>bagging</em> terhadap sejumlah <em>decision tree</em>. Implementasi <em>random forest</em> yang digunakan pada modul ini berasal dari pustaka <em>scikit-learn</em><a href="#fn10" class="footnoteRef" id="fnref10"><sup>10</sup></a> seperti yang ditunjukkan pada berkas <code>classifier.py</code> (untuk fase Belajar) dan <code>extract_triples.py</code> (untk fase Ekstrak) pada lampiran. Konfigurasi yang digunakan pada model <em>random forest</em> pada modul ini adalah:</p>
+<ul>
+<li><p>Kriteria percabangan (<code>criterion</code>): <em>Gini Impurity</em></p></li>
+<li><p>Jumlah sampel minimal untuk membuat cabang (<code>min_samples_split</code>): 5</p></li>
+<li><p>Jumlah fitur maksimum (<code>max_features</code>): 4 (akar dari jumlah total fitur)</p></li>
+<li><p>Kedalaman maksimum (<code>max_depth</code>): 8</p></li>
+<li><p>Jumlah pohon (<code>n_estimators</code>): 20</p></li>
+<li><p>Bobot kelas (<code>class_weight</code>): <em>balanced</em> (sesuai rasio kelas pada <em>dataset</em>)</p></li>
+</ul>
+<p>Konfigurasi ini ditemukan dengan menggunakan algoritma <em>grid search</em> <span class="citation">(Wasserman 2015)</span>, algoritma pencarian menyeluruh (<em>exhaustive</em>) terhadap sejumlah himpunan <em>hyperparameter</em> untuk mengoptimalkan metrik evaluasi tertentu. Algoritma ini digunakan untuk mencari konfigurasi yang menghasilkan <em><span class="math inline"><em>F</em><sub>1</sub></span> score</em> terbaik untuk <em>random forest</em> dengan data yang ada.</p>
+<p>Untuk melakukan klasifikasi, 17 fitur berbasis <em>POS tag</em>, <em>named-entity</em> dan <em>dependency relation</em> diekstrak dari masing-masing kandidat <em>triple</em> dengan rincian pada Tabel [tab:models_features]. Berbeda dengan <span style="font-variant: small-caps;">TextRunner</span> atau <span style="font-variant: small-caps;">ReVerb</span> <span class="citation">(Banko et al. 2007)</span> <span class="citation">(Etzioni et al. 2011)</span> yang lebih memilih menggunakan <em>shallow syntactic features</em>, <em>classifier</em> pada sistem ini menggunakan <em>heavy linguistic features</em> seperti <em>dependency relation</em> untuk mengoptimalkan <em>precision</em> dan <em>recall</em>.</p>
+<table>
+<caption>Fitur klasifikasi <em>triple selector</em><span data-label="tab:models_features"></span></caption>
+<thead>
+<tr class="header">
+<th align="right"><strong>#</strong></th>
+<th align="left"><strong>Fitur Klasifikasi</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left"><em>POS tag</em> dari <em>token</em> Subjek</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left"><em>Dependency relation</em> dari <em>token</em> Subjek</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left"><em>POS tag</em> dari <em>head</em> <em>token</em> Subjek</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left"><em>Named-entity</em> dari <em>token</em> Subjek</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">Jarak Subjek ke <em>token</em> Predikat</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="left"><em>Dependency relation</em> dari <em>token</em> Subjek ke Predikat</td>
+</tr>
+<tr class="odd">
+<td align="right">7</td>
+<td align="left"><em>POS tag</em> dari <em>token</em> Predikat</td>
+</tr>
+<tr class="even">
+<td align="right">8</td>
+<td align="left"><em>Dependency relation</em> dari <em>token</em> Predikat</td>
+</tr>
+<tr class="odd">
+<td align="right">9</td>
+<td align="left"><em>POS tag</em> dari <em>head</em> <em>token</em> Predikat</td>
+</tr>
+<tr class="even">
+<td align="right">10</td>
+<td align="left">Jumlah <em>dependents</em> <em>token</em> Predikat</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="left"><em>POS tag</em> dari <em>token</em> Objek</td>
+</tr>
+<tr class="even">
+<td align="right">12</td>
+<td align="left"><em>Dependency relation</em> dari <em>token</em> Objek</td>
+</tr>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left"><em>POS tag</em> dari <em>head</em> <em>token</em> Objek</td>
+</tr>
+<tr class="even">
+<td align="right">14</td>
+<td align="left"><em>Named-entity</em> dari <em>token</em> Objek</td>
+</tr>
+<tr class="odd">
+<td align="right">15</td>
+<td align="left">Jumlah <em>dependents</em> dari <em>token</em> Objek</td>
+</tr>
+<tr class="even">
+<td align="right">16</td>
+<td align="left">Jarak dari <em>token</em> Objek ke predikat</td>
+</tr>
+<tr class="odd">
+<td align="right">17</td>
+<td align="left"><em>Dependency relation</em> <em>token</em> Objek ke Predikat</td>
+</tr>
+</tbody>
+</table>
+<p>Pada fase Belajar, data kandidat <em>triple</em> yang telah diberi label di fase Label diekstrak menjadi 17 fitur yang dijelaskan di Tabel [tab:models_features] dan dinormalisasi menggunakan pustaka <code>StandardScaler</code> dari <em>sckit-learn</em>. <em>Dataset</em> berisi fitur yang telah dinormalisasi tersebut dipakai untuk melatih <em>classifier</em> dan hasilnya juga disimpan dalam berkas biner (<em>binary file</em>) untuk digunakan pada fase Ekstrak.</p>
+<h3 id="token-expander"><em>Token Expander</em></h3>
+<p>Modul <em>token expander</em> adalah berfungsi mengekspansi <em>token</em> pada <em>triple</em> menjadi kata, kata majemuk atau frase sehingga makna <em>triple</em> menjadi lebih jelas. Contoh ekspansi <em>token</em> terhadap lima kandidat <em>triple</em> yang valid pada subbab [Triple Candidate Generator] adalah:</p>
+<ul>
+<li><p>(Sembungan, adalah, desa)</p></li>
+<li><p>(Sembungan, terletak di, kecamatan Kejajar)</p></li>
+<li><p>(Sembungan, terletak di, kabupaten Wonosobo)</p></li>
+<li><p>(Sembungan, terletak di, Jawa Tengah)</p></li>
+<li><p>(Sembungan, terletak di, Indonesia)</p></li>
+</ul>
+<p>Jika <span style="font-variant: small-caps;">TextRunner</span> menggunakan <em>noun phrase chunker</em> <span class="citation">(Banko et al. 2007)</span> untuk menemukan frase sebagai kandidat argumen (subjek atau objek), <em>token expander</em> menggunakan 11 aturan berbasis <em>POS tag</em>, <em>named-entity</em> dan <em>dependency relation</em> yang dirinci pada Tabel [tab:token_expansion_rules_s_o]. Perbedaan lain dengan <em>TextRunner</em> adalah modul ini digunakan juga untuk mengekspansi negasi <em>token</em> predikat dengan aturan pada Tabel [tab:token_expansion_rules_p]. Modul ini menelusuri setiap <em>dependent</em> dari sebuah <em>token</em> dan memutuskan apakah akan (1) melakukan ekspansi (<em>expand</em>) ke <em>dependent</em> tersebut, (2) mengabaikan (<em>ignore</em>) <em>dependent</em> tersebut, atau (3) membuang (<em>remove</em>) <em>dependent</em> tersebut. Sekalipun memiliki tujuan dan teknik yang berbeda dengan <em>clause selector</em> pada <span style="font-variant: small-caps;">Stanford Open IE</span> <span class="citation">(Angeli, Premkumar, and Manning 2015)</span>, modul ini sama-sama membentuk frase dengan menelusuri <em>dependent</em> dan memutuskan apakah sebuah <em>dependent</em> merupakan bagian dari frase yang sama atau berbeda.</p>
+<table>
+<caption>Aturan ekspansi untuk <em>token</em> subjek atau objek<span data-label="tab:token_expansion_rules_s_o"></span></caption>
+<thead>
+<tr class="header">
+<th align="right"><strong>#</strong></th>
+<th align="left"><strong>Kondisi untuk <em>token</em> subjek atau objek</strong></th>
+<th align="left"><strong>Aksi</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">Jika relasi <em>dependent</em> di antara()[“compound”, “name”, “amod”)</td>
+<td align="left">Ekspansi</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">Jika <em>dependent</em> memiliki <em>named-entity</em> yang sama dengan <em>token</em></td>
+<td align="left">Ekspansi</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">Jika <em>dependent</em> dan token berada dalam kutipan (<em>quote</em>)</td>
+<td align="left">Ekspansi</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">Jika <em>token</em> merupakan <em>root</em> kalimat</td>
+<td align="left">Abaikan</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="left">Jika <em>POS tag</em> dependent CONJ atau termasuk simbol (“,”, “/) &amp; Abaikan<br />
+6 &amp; Jika <em>POS tag</em> dependent termasuk (”VERB“, ”ADP“) &amp; Abaikan<br />
+7 &amp; Jika <em>dependent</em> memiliki <em>dependent</em> dengan <em>POS tag</em> ”ADP“ &amp; Abaikan<br />
+8 &amp; Jika <em>POS tag</em> <em>dependent</em> di antara (”CONJ“, ”ADP“) dan berada di depan frase &amp; Buang<br />
+9 &amp; Jika <em>dependent</em> merupakan tanda kurung yang tidak lengkap &amp; Buang<br />
+10 &amp; Jika <em>dependent</em> merupakan kata ”yang&quot; diakhir frase &amp; Buang<br />
+11 &amp; Lain-lain &amp; Abaikan<br />
+</td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Aturan ekspansi untuk <em>token</em> predikat<span data-label="tab:token_expansion_rules_p"></span></caption>
+<thead>
+<tr class="header">
+<th align="right"><strong>#</strong></th>
+<th align="left"><strong>Kondisi untuk <em>token</em> predikat</strong></th>
+<th align="left"><strong>Aksi</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">Jika <em>dependent</em> adalah “tidak”</td>
+<td align="left">Ekspansi</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">Lain-lain</td>
+<td align="left">Abaikan</td>
+</tr>
+</tbody>
+</table>
+<p>Pada fase Label, <em>token expander</em> digunakan untuk mengekspansi kandidat <em>triple</em> yang dihasilkan <em>triple candidate generator</em> sehingga lebih mudah dimengerti manusia. Sedangkan pada fase Ekstrak, modul ini mengekspansi <em>triple</em> yang telah dipilih oleh <em>triple selector</em> sehingga maknanya lebih jelas. Implementasi dari modul ini dibuat dengan <em>Python</em>, yaitu pada fungsi <code>flatten_node</code> dalam berkas <code>tripletools.py</code> yang juga dilampirkan.</p>
+<h2 id="evaluasi-dan-analisis">Evaluasi dan Analisis</h2>
+<h3 id="evaluasi">Evaluasi</h3>
+<p>Evaluasi sistem <em>open IE</em> ini akan difokuskan pada modul <em>triple selector</em> karena modul ini ditopang oleh modul <em>triple candidate generator</em> dan <em>token expander</em> yang, bersama dengan <em>triple selector</em>, merupakan pusat kontribusi dari penelitian ini. Selain karena tidak banyak kontribusi yang diberikan melalui modul <em>NLP pipeline</em>, kinerja dari modul ini tidak dievaluasi secara khusus melainkan hanya akan dievaluasi secara tidak langsung pada evaluasi efisiensi sistem <em>open IE</em> ini. Evaluasi pada penelitian ini akan dibagi menjadi dua eksperimen:</p>
+<h4 id="eksperimen-model-triple-selector">Eksperimen Model <em>Triple Selector</em></h4>
+<p>Pada eksperimen ini akan dibandingkan kinerja empat buah model <em>supervised learning</em> untuk melakukan klasifikasi <em>triple</em> untuk menentukan apakah <em>random forest</em> <span class="citation">(Wasserman 2015)</span> adalah model yang paling cocok. Empat buah model tersebut adalah <em>linear logistic regression</em> <span class="citation">(Fan et al. 2008)</span>, <em>polynomial support vector machine</em> (SVM) <span class="citation">(C.-C. Chang and Lin 2011)</span>, <em>multi-layer perceptron</em> (MLP) <span class="citation">(Hinton 1989)</span> dan <em>random forest</em> sendiri. Keempat model ini akan dilatih dan diuji dengan metode <em>k-fold cross-validation</em> menggunakan <em>dataset</em> yang telah dijelaskan pada subbab [Triple Candidate Generator]. Karena <em>dataset</em> yang digunakan memiliki rasio kelas positif dan negatif yang tidak seimbang, maka digunakan <span class="math inline"><em>k</em> = 3</span> pada <em>cross-validation</em> untuk mencegah adanya potongan (<em>fold</em>) <em>dataset</em> yang hanya terdiri dari kelas negatif.</p>
+<p>Metrik yang akan dibandingkan pada eksperimen ini adalah <em>precision</em>, <em>recall</em> dan <em><span class="math inline"><em>F</em><sub>1</sub></span> score</em> hanya untuk kelas positif (<em>triple</em> valid) karena pada <em>open IE</em> data negatif tidak diperlukan. Karena untuk <em>task</em> klasifikasi <em>triple</em> ini <em>precision</em> dan <em>recall</em> sama-sama penting, maka metrik yang dipandang lebih penting adalah rerata dari dua metrik tersebut, yaitu <em><span class="math inline"><em>F</em><sub>1</sub></span>-score</em> <span class="citation">(Angeli, Premkumar, and Manning 2015)</span>. Persamaan untuk menghitung <em>precision</em>, <em>recall</em> dan <em><span class="math inline"><em>F</em><sub>1</sub></span>-score</em> untuk data positif ditunjukkan secara berurutan pada persamaan [eq:precision], [eq:recall] dan [eq:f1].</p>
+<p><br /><span class="math display">$$\begin{aligned}
+\label{eq:precision}
+	\textit{precision}_+ = \frac{|\textit{selected valid triples}|}{|\textit{selected triples}|}\end{aligned}$$</span><br /></p>
+<p><br /><span class="math display">$$\begin{aligned}
+\label{eq:recall}
+	\textit{recall}_+ = \frac{|\textit{selected valid triples}|}{|\textit{valid triples}|}\end{aligned}$$</span><br /></p>
+<p><br /><span class="math display">$$\begin{aligned}
+\label{eq:f1}
+	F_{1} = 2 \cdot \frac{\textit{precision}_+ \cdot \textit{recall}_+ }{ \textit{precision}_+ \, + \, \textit{recall}_+}\end{aligned}$$</span><br /></p>
+<h4 id="eksperimen-waktu-ekstraksi-triple">Eksperimen Waktu Ekstraksi <em>Triple</em></h4>
+<p>Pada eksperimen ini diukur waktu eksekusi total sistem <em>open IE</em> yang diajukan pada tiga dokumen input yang memiliki jumlah kalimat yang bervariasi. Tujuan dari eksperimen ini adalah mengukur efisiensi sistem secara umum dan membandingkannya dengan penelitian terkait. Dokumen yang digunakan sebagai input pada eksperimen ini adalah:</p>
+<ol>
+<li><p>Dokumen berisi 2 kalimat dari <em>dataset</em> pelatihan</p></li>
+<li><p>Dokumen berisi 138 kalimat dari proposal penelitian</p></li>
+<li><p>Dokumen berisi 5,593 dari <em>dataset</em> pelatihan</p></li>
+</ol>
+<h3 id="analisis">Analisis</h3>
+<p>Analisis akan dilakukan terhadap hasil eksperimen yang telah dijelaskan di atas dengan tujuan mengukur pencapaian pada penelitian ini relatif terhadap penelitian-penelitian terkait, memapaparkan alasan di balik hasil eksperimen yang diperoleh serta mencari alternatif perbaikan atau peningkatan yang dapat dilakukan pada penelitian ini ke depannya.</p>
+<h1 id="chap:babEmpat"></h1>
+<p>Pada bab ini dijelaskan hasil evaluasi dan analisis dari penelitian ini.</p>
+<h2 id="evaluasi-1">Evaluasi</h2>
+<p>Dua eksperimen pada penelitian ini dilakukan pada <em>notebook</em> dengan sistem operasi <em>Ubuntu 15.04 64-bit</em>, prosesor <em>Intel Core i7 5500U</em> (<em>dual cores</em>), RAM DDR3 8 GB dan penyimpanan SSD 250 GB. Program yang digunakan untuk melakukan eksperimen pertama adalah <code>classifier.py</code> sedangkan eksperimen yang kedua menggunakan program <code>extract_triples.py</code> (terlampir).</p>
+<p>Pada eksperimen pertama, empat model <em>supervised learning</em> dilatih dan diuji menggunakan data kandidat <em>triple</em> yang sudah diberikan label, diekstraksi menjadi 17 fitur dan dinormalisasi. Metode yang digunakan untuk melatih dan menguji adalah <em>k-fold</em> <em>cross-validation</em> <span class="citation">(Kohavi and others 1995)</span> dengan <span class="math inline"><em>k</em> = 3</span>. Empat model yang dibandingkan beserta dengan konfigurasinya adalah sebagai berikut:</p>
+<ol>
+<li><p>Linear Logistic Regression</p>
+<ul>
+<li><p>Solver (cost function): <code>liblinear</code></p></li>
+<li><p>Penalty (regularizer): <code>l2</code></p></li>
+</ul></li>
+<li><p>Polynomial Support Vector Machine (SVM)</p>
+<ul>
+<li><p>Kernel: <code>poly</code></p></li>
+<li><p>Degree: <code>5</code></p></li>
+</ul></li>
+<li><p>ReLU Multi-Layer Perceptron (MLP)</p>
+<ul>
+<li><p>Hidden layers: <code>(20, 10)</code></p></li>
+<li><p>Activation: <code>relu</code> <span class="citation">(Nair and Hinton 2010)</span></p></li>
+<li><p>Max. iteration: <code>1000</code></p></li>
+</ul></li>
+<li><p>Random Forest</p>
+<ul>
+<li><p>Max. depth: <code>8</code></p></li>
+<li><p>Number of estimators: <code>20</code></p></li>
+<li><p>Min. samples split: <code>5</code></p></li>
+<li><p>Criterion: <code>gini</code> <span class="citation">(Mingers 1989)</span></p></li>
+<li><p>Max. features: <code>auto</code> (pembulatan akar dari jumlah total fitur)</p></li>
+<li><p>Class weight: <code>balanced</code> (sesuai rasio kelas)</p></li>
+</ul></li>
+</ol>
+<p>Eksperimen ini dilakukan dengan menjalankan program <code>classifier.py</code> (di direktori yang sama dengan pustaka utama <code>tripletools.py</code>) dengan input <em>dataset</em> fitur yang sudah dinormalisasi dengan format <em>comma separated value</em> (CSV) <code>triple-selector.train.csv</code> pada <em>terminal</em>:</p>
+<pre><code>	$ python classifier.py --best triple-selector.train.csv</code></pre>
+<p>Hasil dari eksperimen pertama ini dapat dilihat pada Tabel [tab:models_performance] dan visualisasinya pada Gambar [fig:models_performance] di mana <em>random forest</em> mencapai nilai <em>recall</em> dan <span class="math inline"><em>F</em><sub>1</sub></span> tertinggi, yaitu <strong>0.58</strong>. Sedangkan nilai <em>precision</em> tertinggi, <strong>0.68</strong>, dicapai oleh SVM.</p>
+<div class="figure">
+<img src="../images/models_performance.png" alt="Diagram hasil eksperimen perbandingan model supervised learning untuk triple selector" />
+<p class="caption">Diagram hasil eksperimen perbandingan model <em>supervised learning</em> untuk <em>triple selector</em><span data-label="fig:models_performance"></span></p>
+</div>
+<p><span>p<span>5cm</span> &gt;p<span>2cm</span> &gt;p<span>2cm</span> &gt;p<span>2cm</span></span> <strong>Model</strong> &amp; <strong><em>Precision</em></strong> &amp; <strong><em>Recall</em></strong> &amp; <strong><span class="math inline"><em>F</em><sub>1</sub></span></strong><br />
+Logistic Regression &amp; 0.64 &amp; 0.28 &amp; 0.36<br />
+SVM &amp; <strong>0.68</strong> &amp; 0.41 &amp; 0.51<br />
+MLP &amp; 0.54 &amp; 0.46 &amp; 0.47<br />
+Random Forest &amp; 0.62 &amp; <strong>0.58</strong> &amp; <strong>0.58</strong><br />
+</p>
+<p>Pada eksperimen kedua, sistem <em>open IE</em> dipakai untuk mengekstrak <em>triple</em> dari tiga buah dokumen dengan ukuran (jumlah kalimat) bervariasi. Metrik utama pada eksperimen ini adalah waktu total eksekusi yang dipakai untuk menghitung waktu eksekusi rata-rata per kalimat. Sebagai tambahan, diamati juga jumlah <em>triple</em> yang dapat diekstraksi dari tiap dokumen. Eksperimen ini dilakukan dengan menjalankan program utama <code>extract_triples.py</code> untuk setiap dokumen (<code>doc1.txt</code>, <code>doc2.txt</code>, <code>doc3.txt</code>) yang berisi satu kalimat per baris:</p>
+<pre><code>	$ python extract_triples.py -f tsv doc1.txt
+	$ python extract_triples.py -f tsv doc2.txt
+	$ python extract_triples.py -f tsv doc3.txt</code></pre>
+<p>Hasil eksperimen tersebut ditunjukkan pada Tabel [tab:system_extraction_time] di mana waktu eksekusi rata-rata per kalimat <strong>0.014 detik/kalimat</strong> dicapai untuk ukuran dokumen terbesar 5,593 kalimat. Dapat dilihat bahwa rata-rata waktu yang dibutuhkan untuk memproses satu kalimat semakin menurun seiring dengan bertambahnya jumlah kalimat pada dokumen. Rata-rata jumlah <em>triple</em> yang diekstraksi dari setiap dokumen adalah <strong>3.3 <em>triple</em>/kalimat</strong>.</p>
+<table>
+<caption>Waktu eksekusi sistem <em>open IE</em> <em>end-to-end</em><span data-label="tab:system_extraction_time"></span></caption>
+<thead>
+<tr class="header">
+<th align="left"><strong>Jumlah kalimat</strong></th>
+<th align="left"><strong><em>Triple</em></strong></th>
+<th align="left"><strong>Total (detik)</strong></th>
+<th align="left"><strong>Per kalimat (detik)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">7</td>
+<td align="left">6.1</td>
+<td align="left">0.800</td>
+</tr>
+<tr class="even">
+<td align="left">138</td>
+<td align="left">429</td>
+<td align="left">11.3</td>
+<td align="left">0.082</td>
+</tr>
+<tr class="odd">
+<td align="left">5,593</td>
+<td align="left">19,403</td>
+<td align="left">78.6</td>
+<td align="left"><strong>0.014</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="analisis-1">Analisis</h2>
+<p>Hasil eksperimen pertama di mana nilai <span class="math inline"><em>F</em><sub>1</sub></span> tertinggi hanya 0.58, mengindikasikan bahwa semua model mengalami kesulitan untuk mempelajari pola <em>triples</em> dari <em>dataset</em> yang diberikan. Kemungkinan penyebab hasil ini adalah masalah pada model (pemilihan fitur atau algoritma) atau kualitas <em>dataset</em> yang digunakan (konflik pola atau ketidaklengkapan pola <em>dataset</em>). Untuk memastikan penyebab dari hasil eksperimen pertama ini, <span>Penulis</span> melakukan eksperimen tambahan yaitu menguji tiap model <em>triple selector</em> menggunakan <em>dataset</em> latih (data yang sama). Hasil cukup baik yang ditunjukkan pada Gambar [fig:models_performance_training] dan Tabel [tab:models_performance_training], di mana <span class="math inline"><em>F</em><sub>1</sub></span> tertinggi <strong>0.83</strong>, <em>recall</em> tertinggi <strong>0.96</strong> dan <em>precision</em> tertinggi <strong>0.88</strong>, menunjukkan bahwa fitur yang dipilih dan model yang digunakan tidak memiliki masalah (kecuali model linier, <em>logistic regression</em>). Oleh karena itu <span>Penulis</span> berargumen bahwa masalah utama terdapat pada <em>dataset</em> yang digunakan, yaitu tidak cukupnya pola <span class="math inline">$\nicefrac{2}{3}$</span> data yang dipakai melatih untuk mengenali pola sisa <span class="math inline">$\nicefrac{1}{3}$</span> data yang dipakai untuk menguji.</p>
+<div class="figure">
+<img src="../images/models_performance_training.png" alt="Diagram hasil eksperimen perbandingan model supervised learning untuk triple selector dengan menggunakan data latih sebagai data uji" />
+<p class="caption">Diagram hasil eksperimen perbandingan model <em>supervised learning</em> untuk <em>triple selector</em> dengan menggunakan data latih sebagai data uji<span data-label="fig:models_performance_training"></span></p>
+</div>
+<p><span>p<span>5cm</span> &gt;p<span>2cm</span> &gt;p<span>2cm</span> &gt;p<span>2cm</span></span> <strong>Model</strong> &amp; <strong><em>Precision</em></strong> &amp; <strong><em>Recall</em></strong> &amp; <strong><span class="math inline"><em>F</em><sub>1</sub></span></strong><br />
+Logistic Regression &amp; 0.70 &amp; 0.29 &amp; 0.41<br />
+SVM &amp; <strong>0.88</strong> &amp; 0.53 &amp; 0.66<br />
+MLP &amp; 0.80 &amp; 0.60 &amp; 0.68<br />
+Random Forest &amp; 0.73 &amp; <strong>0.96</strong> &amp; <strong>0.83</strong><br />
+</p>
+<p>Selain disebabkan oleh kurangnya jumlah kalimat yang dianotasi, permasalahan pada <em>dataset</em> <em>triple selector</em> ini juga tentu dipengaruhi oleh kemampuan <em>triple candidate generator</em> untuk menghasilkan jumlah kandidat <em>triple</em> valid (data positif) yang sebanding jumlahnya dengan kandidat yang tidak valid (data negatif). <span>Penulis</span> berpendapat bahwa, selain menambah data, ada minimal dua solusi yang dapat dilakukan untuk meningkatkan kualitas <em>dataset</em>, yaitu:</p>
+<ol>
+<li><p>Mengekstrak <em>triple</em> implisit dari kalimat<br />
+Module <em>triple candidate generator</em> pada penelitian ini baru menangani <em>triple</em> yang memiliki struktur yang eksplisit sehingga jumlah data positif sangat sedikit. Dengan menambah pola <em>triple</em> yang dapat dibangkitkan, <em>dataset</em> akan lebih seimbang dan memiliki pola lebih banyak <span class="citation">(Schmitz et al. 2012)</span>. Contoh <em>triple</em> eksplisit yang perlu ditangani lebih jauh:</p>
+<ul>
+<li><p><em>Triple</em> <em>(kecamatan Kejajar, terletak di, Jawa Tengah)</em> dari kalimat asal “<em>Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.</em>”</p></li>
+<li><p><em>Triple</em> <em>(Sukarno, adalah, Presiden)</em> dari kalimat asal “<em>Presiden pertama Indonesia Sukarno lahir di Surabaya.</em>”</p></li>
+</ul></li>
+<li><p>Mengurangi ekstraksi <em>triple</em> invalid dari kalimat<br />
+Rasio perbandingan data positif dan negatif pada <em>dataset</em> adalah 1:11. Hal ini menunjukkan bahwa proses pembangkitan kandidat <em>triple</em> ini masih bisa dibuat lebih efisien. Salah satu teknik yang bisa digunakan adalah membuat aturan yang lebih spesifik atau melatih <em>classifier</em> untuk mengekstrak frase <em>self-contained</em> <span class="citation">(Angeli, Premkumar, and Manning 2015)</span>.</p></li>
+</ol>
+<p>Hal menarik yang ditemukan dari hasil eksperimen pertama adalah <em>random forest</em>, yang mewakili <em>ensemble classifier</em>, merupakan pemodelan yang paling cocok dibandingkan pemodelan linier (<em>logistic regression</em>), nonlinier dengan optimalisasi margin (SVM) dan jaringan syaraf tiruan (MLP). <span>Penulis</span> menyimpulkan bahwa dibutuhkan pemodelan yang keseimbangan antara <em>precision</em> dan <em>recall</em>-nya relatif mudah disesuaikan untuk module <em>triple selector</em>. Sekalipun tidak memiliki <em>precision</em> setinggi SVM, <em>Random forest</em> lebih unggul karena penyesuaian jumlah dan kedalaman <em>tree</em> memudahkan penyeimbangan <em>precision</em> dan <em>recall</em> yang menghasilkan <span class="math inline"><em>F</em><sub>1</sub></span> yang paling baik. Potensi SVM yang mampu mencapai <em>precision</em> yang paling tinggi ini juga mungkin bisa dimanfaatkan dengan melakukan <em>bagging</em> <span class="citation">(Breiman 1996)</span> SVM dan <em>random forest</em> untuk meningkatkan kinerja lebih jauh.</p>
+<p>Sebagai tambahan, hasil eksperimen kedua menunjukkan bahwa waktu rata-rata 0.014 detik/kalimat yang dibutuhkan sistem <em>open IE</em> untuk mengekstrak <em>triple</em> dari dokumen yang berukuran 5,593 kalimat, cukup sebanding dengan sistem lain seperti <span style="font-variant: small-caps;">TextRunner</span> yang membutuhkan 0.036 detik/kalimat <span class="citation">(Banko et al. 2007)</span>. Hal ini menunjukkan bahwa penggunaan fitur <em>heavy linguistic</em> cukup efisien juga digunakan pada dokumen yang berukuran 138 - 5,593 kalimat. Kekurangan dari sistem ini tentu ada pada ekstraksi pada dokumen dengan kalimat kurang dari 138. Selain itu juga kedepannya perlu dikaji sejauh skalabilitas sistem ini dengan melakukan ekstraksi pada dokumen dengan jumlah kalimat lebih banyak.</p>
+<h1 id="chap:babLima"></h1>
+<p>Pada bab ini dijelaskan kesimpulan penelitian ini dan saran untuk pengembangan penelitian di masa depan.</p>
+<h2 id="kesimpulan">Kesimpulan</h2>
+<p>Melalui penelitian ini telah diajukan rancangan sistem <em>open IE</em> untuk bahasa Indonesia yang menggunakan <em>NLP pipeline</em> dan kombinasi model heuristik dan <em>supervised learning</em>. Sekalipun belum mencapai akurasi yang tinggi, implementasi sistem ini mampu mengekstraksi <em>triple</em> dari teks atau dokumen bahasa Indonesia secara otomatis dalam waktu yang sebanding dengan sistem dari penelitian terkait. Pada penelitian ini juga dibangun <em>dataset</em> untuk seleksi <em>triple</em> dan dikumpulkan himpunan <em>dataset</em> untuk <em>NLP task</em> bahasa Indonesia yang dapat digunakan untuk penelitian terkait. Semua kode sumber dan <em>dataset</em> penelitian ini juga dipublikasikan pada repositori publik<a href="#fn11" class="footnoteRef" id="fnref11"><sup>11</sup></a> untuk memudahkan replikasi. Kesimpulan yang dapat diambil berdasarkan evaluasi dan analisis dalam penelitian ini adalah:</p>
+<ol>
+<li><p>Kombinasi <em>NLP pipeline</em> dasar (<em>POS tagging</em>, <em>lemmatization</em>, <em>NER</em> dan <em>dependency parsing</em>) berbasis <em>Universal Dependency</em>, model heuristik dan <em>supervised learning</em> dapat melakukan <em>open domain information extraction</em> (<em>open IE</em>) dalam format <em>triple</em> (subjek, predikat, objek) dari teks bahasa Indonesia secara otomatis.</p></li>
+<li><p>Model <em>supervised-learning</em> yang paling sesuai untuk melakukan seleksi <em>triple</em> berdasarkan fitur berbasis <em>POS tag</em>, <em>named-entity</em> dan <em>dependency relation</em> adalah <em>random forest</em>, yang merupakan <em>ensemble classifier</em>. Model ini mencapai nilai <span class="math inline"><em>F</em><sub>1</sub></span> 0.58, yang lebih tinggi dari tiga model linier dan nonlinier lain yang diujikan.</p></li>
+<li><p>Sistem <em>open IE</em> yang diajukan dapat melakukan ekstraksi 19,403 <em>triple</em> dari dokumen yang terdiri atas 5,593 kalimat bahasa Indonesia dalam waktu 78.6 detik atau 0.014 detik/kalimat. Dapat disimpulkan bahwa sistem ini cukup efisien untuk digunakan pada dokumen berukuran lebih besar dari 138 kalimat dan kurang dari 5,593 kalimat.</p></li>
+</ol>
+<h2 id="saran">Saran</h2>
+<p>Berdasarkan hasil analisis, berikut adalah saran pengembangan penelitian ini ke depannya:</p>
+<ol>
+<li><p>Memperbaiki kualitas <em>dataset</em> untuk melatih <em>triple selector</em> dengan menambah lebih banyak data.</p></li>
+<li><p>Mengembangkan <em>triple candidate generator</em> untuk bisa mengekstraksi kandidat <em>triple</em> implisit dan mengurangi kandidat <em>triple</em> yang invalid.</p></li>
+<li><p>Menggunakan kombinasi antara <em>ensemble classifier</em> seperti <em>random forest</em> dan <em>classifier</em> berpresisi tinggi seperti SVM sebagai <em>triple selector</em> untuk meningkatkan <em>precision</em> dan <em><span class="math inline"><em>F</em><sub>1</sub></span> score</em>.</p></li>
+<li><p>Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar (berisi lebih banyak kaliat) serta membangun <em>dataset</em> untuk bisa mengevaluasi keseluruhan sistem secara lebih <em>reliable</em>.</p></li>
+</ol>
+<h1 id="lampiran-1-kode-sumber-program-utama" class="unnumbered">Lampiran 1: Kode Sumber Program Utama</h1>
+<p>Kode sumber program utama (<em>main program</em>) <code>extract_triples.py</code></p>
+<div class="sourceCode" language="Python"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> os
+<span class="im">import</span> csv
+<span class="im">import</span> argparse
+<span class="im">import</span> subprocess
+<span class="im">import</span> numpy <span class="im">as</span> np
+<span class="im">import</span> json
+<span class="im">from</span> sys <span class="im">import</span> platform
+<span class="im">from</span> sklearn.externals <span class="im">import</span> joblib
+<span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler
+<span class="im">from</span> tripletools <span class="im">import</span> (
+    vectorize,
+    parse_connlu_file,
+    extract_triples_by_combinations,
+    get_best_features
+)
+<span class="im">from</span> pprint <span class="im">import</span> pprint
+
+<span class="co"># choose script based on OS (windows or *nix)</span>
+DEPPARSE_SCRIPT <span class="op">=</span> <span class="st">&#39;bin&#39;</span> <span class="op">+</span> os.sep <span class="op">+</span> <span class="st">&#39;id-openie&#39;</span>
+<span class="cf">if</span> platform <span class="op">==</span> <span class="st">&#39;win32&#39;</span>:
+    DEPPARSE_SCRIPT <span class="op">+=</span> <span class="st">&#39;.bat&#39;</span>
+
+
+<span class="kw">def</span> write_json(triples, y, out):
+    count <span class="op">=</span> <span class="dv">0</span>
+    grouped <span class="op">=</span> {}
+    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(y.shape[<span class="dv">0</span>]):
+        <span class="cf">if</span> y[i] <span class="op">==</span> <span class="dv">1</span>:
+            triple <span class="op">=</span> triples[i]
+            <span class="cf">if</span> triple[<span class="dv">1</span>] <span class="kw">not</span> <span class="kw">in</span> grouped:
+                grouped[triple[<span class="dv">1</span>]] <span class="op">=</span> {}
+            <span class="cf">if</span> triple[<span class="dv">2</span>] <span class="kw">not</span> <span class="kw">in</span> grouped[triple[<span class="dv">1</span>]]:
+                grouped[triple[<span class="dv">1</span>]][triple[<span class="dv">2</span>]] <span class="op">=</span> {}
+            <span class="cf">if</span> triple[<span class="dv">3</span>] <span class="kw">not</span> <span class="kw">in</span> grouped[triple[<span class="dv">1</span>]][triple[<span class="dv">2</span>]]:
+                grouped[triple[<span class="dv">1</span>]][triple[<span class="dv">2</span>]][triple[<span class="dv">3</span>]] <span class="op">=</span> {}
+            count <span class="op">+=</span> <span class="dv">1</span>
+    out.write(json.dumps(grouped) <span class="op">+</span> <span class="st">&#39;</span><span class="ch">\n</span><span class="st">&#39;</span>)
+    <span class="cf">return</span> count
+
+
+<span class="kw">def</span> write_tsv(triples, y, out):
+    writer <span class="op">=</span> csv.writer(out, delimiter<span class="op">=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, quoting<span class="op">=</span>csv.QUOTE_NONE, quotechar<span class="op">=</span><span class="st">&#39;&#39;</span>)
+    count <span class="op">=</span> <span class="dv">0</span>
+    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(y.shape[<span class="dv">0</span>]):
+        <span class="cf">if</span> y[i] <span class="op">==</span> <span class="dv">1</span>:
+            writer.writerow(triples[i])
+            count <span class="op">+=</span> <span class="dv">1</span>
+    <span class="cf">return</span> count
+
+
+<span class="kw">def</span> extract(conllu_file, classifier, out, <span class="bu">format</span><span class="op">=</span><span class="st">&#39;tsv&#39;</span>, scaler<span class="op">=</span><span class="va">None</span>):
+    X <span class="op">=</span> []
+    triples <span class="op">=</span> []
+    <span class="cf">for</span> index, s, s_header <span class="kw">in</span> parse_connlu_file(conllu_file):
+        <span class="cf">for</span> first, second, third, subj, pred, obj <span class="kw">in</span> extract_triples_by_combinations(s, s_header):
+            X.append(vectorize(first, second, third))
+            triples.append((first[<span class="st">&#39;sentence_id&#39;</span>], subj, pred, obj))
+    X <span class="op">=</span> np.array(X, dtype<span class="op">=</span><span class="st">&#39;float32&#39;</span>)
+    <span class="co"># apply best features selection</span>
+    X <span class="op">=</span> X[:, get_best_features()]
+    <span class="co"># scale if scaler is available</span>
+    <span class="cf">if</span> scaler:
+        X <span class="op">=</span> scaler.transform(X)
+    y <span class="op">=</span> classifier.predict(X)
+    <span class="co"># write output</span>
+    <span class="cf">if</span> <span class="bu">format</span> <span class="op">==</span> <span class="st">&#39;tsv&#39;</span>:
+        <span class="cf">return</span> write_tsv(triples, y, out)
+    <span class="cf">else</span>:  <span class="co"># format == &#39;json&#39;</span>
+        <span class="cf">return</span> write_json(triples, y, out)
+
+
+<span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:
+
+    <span class="cf">if</span> os.path.isfile(DEPPARSE_SCRIPT):
+        parser <span class="op">=</span> argparse.ArgumentParser(description<span class="op">=</span><span class="st">&#39;Extract triples from Indonesian text&#39;</span>)
+        parser.add_argument(<span class="st">&#39;input_file&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Input file containing 1 (one) Indonesian sentence per line&#39;</span>)
+        parser.add_argument(<span class="st">&#39;-m&#39;</span>, <span class="st">&#39;--model_file&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Triples classifier model file&#39;</span>, default<span class="op">=</span><span class="st">&#39;triples-classifier-model.pkl&#39;</span>)
+        parser.add_argument(<span class="st">&#39;-s&#39;</span>, <span class="st">&#39;--scaler_file&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Triples classifier scaler file&#39;</span>, default<span class="op">=</span><span class="st">&#39;triples-classifier-scaler.pkl&#39;</span>)
+        parser.add_argument(<span class="st">&#39;-o&#39;</span>, <span class="st">&#39;--output_file&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Output file containing triples&#39;</span>)
+        parser.add_argument(<span class="st">&#39;-f&#39;</span>, <span class="st">&#39;--output_format&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Output file format&#39;</span>, choices<span class="op">=</span>[<span class="st">&#39;json&#39;</span>, <span class="st">&#39;tsv&#39;</span>], default<span class="op">=</span><span class="st">&#39;json&#39;</span>)
+        args <span class="op">=</span> parser.parse_args()
+        args.output_file <span class="op">=</span> args.output_file <span class="cf">if</span> args.output_file <span class="cf">else</span> <span class="st">&#39;triples.&#39;</span> <span class="op">+</span> args.output_format
+
+        <span class="co"># dependency parsing</span>
+        <span class="bu">print</span>(<span class="st">&#39;Parsing dependency tree..&#39;</span>)
+        depparse_output <span class="op">=</span> os.path.basename(args.input_file) <span class="op">+</span> <span class="st">&#39;.conllu&#39;</span>
+        subprocess.call([DEPPARSE_SCRIPT, <span class="st">&#39;-f&#39;</span>, args.input_file])
+
+        <span class="co"># extract triples</span>
+        classifier <span class="op">=</span> joblib.load(args.model_file)
+        scaler <span class="op">=</span> joblib.load(args.scaler_file)
+        <span class="cf">with</span> <span class="bu">open</span>(args.output_file, <span class="st">&#39;wb&#39;</span>) <span class="im">as</span> out:
+            count <span class="op">=</span> extract(depparse_output, classifier, out, args.output_format, scaler<span class="op">=</span>scaler)
+
+        <span class="bu">print</span>(<span class="st">&#39;</span><span class="sc">{}</span><span class="st"> triple(s) extracted&#39;</span>.<span class="bu">format</span>(count))
+        <span class="bu">print</span>(<span class="st">&#39;Triples saved in &#39;</span> <span class="op">+</span> args.output_file)
+    <span class="cf">else</span>:
+        <span class="bu">print</span>(<span class="st">&#39;File not found: &#39;</span> <span class="op">+</span> DEPPARSE_SCRIPT)</code></pre></div>
+<h1 id="lampiran-2-kode-sumber-nlp-pipeline" class="unnumbered">Lampiran 2: Kode Sumber <em>NLP Pipeline</em></h1>
+<p>Kode sumber utama <em>NLP pipeline</em>: <code>DepdendencyParser.java</code></p>
+<div class="sourceCode" language="Java"><pre class="sourceCode java"><code class="sourceCode java"><span class="kw">package</span><span class="im"> id.nlp.depparser;</span>
+
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.ling.CoreAnnotations;</span>
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.pipeline.*;</span>
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.semgraph.SemanticGraph;</span>
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;</span>
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.trees.ud.CoNLLUDocumentWriter;</span>
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.trees.ud.ExtendedCoNLLUDocumentWriter;</span>
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.util.CoreMap;</span>
+<span class="kw">import</span><span class="im"> edu.stanford.nlp.util.PropertiesUtils;</span>
+<span class="kw">import</span><span class="im"> net.sourceforge.argparse4j.ArgumentParsers;</span>
+<span class="kw">import</span><span class="im"> net.sourceforge.argparse4j.inf.ArgumentParser;</span>
+<span class="kw">import</span><span class="im"> net.sourceforge.argparse4j.inf.ArgumentParserException;</span>
+<span class="kw">import</span><span class="im"> net.sourceforge.argparse4j.inf.Namespace;</span>
+
+<span class="kw">import</span><span class="im"> java.io.File;</span>
+<span class="kw">import</span><span class="im"> java.io.IOException;</span>
+<span class="kw">import</span><span class="im"> java.sql.SQLException;</span>
+<span class="kw">import</span><span class="im"> java.util.ArrayList;</span>
+<span class="kw">import</span><span class="im"> java.util.List;</span>
+<span class="kw">import</span><span class="im"> java.util.Properties;</span>
+
+<span class="kw">import static</span><span class="im"> edu.stanford.nlp.pipeline.Annotator.*;</span>
+
+<span class="kw">public</span> <span class="kw">class</span> DependencyParser {
+
+    <span class="dt">static</span> <span class="dt">final</span> <span class="bu">String</span> TAGGER_MODEL = <span class="st">&quot;tagger-id.universal.model&quot;</span>;
+    <span class="dt">static</span> <span class="dt">final</span> <span class="bu">String</span> NER_MODEL = <span class="st">&quot;ner-id.model.ser.gz&quot;</span>;
+    <span class="dt">static</span> <span class="dt">final</span> <span class="bu">String</span> PARSER_MODEL = <span class="st">&quot;parser-id.conllu.model.gz&quot;</span>;
+    <span class="dt">static</span> <span class="dt">final</span> <span class="dt">int</span> NUM_THREADS = <span class="dv">1</span>;
+    <span class="dt">static</span> <span class="dt">final</span> <span class="bu">String</span> OUTPUT_FORMAT = <span class="st">&quot;conllu&quot;</span>;
+
+    AnnotatorPool annotatorPool;
+    <span class="bu">Properties</span> props;
+    StanfordCoreNLP pipeline;
+
+    <span class="kw">public</span> <span class="fu">DependencyParser</span>() <span class="kw">throws</span> <span class="bu">SQLException</span>, <span class="bu">IOException</span>, <span class="bu">ClassNotFoundException</span> {
+        <span class="kw">this</span>(TAGGER_MODEL, NER_MODEL, PARSER_MODEL, NUM_THREADS);
+    }
+
+    <span class="kw">public</span> <span class="fu">DependencyParser</span>(
+            <span class="bu">String</span> taggerModel,
+            <span class="bu">String</span> nerModel,
+            <span class="bu">String</span> parserModel,
+            <span class="dt">int</span> numThreads
+    ) <span class="kw">throws</span> <span class="bu">SQLException</span>, <span class="bu">IOException</span>, <span class="bu">ClassNotFoundException</span> {
+
+        <span class="co">// Create the Stanford CoreNLP pipeline</span>
+        <span class="kw">this</span>.<span class="fu">props</span> = PropertiesUtils.<span class="fu">asProperties</span>(
+                <span class="st">&quot;annotators&quot;</span>, <span class="st">&quot;tokenize,ssplit,pos,lemma,ner,depparse&quot;</span>,
+                <span class="st">&quot;ner.model&quot;</span>, nerModel,
+                <span class="st">&quot;ner.useSUTime&quot;</span>, <span class="st">&quot;false&quot;</span>,
+                <span class="st">&quot;pos.model&quot;</span>, taggerModel,
+                <span class="st">&quot;depparse.model&quot;</span>, parserModel,
+                <span class="st">&quot;splitter.nomodel&quot;</span>, <span class="st">&quot;true&quot;</span>,
+                <span class="st">&quot;ignore_affinity&quot;</span>, <span class="st">&quot;true&quot;</span>,
+                <span class="st">&quot;outputFormat&quot;</span>, OUTPUT_FORMAT,
+                <span class="st">&quot;threads&quot;</span>, <span class="bu">String</span>.<span class="fu">valueOf</span>(numThreads)
+        );
+
+        <span class="co">// Create annotator pools</span>
+        <span class="kw">this</span>.<span class="fu">annotatorPool</span> = <span class="kw">new</span> <span class="fu">AnnotatorPool</span>();
+        AnnotatorImplementations annotatorImplementations = <span class="kw">new</span> <span class="fu">IndonesianAnnotatorImplementations</span>();
+        annotatorPool.<span class="fu">register</span>(STANFORD_TOKENIZE, AnnotatorFactories.<span class="fu">tokenize</span>(props, annotatorImplementations));
+        annotatorPool.<span class="fu">register</span>(STANFORD_SSPLIT, AnnotatorFactories.<span class="fu">sentenceSplit</span>(props, annotatorImplementations));
+        annotatorPool.<span class="fu">register</span>(STANFORD_POS, AnnotatorFactories.<span class="fu">posTag</span>(props, annotatorImplementations));
+        annotatorPool.<span class="fu">register</span>(STANFORD_LEMMA, AnnotatorFactories.<span class="fu">lemma</span>(props, annotatorImplementations));
+        annotatorPool.<span class="fu">register</span>(STANFORD_NER, AnnotatorFactories.<span class="fu">nerTag</span>(props, annotatorImplementations));
+        annotatorPool.<span class="fu">register</span>(STANFORD_DEPENDENCIES, AnnotatorFactories.<span class="fu">dependencies</span>(props, annotatorImplementations));
+
+        <span class="co">// Create pipeline</span>
+        <span class="kw">this</span>.<span class="fu">pipeline</span> = <span class="kw">new</span> <span class="fu">IndonesianStanfordCoreNLP</span>(<span class="kw">this</span>.<span class="fu">props</span>, annotatorPool);
+    }
+
+    <span class="co">/**</span>
+     <span class="co">*</span> Parse text
+     <span class="co">* </span><span class="kw">@param text</span>
+     <span class="co">*</span> <span class="co">@</span>return
+     <span class="co">*/</span>
+    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">parse</span>(<span class="bu">String</span> text) {
+        <span class="bu">StringBuilder</span> result = <span class="kw">new</span> <span class="bu">StringBuilder</span>();
+        <span class="bu">Annotation</span> doc = pipeline.<span class="fu">process</span>(text);
+        <span class="bu">List</span>&lt;CoreMap&gt; sentences = doc.<span class="fu">get</span>(CoreAnnotations.<span class="fu">SentencesAnnotation</span>.<span class="fu">class</span>);
+        CoNLLUDocumentWriter conllUWriter = <span class="kw">new</span> <span class="fu">ExtendedCoNLLUDocumentWriter</span>();
+        <span class="kw">for</span> (CoreMap sentence : sentences) {
+            SemanticGraph sg = sentence.<span class="fu">get</span>(SemanticGraphCoreAnnotations.<span class="fu">BasicDependenciesAnnotation</span>.<span class="fu">class</span>);
+            <span class="kw">if</span> (sg != <span class="kw">null</span>) {
+                result.<span class="fu">append</span>(conllUWriter.<span class="fu">printSemanticGraph</span>(sg)).<span class="fu">append</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>);
+            }
+        }
+        <span class="kw">return</span> result.<span class="fu">toString</span>();
+    }
+
+    <span class="co">/**</span>
+     <span class="co">*</span> Parse input file<span class="co">(</span>s<span class="co">)</span>
+     <span class="co">* </span><span class="kw">@param inputFiles</span>
+     <span class="co">*</span> <span class="kw">@param outputDir</span>
+     <span class="co">*</span> <span class="kw">@throws IOException</span>
+     <span class="co">*/</span>
+    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">parse</span>(<span class="bu">List</span>&lt;<span class="bu">File</span>&gt; inputFiles, <span class="bu">String</span> outputDir) <span class="kw">throws</span> <span class="bu">IOException</span>, <span class="bu">SQLException</span>, <span class="bu">ClassNotFoundException</span> {
+        <span class="co">// override existing pipeline</span>
+        <span class="kw">if</span> (!props.<span class="fu">containsKey</span>(<span class="st">&quot;outputDirectory&quot;</span>)) {
+            props.<span class="fu">setProperty</span>(<span class="st">&quot;outputDirectory&quot;</span>, outputDir);
+            <span class="kw">this</span>.<span class="fu">pipeline</span> = <span class="kw">new</span> <span class="fu">IndonesianStanfordCoreNLP</span>(<span class="kw">this</span>.<span class="fu">props</span>, <span class="kw">this</span>.<span class="fu">annotatorPool</span>);
+        }
+        pipeline.<span class="fu">processFiles</span>(inputFiles);
+    }
+
+    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span>(<span class="bu">String</span> args[]) {
+
+        <span class="co">// parse arguments</span>
+        ArgumentParser parser = ArgumentParsers.<span class="fu">newArgumentParser</span>(<span class="st">&quot;DependencyParser&quot;</span>).<span class="fu">defaultHelp</span>(<span class="kw">true</span>).<span class="fu">description</span>(<span class="st">&quot;Generate CONLL-U dependency tree from Indonesian text&quot;</span>);
+        parser.<span class="fu">addArgument</span>(<span class="st">&quot;-t&quot;</span>, <span class="st">&quot;--text&quot;</span>).<span class="fu">help</span>(<span class="st">&quot;Text input to parse&quot;</span>);
+        parser.<span class="fu">addArgument</span>(<span class="st">&quot;-f&quot;</span>, <span class="st">&quot;--file&quot;</span>).<span class="fu">nargs</span>(<span class="st">&quot;*&quot;</span>).<span class="fu">help</span>(<span class="st">&quot;File input to parse&quot;</span>);
+        parser.<span class="fu">addArgument</span>(<span class="st">&quot;-o&quot;</span>, <span class="st">&quot;--outputDir&quot;</span>).<span class="fu">setDefault</span>(<span class="st">&quot;.&quot;</span>).<span class="fu">help</span>(<span class="st">&quot;Output directory&quot;</span>);
+
+        <span class="bu">Namespace</span> ns = <span class="kw">null</span>;
+        <span class="kw">try</span> {
+            ns = parser.<span class="fu">parseArgs</span>(args);
+        } <span class="kw">catch</span> (ArgumentParserException e) {
+            parser.<span class="fu">handleError</span>(e);
+            <span class="bu">System</span>.<span class="fu">exit</span>(<span class="dv">1</span>);
+        }
+
+        <span class="bu">String</span> text = ns.<span class="fu">getString</span>(<span class="st">&quot;text&quot;</span>);
+        <span class="bu">List</span>&lt;<span class="bu">String</span>&gt; files = ns.&lt;<span class="bu">String</span>&gt; <span class="fu">getList</span>(<span class="st">&quot;file&quot;</span>);
+        <span class="bu">String</span> outputDir = ns.<span class="fu">getString</span>(<span class="st">&quot;outputDir&quot;</span>);
+        <span class="kw">try</span> {
+            <span class="kw">if</span> (text != <span class="kw">null</span>) {
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="kw">new</span> <span class="fu">DependencyParser</span>().<span class="fu">parse</span>(text.<span class="fu">trim</span>()));
+            } <span class="kw">else</span> <span class="kw">if</span> (files != <span class="kw">null</span>) {
+                <span class="bu">List</span>&lt;<span class="bu">File</span>&gt; fileList = <span class="kw">new</span> <span class="bu">ArrayList</span>&lt;&gt;();
+                <span class="bu">List</span>&lt;<span class="bu">String</span>&gt; outputFiles = <span class="kw">new</span> <span class="bu">ArrayList</span>&lt;&gt;();
+                <span class="bu">String</span> sep = <span class="bu">System</span>.<span class="fu">getProperty</span>(<span class="st">&quot;file.separator&quot;</span>);
+                <span class="kw">for</span> (<span class="bu">String</span> file:files) {
+                    <span class="bu">File</span> fileObj = <span class="kw">new</span> <span class="bu">File</span>(file);
+                    fileList.<span class="fu">add</span>(fileObj);
+                    outputFiles.<span class="fu">add</span>(outputDir + sep + fileObj.<span class="fu">getName</span>() + <span class="st">&quot;.&quot;</span> + OUTPUT_FORMAT);
+                }
+                <span class="kw">new</span> <span class="fu">DependencyParser</span>().<span class="fu">parse</span>(fileList, outputDir);
+                <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(<span class="st">&quot;File(s) created:&quot;</span>);
+                <span class="kw">for</span> (<span class="bu">String</span> outputFile:outputFiles) {
+                    <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(outputFile);
+                }
+            } <span class="kw">else</span> {
+                <span class="bu">System</span>.<span class="fu">err</span>.<span class="fu">println</span>(<span class="st">&quot;No input provided&quot;</span>);
+            }
+        } <span class="kw">catch</span> (<span class="bu">Exception</span> e) {
+            e.<span class="fu">printStackTrace</span>();
+        }
+    }
+}</code></pre></div>
+<h1 id="lampiran-3-kode-sumber-pustaka-utama" class="unnumbered">Lampiran 3: Kode Sumber Pustaka Utama</h1>
+<p>Kode sumber pustaka utama (<em>main library</em>) yang berisi kode sumber untuk <em>Triple Candidates Generator</em>, <em>Token Expander</em> dan <em>Triple Selector</em> <code>tripletools.py</code></p>
+<div class="sourceCode" language="Python"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> itertools
+<span class="im">import</span> csv
+<span class="im">import</span> argparse
+
+
+BEST_FEATURES <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">20</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">23</span>]  <span class="co"># F1 0.586</span>
+<span class="co"># BEST_FEATURES = [0, 1, 2, 3, 5, 6, 10, 11, 12, 17, 18, 19, 20, 21, 22, 23]   # F1 0.579</span>
+<span class="co"># BEST_FEATURES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]  # F1 0.547</span>
+
+
+<span class="co"># constants</span>
+conllu <span class="op">=</span> [<span class="st">&#39;ID&#39;</span>, <span class="st">&#39;FORM&#39;</span>, <span class="st">&#39;LEMMA&#39;</span>, <span class="st">&#39;UPOSTAG&#39;</span>, <span class="st">&#39;XPOSTAG&#39;</span>, <span class="st">&#39;FEATS&#39;</span>, <span class="st">&#39;HEAD&#39;</span>, <span class="st">&#39;DEPREL&#39;</span>, <span class="st">&#39;DEPS&#39;</span>, <span class="st">&#39;MISC&#39;</span>]
+postag <span class="op">=</span> [<span class="st">&#39;&#39;</span>, <span class="st">&#39;ADJ&#39;</span>, <span class="st">&#39;ADP&#39;</span>, <span class="st">&#39;ADV&#39;</span>, <span class="st">&#39;AUX&#39;</span>, <span class="st">&#39;CCONJ&#39;</span>, <span class="st">&#39;DET&#39;</span>, <span class="st">&#39;INTJ&#39;</span>, <span class="st">&#39;NOUN&#39;</span>, <span class="st">&#39;NUM&#39;</span>, <span class="st">&#39;PART&#39;</span>, <span class="st">&#39;PRON&#39;</span>, <span class="st">&#39;PROPN&#39;</span>, <span class="st">&#39;PUNCT&#39;</span>, <span class="st">&#39;SCONJ&#39;</span>, <span class="st">&#39;SYM&#39;</span>, <span class="st">&#39;VERB&#39;</span>, <span class="st">&#39;X&#39;</span>, <span class="st">&#39;CONJ&#39;</span>]
+deprel <span class="op">=</span> [<span class="st">&#39;&#39;</span>, <span class="st">&#39;acl&#39;</span>, <span class="st">&#39;advcl&#39;</span>, <span class="st">&#39;advmod&#39;</span>, <span class="st">&#39;amod&#39;</span>, <span class="st">&#39;appos&#39;</span>, <span class="st">&#39;aux&#39;</span>, <span class="st">&#39;case&#39;</span>, <span class="st">&#39;cc&#39;</span>, <span class="st">&#39;ccomp&#39;</span>, <span class="st">&#39;clf&#39;</span>, <span class="st">&#39;compound&#39;</span>, <span class="st">&#39;conj&#39;</span>, <span class="st">&#39;cop&#39;</span>, <span class="st">&#39;csubj&#39;</span>, <span class="st">&#39;dep&#39;</span>, <span class="st">&#39;det&#39;</span>, <span class="st">&#39;discourse&#39;</span>, <span class="st">&#39;dislocated&#39;</span>, <span class="st">&#39;expl&#39;</span>, <span class="st">&#39;fixed&#39;</span>, <span class="st">&#39;flat&#39;</span>, <span class="st">&#39;goeswith&#39;</span>, <span class="st">&#39;iobj&#39;</span>, <span class="st">&#39;list&#39;</span>, <span class="st">&#39;mark&#39;</span>, <span class="st">&#39;nmod&#39;</span>, <span class="st">&#39;nsubj&#39;</span>, <span class="st">&#39;nummod&#39;</span>, <span class="st">&#39;obj&#39;</span>, <span class="st">&#39;obl&#39;</span>, <span class="st">&#39;orphan&#39;</span>, <span class="st">&#39;parataxis&#39;</span>, <span class="st">&#39;punct&#39;</span>, <span class="st">&#39;reparandum&#39;</span>, <span class="st">&#39;root&#39;</span>, <span class="st">&#39;vocative&#39;</span>, <span class="st">&#39;xcomp&#39;</span>, <span class="st">&#39;nsubjpass&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;dobj&#39;</span>, <span class="st">&#39;neg&#39;</span>, <span class="st">&#39;mwe&#39;</span>, <span class="st">&#39;csubjpass&#39;</span>]
+entity <span class="op">=</span> [<span class="st">&#39;&#39;</span>, <span class="st">&#39;PERSON&#39;</span>, <span class="st">&#39;LOCATION&#39;</span>, <span class="st">&#39;ORGANIZATION&#39;</span>, <span class="st">&#39;TIME&#39;</span>, <span class="st">&#39;QUANTITY&#39;</span>, <span class="st">&#39;OTHER&#39;</span>]
+
+<span class="co"># extraction RULES</span>
+subject_object_candidates_pos <span class="op">=</span> [<span class="st">&#39;PROPN&#39;</span>, <span class="st">&#39;NOUN&#39;</span>, <span class="st">&#39;PRON&#39;</span>, <span class="st">&#39;VERB&#39;</span>]
+predicate_candidates_pos <span class="op">=</span> [<span class="st">&#39;VERB&#39;</span>, <span class="st">&#39;AUX&#39;</span>]
+non_subject_object_candidates_form <span class="op">=</span> [<span class="st">&#39;yang&#39;</span>, <span class="st">&#39;adalah&#39;</span>]
+non_predicate_candidates_form <span class="op">=</span> [<span class="st">&#39;yang&#39;</span>]
+num_siblings <span class="op">=</span> <span class="dv">1</span>  <span class="co"># bigram</span>
+
+
+<span class="kw">def</span> extract_triples_by_root_children(conllu_s, header):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Extract features (triples) for clustering from sentence (conllu_s)</span>
+<span class="co">    by combining sentence root/header with 2 of its children</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    <span class="co"># find all direct branches of header</span>
+    direct_branches <span class="op">=</span> []
+    <span class="cf">for</span> <span class="bu">id</span>, row <span class="kw">in</span> conllu_s.iteritems():
+        <span class="co"># children (direct branches of header)</span>
+        <span class="cf">if</span> (
+            row[<span class="st">&#39;head&#39;</span>] <span class="op">==</span> header[<span class="st">&#39;id&#39;</span>] <span class="kw">and</span>
+            row[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> subject_object_candidates_pos <span class="kw">and</span>
+            row[<span class="st">&#39;form&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> non_subject_object_candidates_form
+        ):
+            direct_branches.append(<span class="bu">id</span>)
+
+    <span class="co"># yield triples combinations</span>
+    <span class="cf">if</span> <span class="bu">len</span>(direct_branches) <span class="op">&gt;</span> <span class="dv">1</span>:
+        <span class="cf">for</span> combi <span class="kw">in</span> itertools.combinations(direct_branches, <span class="dv">2</span>):
+            first <span class="op">=</span> <span class="va">None</span>
+            third <span class="op">=</span> <span class="va">None</span>
+            <span class="cf">if</span> combi[<span class="dv">0</span>] <span class="op">&lt;</span> header[<span class="st">&#39;id&#39;</span>] <span class="kw">and</span> header[<span class="st">&#39;id&#39;</span>] <span class="op">&lt;</span> combi[<span class="dv">1</span>]:
+                first <span class="op">=</span> conllu_s[combi[<span class="dv">0</span>]]
+                third <span class="op">=</span> conllu_s[combi[<span class="dv">1</span>]]
+            <span class="cf">elif</span> combi[<span class="dv">1</span>] <span class="op">&lt;</span> header[<span class="st">&#39;id&#39;</span>] <span class="kw">and</span> header[<span class="st">&#39;id&#39;</span>] <span class="op">&lt;</span> combi[<span class="dv">0</span>]:
+                first <span class="op">=</span> conllu_s[combi[<span class="dv">1</span>]]
+                third <span class="op">=</span> conllu_s[combi[<span class="dv">0</span>]]
+
+            <span class="cf">if</span> first <span class="kw">and</span> third:
+                second <span class="op">=</span> conllu_s[header[<span class="st">&#39;id&#39;</span>]]
+                <span class="cf">yield</span> (first, second, third)
+
+
+<span class="kw">def</span> extract_triples_by_combinations(conllu_s, header):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Extract features (triples) for clustering from sentence (conllu_s)</span>
+<span class="co">    by enumerating all possible triple combination of word</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    num_tokens <span class="op">=</span> <span class="bu">len</span>(conllu_s)
+    <span class="co"># sentence start from 1</span>
+    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, num_tokens <span class="op">-</span> <span class="dv">2</span>):
+        first <span class="op">=</span> conllu_s[i]
+        <span class="co"># RULES for Subject</span>
+        <span class="cf">if</span> (
+            first[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> subject_object_candidates_pos <span class="kw">and</span>
+            first[<span class="st">&#39;form&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> non_subject_object_candidates_form <span class="kw">and</span>
+            (first[<span class="st">&#39;deprel&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> [<span class="st">&#39;compound&#39;</span>, <span class="st">&#39;name&#39;</span>] <span class="kw">or</span> first[<span class="st">&#39;head_distance&#39;</span>] <span class="op">&gt;</span> <span class="dv">2</span>)
+        ):
+            <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i <span class="op">+</span> <span class="dv">1</span>, num_tokens <span class="op">-</span> <span class="dv">1</span>):
+                second <span class="op">=</span> conllu_s[j]
+                <span class="co"># RULES for Predicate</span>
+                <span class="cf">if</span> (
+                    second[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> predicate_candidates_pos
+                ):
+                    <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(j <span class="op">+</span> <span class="dv">1</span>, num_tokens):
+                        third <span class="op">=</span> conllu_s[k]
+                        <span class="co"># RULES for Object</span>
+                        <span class="cf">if</span> (
+                            third[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> subject_object_candidates_pos <span class="kw">and</span>
+                            third[<span class="st">&#39;form&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> non_subject_object_candidates_form <span class="kw">and</span>
+                            (third[<span class="st">&#39;deprel&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> [<span class="st">&#39;compound&#39;</span>, <span class="st">&#39;name&#39;</span>] <span class="kw">or</span> third[<span class="st">&#39;head_distance&#39;</span>] <span class="op">&gt;</span> <span class="dv">2</span>) <span class="kw">and</span>
+                            (third[<span class="st">&#39;upostag&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> predicate_candidates_pos <span class="kw">or</span> first[<span class="st">&#39;upostag&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> predicate_candidates_pos)
+                        ):
+                            s <span class="op">=</span> first[<span class="st">&#39;flatten_s&#39;</span>]
+                            p <span class="op">=</span> second[<span class="st">&#39;flatten_p&#39;</span>]
+                            <span class="cf">if</span> third[<span class="st">&#39;nearest_adp_id&#39;</span>]:
+                                p <span class="op">+=</span> <span class="st">&#39; &#39;</span> <span class="op">+</span> conllu_s[third[<span class="st">&#39;nearest_adp_id&#39;</span>]][<span class="st">&#39;form&#39;</span>]
+                            o <span class="op">=</span> third[<span class="st">&#39;flatten_o&#39;</span>]
+                            <span class="cf">yield</span> (first, second, third, s, p, o)
+
+
+<span class="kw">def</span> extract_triples_by_children_combination(conllu_s, header):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Extract features (triples) for clustering from sentence (conllu_s)</span>
+<span class="co">    by combining sentence predicate nodes with 2 of their children</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    <span class="cf">for</span> k, v <span class="kw">in</span> conllu_s.items():
+        <span class="co"># RULES for Subject, Predicate and Object</span>
+        <span class="cf">if</span> (
+            v[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> predicate_candidates_pos <span class="kw">and</span>
+            v[<span class="st">&#39;form&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> non_predicate_candidates_form
+        ):
+            <span class="cf">for</span> first, second, third <span class="kw">in</span> extract_triples_by_root_children(conllu_s, v):
+                <span class="cf">yield</span> (first, second, third)
+
+
+<span class="kw">def</span> trace_children_pos(child_pos_list, parent_pos, node, s):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Find parent that has parent_pos pos tag and has one child of child_pos</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    parent_pos_list <span class="op">=</span> [parent_pos] <span class="cf">if</span> parent_pos <span class="kw">not</span> <span class="kw">in</span> [<span class="st">&#39;NOUN&#39;</span>, <span class="st">&#39;PROPN&#39;</span>] <span class="cf">else</span> [<span class="st">&#39;NOUN&#39;</span>, <span class="st">&#39;PROPN&#39;</span>]
+    <span class="cf">if</span> node[<span class="st">&#39;deprel&#39;</span>] <span class="op">==</span> <span class="st">&#39;root&#39;</span> <span class="kw">or</span> node[<span class="st">&#39;upostag&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> parent_pos_list:
+        <span class="cf">return</span> <span class="va">None</span>
+    <span class="cf">else</span>:
+        <span class="co"># find child with upostag == child_pos</span>
+        <span class="cf">for</span> child_id <span class="kw">in</span> node[<span class="st">&#39;children&#39;</span>]:
+            <span class="cf">if</span> s[child_id][<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> child_pos_list:
+                <span class="cf">return</span> s[child_id]
+
+        <span class="co"># if not found try to search on node&#39;s parent</span>
+        <span class="cf">return</span> trace_children_pos(child_pos_list, parent_pos, s[node[<span class="st">&#39;head&#39;</span>]], s)
+
+
+<span class="kw">def</span> remove_token_if_first(field, values, tokens):
+    <span class="cf">while</span> (tokens <span class="kw">and</span> tokens[<span class="dv">0</span>][<span class="dv">1</span>][field] <span class="kw">in</span> values):
+        tokens.pop(<span class="dv">0</span>)
+
+
+<span class="kw">def</span> remove_token_if_last(field, values, tokens):
+    <span class="cf">while</span> (tokens <span class="kw">and</span> tokens[<span class="op">-</span><span class="dv">1</span>][<span class="dv">1</span>][field] <span class="kw">in</span> values):
+        tokens.pop(<span class="op">-</span><span class="dv">1</span>)
+
+
+<span class="kw">def</span> remove_token_if_first_or_last(field, values, tokens):
+    remove_token_if_first(field, values, tokens)
+    remove_token_if_last(field, values, tokens)
+
+
+<span class="kw">def</span> expand_node(node, s):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Expand node to its children as dict</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    expanded <span class="op">=</span> {node[<span class="st">&#39;id&#39;</span>]: node}
+    has_quote <span class="op">=</span> <span class="va">False</span>
+    <span class="co"># EXPAND RULES</span>
+
+    <span class="cf">for</span> k <span class="kw">in</span> node[<span class="st">&#39;children&#39;</span>]:
+        v <span class="op">=</span> s[k]
+        <span class="cf">if</span> v[<span class="st">&#39;deprel&#39;</span>] <span class="kw">in</span> [<span class="st">&#39;compound&#39;</span>, <span class="st">&#39;name&#39;</span>, <span class="st">&#39;amod&#39;</span>]:
+            expanded.update(expand_node(v, s))
+        <span class="cf">elif</span> v[<span class="st">&#39;entity&#39;</span>] <span class="kw">and</span> v[<span class="st">&#39;entity&#39;</span>] <span class="op">==</span> node[<span class="st">&#39;entity&#39;</span>] <span class="kw">and</span> <span class="bu">abs</span>(v[<span class="st">&#39;id&#39;</span>] <span class="op">-</span> node[<span class="st">&#39;id&#39;</span>]) <span class="op">==</span> <span class="dv">1</span>:
+            expanded.update(expand_node(v, s))
+        <span class="cf">elif</span> has_quote:
+            expanded.update(expand_node(v, s))
+        <span class="cf">elif</span> node[<span class="st">&#39;deprel&#39;</span>] <span class="op">==</span> <span class="st">&#39;root&#39;</span>:     <span class="co"># [Sembungan adalah sebuah] (desa) [.]</span>
+            <span class="cf">continue</span>
+        <span class="cf">else</span>:
+            <span class="cf">if</span> v[<span class="st">&#39;form&#39;</span>] <span class="kw">in</span> [<span class="st">&#39;</span><span class="ch">\&#39;</span><span class="st">&#39;</span>, <span class="st">&#39;&quot;&#39;</span>]:  <span class="co"># (&quot; Lelaki dan Telaga &quot;)</span>
+                has_quote <span class="op">=</span> <span class="va">True</span>
+            <span class="cf">if</span> (v[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> [<span class="st">&#39;CONJ&#39;</span>] <span class="kw">or</span> v[<span class="st">&#39;form&#39;</span>] <span class="kw">in</span> [<span class="st">&#39;,&#39;</span>, <span class="st">&#39;/&#39;</span>]):  <span class="co"># (kecamatan) Kejajar [, kabupaten Wonosobo]</span>
+                <span class="cf">break</span>
+            <span class="cf">if</span> v[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> [<span class="st">&#39;VERB&#39;</span>, <span class="st">&#39;ADP&#39;</span>]:  <span class="co"># (helm) Brodie [yang dipakai]</span>
+                <span class="cf">continue</span>
+            <span class="cf">if</span> v[<span class="st">&#39;children&#39;</span>] <span class="kw">and</span> <span class="st">&#39;ADP&#39;</span> <span class="kw">in</span> [s[i][<span class="st">&#39;upostag&#39;</span>] <span class="cf">for</span> i <span class="kw">in</span> v[<span class="st">&#39;children&#39;</span>]]:  <span class="co"># (Stahlhelm) Jerman [dengan perbaikan desain], [Beberapa bulan sebelum] (Rose)</span>
+                <span class="cf">continue</span>
+            expanded.update(expand_node(v, s))
+
+    <span class="cf">return</span> expanded
+
+
+<span class="kw">def</span> flatten_node(node, s, expand_as<span class="op">=</span><span class="st">&#39;o&#39;</span>, mark_head<span class="op">=</span><span class="va">False</span>):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Expand node and its branches to clause string</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    <span class="cf">if</span> expand_as.lower() <span class="kw">in</span> [<span class="st">&#39;s&#39;</span>, <span class="st">&#39;o&#39;</span>]:
+        expanded <span class="op">=</span> expand_node(node, s)
+        sorted_nodes <span class="op">=</span> <span class="bu">sorted</span>(expanded.items())
+
+        <span class="co"># EXPAND RULES</span>
+        remove_token_if_first_or_last(<span class="st">&#39;upostag&#39;</span>, [<span class="st">&#39;CONJ&#39;</span>, <span class="st">&#39;ADP&#39;</span>], sorted_nodes)
+        remove_token_if_first(<span class="st">&#39;form&#39;</span>, [<span class="st">&#39;)&#39;</span>], sorted_nodes)
+        remove_token_if_last(<span class="st">&#39;form&#39;</span>, [<span class="st">&#39;(&#39;</span>, <span class="st">&#39;yang&#39;</span>], sorted_nodes)
+
+        text <span class="op">=</span> <span class="st">&#39; &#39;</span>.join([v[<span class="st">&#39;form&#39;</span>] <span class="cf">if</span> <span class="kw">not</span> mark_head <span class="kw">or</span> k <span class="op">!=</span> node[<span class="st">&#39;id&#39;</span>] <span class="cf">else</span> <span class="st">&#39;(</span><span class="sc">{}</span><span class="st">)&#39;</span>.<span class="bu">format</span>(v[<span class="st">&#39;form&#39;</span>]) <span class="cf">for</span> k, v <span class="kw">in</span> sorted_nodes])
+        ids <span class="op">=</span> [k <span class="cf">for</span> k, v <span class="kw">in</span> sorted_nodes]
+    <span class="cf">elif</span> expand_as.lower() <span class="kw">in</span> [<span class="st">&#39;p&#39;</span>]:
+        text <span class="op">=</span> node[<span class="st">&#39;form&#39;</span>] <span class="cf">if</span> <span class="kw">not</span> mark_head <span class="cf">else</span> <span class="st">&#39;(</span><span class="sc">{}</span><span class="st">)&#39;</span>.<span class="bu">format</span>(node[<span class="st">&#39;form&#39;</span>])
+        ids <span class="op">=</span> [node[<span class="st">&#39;id&#39;</span>]]
+
+        <span class="co"># EXPAND RULES</span>
+        negation_node <span class="op">=</span> [s[c_id] <span class="cf">for</span> c_id <span class="kw">in</span> node[<span class="st">&#39;children&#39;</span>] <span class="cf">if</span> s[c_id][<span class="st">&#39;form&#39;</span>].lower() <span class="op">==</span> <span class="st">&#39;tidak&#39;</span>]
+        <span class="cf">if</span> negation_node:
+            text <span class="op">=</span> negation_node[<span class="dv">0</span>][<span class="st">&#39;form&#39;</span>] <span class="op">+</span> <span class="st">&#39; &#39;</span> <span class="op">+</span> text
+            ids <span class="op">=</span> [negation_node[<span class="dv">0</span>][<span class="st">&#39;id&#39;</span>]] <span class="op">+</span> ids
+
+    <span class="cf">return</span> text, ids
+
+
+<span class="kw">def</span> flatten_conllu_sentence(conllu_s):
+    <span class="cf">return</span> <span class="st">&#39; &#39;</span>.join([token[<span class="st">&#39;form&#39;</span>] <span class="cf">for</span> token <span class="kw">in</span> conllu_s.values()])
+
+
+<span class="kw">def</span> set_extra_properties(s, children, mark_head<span class="op">=</span><span class="va">False</span>):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Retrieve head&#39;s pos tag</span>
+<span class="co">    Flatten subject/object candidates</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    <span class="cf">for</span> k, v <span class="kw">in</span> s.iteritems():
+        <span class="co"># get head pos tag</span>
+        s[k][<span class="st">&#39;head_upostag&#39;</span>] <span class="op">=</span> s[v[<span class="st">&#39;head&#39;</span>]][<span class="st">&#39;upostag&#39;</span>] <span class="cf">if</span> v[<span class="st">&#39;head&#39;</span>] <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">&#39;&#39;</span>
+        <span class="co"># get siblings pos tags</span>
+        before <span class="op">=</span> v[<span class="st">&#39;id&#39;</span>] <span class="op">-</span> num_siblings
+        s[k][<span class="st">&#39;before_upostag&#39;</span>] <span class="op">=</span> [s[i][<span class="st">&#39;upostag&#39;</span>] <span class="cf">if</span> i <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">&#39;&#39;</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(before, v[<span class="st">&#39;id&#39;</span>])]
+        after <span class="op">=</span> v[<span class="st">&#39;id&#39;</span>] <span class="op">+</span> num_siblings <span class="op">+</span> <span class="dv">1</span>
+        s[k][<span class="st">&#39;before_upostag&#39;</span>] <span class="op">=</span> [s[i][<span class="st">&#39;upostag&#39;</span>] <span class="cf">if</span> i <span class="op">&lt;</span> <span class="bu">len</span>(s) <span class="cf">else</span> <span class="st">&#39;&#39;</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(after <span class="op">-</span> num_siblings, after)]
+        <span class="co"># get children id</span>
+        <span class="cf">if</span> k <span class="kw">in</span> children:
+            sorted_children <span class="op">=</span> <span class="bu">sorted</span>(children[k])
+            s[k][<span class="st">&#39;children&#39;</span>] <span class="op">=</span> sorted_children
+
+    <span class="co"># loop once more to flatten as children is required</span>
+    <span class="cf">for</span> k, v <span class="kw">in</span> s.iteritems():
+        <span class="cf">if</span> v[<span class="st">&#39;upostag&#39;</span>] <span class="kw">in</span> subject_object_candidates_pos:
+            s[k][<span class="st">&#39;flatten_s&#39;</span>], s[k][<span class="st">&#39;flatten_s_id&#39;</span>] <span class="op">=</span> flatten_node(s[k], s, expand_as<span class="op">=</span><span class="st">&#39;s&#39;</span>, mark_head<span class="op">=</span>mark_head)
+            s[k][<span class="st">&#39;flatten_o&#39;</span>], s[k][<span class="st">&#39;flatten_o_id&#39;</span>] <span class="op">=</span> flatten_node(s[k], s, expand_as<span class="op">=</span><span class="st">&#39;o&#39;</span>, mark_head<span class="op">=</span>mark_head)
+            <span class="co"># trace ADP node to parents to be inherited</span>
+            <span class="cf">if</span> v[<span class="st">&#39;head&#39;</span>] <span class="op">&gt;</span> <span class="dv">0</span>:
+                nearest_adp_node <span class="op">=</span> trace_children_pos([<span class="st">&#39;ADP&#39;</span>], v[<span class="st">&#39;upostag&#39;</span>], v, s)
+                <span class="cf">if</span> nearest_adp_node:
+                    s[k][<span class="st">&#39;nearest_adp_id&#39;</span>] <span class="op">=</span> nearest_adp_node[<span class="st">&#39;id&#39;</span>]
+        <span class="cf">if</span> v[<span class="st">&#39;upostag&#39;</span>] <span class="op">==</span> <span class="st">&#39;VERB&#39;</span>:
+            s[k][<span class="st">&#39;flatten_p&#39;</span>], s[k][<span class="st">&#39;flatten_p_id&#39;</span>] <span class="op">=</span> flatten_node(s[k], s, expand_as<span class="op">=</span><span class="st">&#39;p&#39;</span>, mark_head<span class="op">=</span>mark_head)
+
+
+<span class="kw">def</span> get_neigbour_upostag(position, token):
+    key <span class="op">=</span> position <span class="op">+</span> <span class="st">&#39;_upostag&#39;</span>
+    <span class="cf">if</span> position <span class="kw">not</span> <span class="kw">in</span> [<span class="st">&#39;before&#39;</span>, <span class="st">&#39;after&#39;</span>] <span class="kw">or</span> <span class="kw">not</span> token[key]:
+        <span class="cf">return</span> postag.index(<span class="st">&#39;&#39;</span>)
+    <span class="cf">return</span> postag.index(token[key][<span class="dv">0</span>])
+
+
+<span class="kw">def</span> get_next_upostag(token):
+    <span class="cf">return</span> get_neigbour_upostag(<span class="st">&#39;after&#39;</span>, token)
+
+
+<span class="kw">def</span> get_prev_upostag(token):
+    <span class="cf">return</span> get_neigbour_upostag(<span class="st">&#39;before&#39;</span>, token)
+
+
+<span class="kw">def</span> vectorize(first, second, third):
+    <span class="co">&quot;&quot;&quot;</span>
+<span class="co">    Convert a triple&#39;s member to feature vector</span>
+<span class="co">    &quot;&quot;&quot;</span>
+    distance_first_second <span class="op">=</span> <span class="bu">abs</span>(first[<span class="st">&#39;id&#39;</span>] <span class="op">-</span> second[<span class="st">&#39;id&#39;</span>])
+    distance_second_third <span class="op">=</span> <span class="bu">abs</span>(second[<span class="st">&#39;id&#39;</span>] <span class="op">-</span> third[<span class="st">&#39;id&#39;</span>])
+    first_is_child_of_second <span class="op">=</span> <span class="dv">1</span> <span class="cf">if</span> first[<span class="st">&#39;id&#39;</span>] <span class="kw">in</span> second[<span class="st">&#39;children&#39;</span>] <span class="cf">else</span> <span class="dv">0</span>
+    third_is_child_of_second <span class="op">=</span> <span class="dv">1</span> <span class="cf">if</span> third[<span class="st">&#39;id&#39;</span>] <span class="kw">in</span> second[<span class="st">&#39;children&#39;</span>] <span class="cf">else</span> <span class="dv">0</span>
+
+    vector <span class="op">=</span> []
+    vector.append(postag.index(first[<span class="st">&#39;upostag&#39;</span>]))
+    vector.append(deprel.index(first[<span class="st">&#39;deprel&#39;</span>]))
+    vector.append(postag.index(first[<span class="st">&#39;head_upostag&#39;</span>]))
+    vector.append(entity.index(first[<span class="st">&#39;entity&#39;</span>]))
+    vector.append(<span class="bu">len</span>(first[<span class="st">&#39;children&#39;</span>]))
+    vector.append(distance_first_second)
+    vector.append(first_is_child_of_second)
+    vector.append(get_prev_upostag(first))
+    vector.append(get_next_upostag(first))
+    vector.append(<span class="dv">1</span> <span class="cf">if</span> first[<span class="st">&#39;nearest_adp_id&#39;</span>] <span class="cf">else</span> <span class="dv">0</span>)
+
+    vector.append(postag.index(second[<span class="st">&#39;upostag&#39;</span>]))
+    vector.append(deprel.index(second[<span class="st">&#39;deprel&#39;</span>]))
+    vector.append(postag.index(second[<span class="st">&#39;head_upostag&#39;</span>]))
+    vector.append(entity.index(second[<span class="st">&#39;entity&#39;</span>]))
+    vector.append(<span class="bu">len</span>(second[<span class="st">&#39;children&#39;</span>]))
+    vector.append(get_prev_upostag(second))
+    vector.append(get_next_upostag(second))
+
+    vector.append(postag.index(third[<span class="st">&#39;upostag&#39;</span>]))
+    vector.append(deprel.index(third[<span class="st">&#39;deprel&#39;</span>]))
+    vector.append(postag.index(third[<span class="st">&#39;head_upostag&#39;</span>]))
+    vector.append(entity.index(third[<span class="st">&#39;entity&#39;</span>]))
+    vector.append(<span class="bu">len</span>(third[<span class="st">&#39;children&#39;</span>]))
+    vector.append(distance_second_third)
+    vector.append(third_is_child_of_second)
+    vector.append(get_prev_upostag(third))
+    vector.append(get_next_upostag(third))
+    vector.append(<span class="dv">1</span> <span class="cf">if</span> third[<span class="st">&#39;nearest_adp_id&#39;</span>] <span class="cf">else</span> <span class="dv">0</span>)
+
+    <span class="cf">return</span> vector
+
+
+<span class="kw">def</span> parse_connlu_file(conllu_file, mark_head<span class="op">=</span><span class="va">False</span>):
+    <span class="cf">with</span> <span class="bu">open</span>(conllu_file, <span class="st">&#39;rb&#39;</span>) <span class="im">as</span> csvfile:
+        reader <span class="op">=</span> csv.reader(csvfile, delimiter<span class="op">=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>, quoting<span class="op">=</span>csv.QUOTE_NONE)
+        s <span class="op">=</span> {}
+        children <span class="op">=</span> {}
+        s_header <span class="op">=</span> <span class="va">None</span>
+        index <span class="op">=</span> <span class="dv">0</span>
+        <span class="cf">for</span> row <span class="kw">in</span> reader:
+            <span class="cf">if</span> <span class="bu">len</span>(row) <span class="op">&gt;</span> <span class="dv">0</span>:
+                <span class="bu">id</span> <span class="op">=</span> <span class="bu">int</span>(row[conllu.index(<span class="st">&#39;ID&#39;</span>)])
+                head_id <span class="op">=</span> <span class="bu">int</span>(row[conllu.index(<span class="st">&#39;HEAD&#39;</span>)])
+                deprel <span class="op">=</span> row[conllu.index(<span class="st">&#39;DEPREL&#39;</span>)].split(<span class="st">&#39;:&#39;</span>)[<span class="dv">0</span>]  <span class="co"># ignore sub relation</span>
+                obj <span class="op">=</span> {
+                    <span class="st">&#39;id&#39;</span>: <span class="bu">id</span>,
+                    <span class="st">&#39;sentence_id&#39;</span>: index,
+                    <span class="st">&#39;form&#39;</span>: row[conllu.index(<span class="st">&#39;FORM&#39;</span>)],
+                    <span class="st">&#39;upostag&#39;</span>: row[conllu.index(<span class="st">&#39;UPOSTAG&#39;</span>)],
+                    <span class="st">&#39;head&#39;</span>: head_id,
+                    <span class="st">&#39;head_distance&#39;</span>: <span class="bu">abs</span>(head_id <span class="op">-</span> <span class="bu">id</span>) <span class="cf">if</span> head_id <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">0</span>,
+                    <span class="st">&#39;deprel&#39;</span>: deprel <span class="cf">if</span> deprel <span class="op">!=</span> <span class="st">&#39;_&#39;</span> <span class="cf">else</span> <span class="st">&#39;root&#39;</span>,
+                    <span class="st">&#39;head_upostag&#39;</span>: <span class="st">&#39;&#39;</span>,
+                    <span class="st">&#39;before_upostag&#39;</span>: [],
+                    <span class="st">&#39;after_upostag&#39;</span>: [],
+                    <span class="st">&#39;flatten_s&#39;</span>: row[conllu.index(<span class="st">&#39;FORM&#39;</span>)],
+                    <span class="st">&#39;flatten_p&#39;</span>: row[conllu.index(<span class="st">&#39;FORM&#39;</span>)],
+                    <span class="st">&#39;flatten_o&#39;</span>: row[conllu.index(<span class="st">&#39;FORM&#39;</span>)],
+                    <span class="st">&#39;flatten_s_id&#39;</span>: [<span class="bu">id</span>],
+                    <span class="st">&#39;flatten_p_id&#39;</span>: [<span class="bu">id</span>],
+                    <span class="st">&#39;flatten_o_id&#39;</span>: [<span class="bu">id</span>],
+                    <span class="st">&#39;entity&#39;</span>: row[conllu.index(<span class="st">&#39;MISC&#39;</span>)] <span class="cf">if</span> row[conllu.index(<span class="st">&#39;MISC&#39;</span>)] <span class="op">!=</span> <span class="st">&#39;_&#39;</span> <span class="cf">else</span> <span class="st">&#39;&#39;</span>,
+                    <span class="st">&#39;children&#39;</span>: [],
+                    <span class="st">&#39;nearest_adp_id&#39;</span>: <span class="va">None</span>
+                }
+                s[<span class="bu">id</span>] <span class="op">=</span> obj
+                <span class="co"># map children</span>
+                <span class="cf">if</span> obj[<span class="st">&#39;head&#39;</span>] <span class="op">!=</span> <span class="dv">0</span>:
+                    <span class="cf">if</span> obj[<span class="st">&#39;head&#39;</span>] <span class="kw">not</span> <span class="kw">in</span> children:
+                        children[obj[<span class="st">&#39;head&#39;</span>]] <span class="op">=</span> []
+                    <span class="cf">if</span> <span class="bu">id</span> <span class="kw">not</span> <span class="kw">in</span> children[obj[<span class="st">&#39;head&#39;</span>]]:
+                        children[obj[<span class="st">&#39;head&#39;</span>]].append(<span class="bu">id</span>)
+                <span class="co"># find root header</span>
+                s_header <span class="op">=</span> obj <span class="cf">if</span> obj[<span class="st">&#39;head&#39;</span>] <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> s_header
+            <span class="cf">else</span>:
+                set_extra_properties(s, children, mark_head)
+                <span class="cf">yield</span> index, s, s_header
+                s <span class="op">=</span> {}
+                index <span class="op">+=</span> <span class="dv">1</span>
+                children <span class="op">=</span> {}
+        <span class="cf">if</span> s:
+            <span class="co"># if last element not a blank</span>
+            set_extra_properties(s, children, mark_head)
+            <span class="cf">yield</span> index, s, s_header
+
+
+<span class="kw">def</span> get_best_features():
+    <span class="cf">return</span> BEST_FEATURES</code></pre></div>
+<h1 id="lampiran-4-kode-sumber-pelatihan-triple-selector" class="unnumbered">Lampiran 4: Kode Sumber Pelatihan <em>Triple selector</em></h1>
+<p>Kode sumber pelatihan dan perbandingan <em>Triple Selector</em> <code>classifier.py</code></p>
+<div class="sourceCode" language="Python"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> argparse
+<span class="im">import</span> collections
+<span class="im">import</span> numpy <span class="im">as</span> np
+<span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler
+<span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV
+<span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier
+<span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression
+<span class="im">from</span> sklearn.svm <span class="im">import</span> SVC
+<span class="im">from</span> sklearn.neural_network <span class="im">import</span> MLPClassifier
+<span class="im">from</span> sklearn.externals <span class="im">import</span> joblib
+<span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score
+<span class="im">from</span> sklearn.metrics <span class="im">import</span> precision_recall_fscore_support
+<span class="im">from</span> tripletools <span class="im">import</span> get_best_features
+<span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt
+<span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches
+
+
+plt.style.use(<span class="st">&#39;ggplot&#39;</span>)
+
+experiments <span class="op">=</span> [
+    {
+        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Logistic Regression&#39;</span>,
+        <span class="st">&#39;model&#39;</span>: LogisticRegression(),
+        <span class="st">&#39;params&#39;</span>: [
+            {
+                <span class="st">&#39;solver&#39;</span>: [<span class="st">&#39;liblinear&#39;</span>],
+                <span class="st">&#39;penalty&#39;</span>: [<span class="st">&#39;l2&#39;</span>],
+                <span class="st">&#39;random_state&#39;</span>: [<span class="dv">77</span>]
+            },
+        ]
+    },
+    {
+        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;SVM&#39;</span>,
+        <span class="st">&#39;model&#39;</span>: SVC(),
+        <span class="st">&#39;params&#39;</span>: [
+            {
+                <span class="st">&#39;kernel&#39;</span>: [<span class="st">&#39;poly&#39;</span>],
+                <span class="st">&#39;degree&#39;</span>: [<span class="dv">5</span>],
+                <span class="st">&#39;random_state&#39;</span>: [<span class="dv">77</span>]
+            },
+        ]
+    },
+    {
+        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;MLP&#39;</span>,
+        <span class="st">&#39;model&#39;</span>: MLPClassifier(max_iter<span class="op">=</span><span class="dv">1000</span>),
+        <span class="st">&#39;params&#39;</span>: [
+            {
+                <span class="st">&#39;hidden_layer_sizes&#39;</span>: [(<span class="dv">20</span>, <span class="dv">10</span>)],
+                <span class="st">&#39;random_state&#39;</span>: [<span class="dv">77</span>]
+            }
+        ]
+    },
+    {
+        <span class="st">&#39;name&#39;</span>: <span class="st">&#39;Random Forest&#39;</span>,
+        <span class="st">&#39;model&#39;</span>: RandomForestClassifier(),
+        <span class="st">&#39;params&#39;</span>: [
+            {
+                <span class="st">&#39;max_depth&#39;</span>: [<span class="dv">8</span>],
+                <span class="st">&#39;n_estimators&#39;</span>: [<span class="dv">20</span>],
+                <span class="st">&#39;min_samples_split&#39;</span>: [<span class="dv">5</span>],
+                <span class="st">&#39;criterion&#39;</span>: [<span class="st">&#39;gini&#39;</span>],
+                <span class="st">&#39;max_features&#39;</span>: [<span class="st">&#39;auto&#39;</span>],
+                <span class="st">&#39;class_weight&#39;</span>: [<span class="st">&#39;balanced&#39;</span>],
+                <span class="st">&#39;random_state&#39;</span>: [<span class="dv">77</span>]
+            }
+        ]
+    },
+]
+
+
+<span class="kw">def</span> cross_validate_precision_recall_fbeta(model, X, y, cv<span class="op">=</span><span class="va">None</span>):
+    precision <span class="op">=</span> cross_val_score(model, X, y, cv<span class="op">=</span>cv, scoring<span class="op">=</span><span class="st">&#39;precision&#39;</span>).mean()
+    recall <span class="op">=</span> cross_val_score(model, X, y, cv<span class="op">=</span>cv, scoring<span class="op">=</span><span class="st">&#39;recall&#39;</span>).mean()
+    fbeta_list <span class="op">=</span> cross_val_score(model, X, y, cv<span class="op">=</span>cv, scoring<span class="op">=</span><span class="st">&#39;f1&#39;</span>)
+    fbeta <span class="op">=</span> fbeta_list.mean()
+    fbeta_min <span class="op">=</span> fbeta_list.<span class="bu">min</span>()
+    fbeta_max <span class="op">=</span> fbeta_list.<span class="bu">max</span>()
+    fbeta_std <span class="op">=</span> fbeta_list.std()
+    <span class="cf">return</span> precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std
+
+
+<span class="kw">def</span> plot_model_performance_comparison(experiments):
+    fig, ax <span class="op">=</span> plt.subplots()
+
+    <span class="co"># Example data</span>
+    x_data <span class="op">=</span> []
+    y_dict <span class="op">=</span> {
+        <span class="st">&#39;precision&#39;</span>: {<span class="st">&#39;color&#39;</span>: <span class="st">&#39;#f9f1c5&#39;</span>, <span class="st">&#39;data&#39;</span>: []},
+        <span class="st">&#39;recall&#39;</span>: {<span class="st">&#39;color&#39;</span>: <span class="st">&#39;lightblue&#39;</span>, <span class="st">&#39;data&#39;</span>: []},
+        <span class="st">&#39;f1&#39;</span>: {<span class="st">&#39;color&#39;</span>: <span class="st">&#39;green&#39;</span>, <span class="st">&#39;data&#39;</span>: []},
+    }
+    <span class="cf">for</span> exp <span class="kw">in</span> experiments:
+        x_data.append(exp[<span class="st">&#39;name&#39;</span>])
+        y_dict[<span class="st">&#39;precision&#39;</span>][<span class="st">&#39;data&#39;</span>].append(exp[<span class="st">&#39;best_score&#39;</span>][<span class="st">&#39;precision&#39;</span>])
+        y_dict[<span class="st">&#39;recall&#39;</span>][<span class="st">&#39;data&#39;</span>].append(exp[<span class="st">&#39;best_score&#39;</span>][<span class="st">&#39;recall&#39;</span>])
+        y_dict[<span class="st">&#39;f1&#39;</span>][<span class="st">&#39;data&#39;</span>].append(exp[<span class="st">&#39;best_score&#39;</span>][<span class="st">&#39;f1&#39;</span>])
+
+    x <span class="op">=</span> np.arange(<span class="bu">len</span>(x_data))
+    width <span class="op">=</span> <span class="fl">0.20</span>
+    i <span class="op">=</span> <span class="dv">1</span>
+    legend_handles <span class="op">=</span> []
+    <span class="cf">for</span> label, y <span class="kw">in</span> y_dict.items():
+        ax.bar(x <span class="op">+</span> width <span class="op">*</span> i, y[<span class="st">&#39;data&#39;</span>], width, color<span class="op">=</span>y[<span class="st">&#39;color&#39;</span>])
+        legend_handles.append(mpatches.Patch(color<span class="op">=</span>y[<span class="st">&#39;color&#39;</span>], label<span class="op">=</span>label))
+        i <span class="op">+=</span> <span class="dv">1</span>
+    ax.set_xticks(x <span class="op">+</span> width <span class="op">*</span> <span class="dv">2</span>)
+    ax.set_xticklabels(x_data)
+    ax.set_yticks(np.arange(<span class="fl">0.0</span>, <span class="fl">1.1</span>, <span class="fl">0.1</span>))
+    ax.set_title(<span class="st">&#39;Triple Selector Models Performance&#39;</span>)
+
+    lgd <span class="op">=</span> plt.legend(handles<span class="op">=</span>legend_handles)
+    plt.show()
+
+<span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:
+    parser <span class="op">=</span> argparse.ArgumentParser(description<span class="op">=</span><span class="st">&#39;Train triples classifier&#39;</span>)
+    parser.add_argument(<span class="st">&#39;dataset_path&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Dataset path&#39;</span>)
+    parser.add_argument(<span class="st">&#39;-o&#39;</span>, <span class="st">&#39;--output_path&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Output model path&#39;</span>, default<span class="op">=</span><span class="st">&#39;triples-classifier-model.pkl&#39;</span>)
+    parser.add_argument(<span class="st">&#39;-s&#39;</span>, <span class="st">&#39;--scaler_output_path&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;Output scaler path&#39;</span>, default<span class="op">=</span><span class="st">&#39;triples-classifier-scaler.pkl&#39;</span>)
+    parser.add_argument(<span class="st">&#39;-b&#39;</span>, <span class="st">&#39;--best&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;search parameters that gives best model&#39;</span>, action<span class="op">=</span><span class="st">&#39;store_true&#39;</span>)
+    parser.add_argument(<span class="st">&#39;--nocv&#39;</span>, <span class="bu">help</span><span class="op">=</span><span class="st">&#39;no cross-validation. training accuracy only&#39;</span>, action<span class="op">=</span><span class="st">&#39;store_true&#39;</span>)
+    args <span class="op">=</span> parser.parse_args()
+
+    <span class="co"># load dataset</span>
+    dataset <span class="op">=</span> np.genfromtxt(args.dataset_path, delimiter<span class="op">=</span><span class="st">&#39;,&#39;</span>, dtype<span class="op">=</span><span class="st">&#39;float32&#39;</span>)
+    total_features <span class="op">=</span> dataset.shape[<span class="dv">1</span>] <span class="op">-</span> <span class="dv">1</span>
+
+    <span class="co"># feature selection</span>
+    selected_features <span class="op">=</span> get_best_features()
+    <span class="bu">print</span>(<span class="st">&#39;Total features: </span><span class="sc">{}</span><span class="st">&#39;</span>.<span class="bu">format</span>(total_features))
+    <span class="bu">print</span>(<span class="st">&#39;Selected features: </span><span class="sc">{}</span><span class="st"> (</span><span class="sc">{}</span><span class="st">)&#39;</span>.<span class="bu">format</span>(selected_features, <span class="bu">len</span>(selected_features)))
+
+    X <span class="op">=</span> dataset[:, selected_features]
+    y <span class="op">=</span> dataset[:, <span class="op">-</span><span class="dv">1</span>]
+    scaler <span class="op">=</span> StandardScaler().fit(X)
+    X <span class="op">=</span> scaler.transform(X)
+    joblib.dump(scaler, args.scaler_output_path)
+
+    <span class="co"># collect dataset statistics</span>
+    counter <span class="op">=</span> collections.Counter(y)
+    <span class="bu">print</span>(counter)
+    pos <span class="op">=</span> counter[<span class="dv">1</span>] <span class="op">*</span> <span class="fl">1.0</span> <span class="op">/</span> (counter[<span class="dv">0</span>] <span class="op">+</span> counter[<span class="dv">1</span>])
+    neg <span class="op">=</span> <span class="fl">1.0</span> <span class="op">-</span> pos
+
+    <span class="co"># exhaustive best parameters search</span>
+    cv <span class="op">=</span> <span class="va">None</span>
+    <span class="bu">print</span>(<span class="st">&#39;&#39;</span>)
+    <span class="cf">if</span> args.best:
+        best_score <span class="op">=</span> <span class="fl">0.0</span>
+        best_model <span class="op">=</span> <span class="va">None</span>
+        count <span class="op">=</span> <span class="dv">0</span>
+        <span class="cf">for</span> experiment <span class="kw">in</span> experiments:
+            search <span class="op">=</span> GridSearchCV(
+                estimator<span class="op">=</span>experiment[<span class="st">&#39;model&#39;</span>],
+                param_grid<span class="op">=</span>experiment[<span class="st">&#39;params&#39;</span>],
+                scoring<span class="op">=</span><span class="st">&#39;f1&#39;</span>,
+                cv<span class="op">=</span>cv
+            )
+            search.fit(X, y)
+            <span class="cf">if</span> args.nocv:
+                y_pred <span class="op">=</span> search.best_estimator_.predict(X)
+                precision, recall, fbeta, support <span class="op">=</span> precision_recall_fscore_support(y, y_pred, average<span class="op">=</span><span class="st">&#39;binary&#39;</span>)
+                fbeta_min <span class="op">=</span> fbeta_max <span class="op">=</span> fbeta_std <span class="op">=</span> fbeta
+            <span class="cf">else</span>:
+                precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std <span class="op">=</span> cross_validate_precision_recall_fbeta(search.best_estimator_, X, y)
+            <span class="bu">print</span>(search.best_estimator_)
+            <span class="bu">print</span>(<span class="st">&#39;Precision: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">Recall: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 avg: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 min: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 max: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 std: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">&#39;</span>.<span class="bu">format</span>(
+                precision,
+                recall,
+                fbeta,
+                fbeta_min,
+                fbeta_max,
+                fbeta_std,
+            ))
+            experiment[<span class="st">&#39;best_model&#39;</span>] <span class="op">=</span> best_model
+            experiment[<span class="st">&#39;best_score&#39;</span>] <span class="op">=</span> {<span class="st">&#39;precision&#39;</span>: precision, <span class="st">&#39;recall&#39;</span>: recall, <span class="st">&#39;f1&#39;</span>: fbeta}
+            <span class="co"># replace current best model if the score is higher</span>
+            <span class="cf">if</span> search.best_score_ <span class="op">&gt;</span> best_score:
+                best_score <span class="op">=</span> search.best_score_
+                best_model <span class="op">=</span> search.best_estimator_
+            count <span class="op">+=</span> <span class="dv">1</span>
+        <span class="bu">print</span>(<span class="st">&#39;--------------- Result ----------------&#39;</span>)
+        <span class="bu">print</span>(<span class="st">&#39;Best models: </span><span class="sc">{}</span><span class="st"> (F1 = </span><span class="sc">{}</span><span class="st">)&#39;</span>.<span class="bu">format</span>(best_score, <span class="bu">type</span>(best_model).<span class="va">__name__</span>))
+        model <span class="op">=</span> best_model
+
+        <span class="co"># show plot</span>
+        plot_model_performance_comparison(experiments)
+
+    <span class="cf">else</span>:
+        model <span class="op">=</span> RandomForestClassifier(max_depth<span class="op">=</span><span class="dv">8</span>, class_weight<span class="op">=</span><span class="st">&#39;balanced&#39;</span>, n_estimators<span class="op">=</span><span class="dv">20</span>, min_samples_split<span class="op">=</span><span class="dv">5</span>, max_features<span class="op">=</span><span class="st">&#39;auto&#39;</span>, random_state<span class="op">=</span><span class="dv">77</span>)
+
+        <span class="co"># cross validate best model to compare score</span>
+        precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std <span class="op">=</span> cross_validate_precision_recall_fbeta(model, X, y)
+        <span class="bu">print</span>(<span class="st">&#39;Precision: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">Recall: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 avg: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 min: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 max: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">F1 std: </span><span class="sc">{}</span><span class="ch">\n</span><span class="st">&#39;</span>.<span class="bu">format</span>(
+            precision,
+            recall,
+            fbeta,
+            fbeta_min,
+            fbeta_max,
+            fbeta_std,
+        ))
+
+    <span class="co"># save model to file</span>
+    joblib.dump(model, args.output_path)
+    <span class="bu">print</span>(<span class="st">&#39;Model saved to </span><span class="sc">{}</span><span class="st">&#39;</span>.<span class="bu">format</span>(args.output_path))
+    <span class="bu">print</span>(<span class="st">&#39;Scaler saved to </span><span class="sc">{}</span><span class="st">&#39;</span>.<span class="bu">format</span>(args.scaler_output_path))</code></pre></div>
+<h1 id="lampiran-5-daftar-pos-tag-dan-dependency-relation-conll-u" class="unnumbered">Lampiran 5: Daftar <em>POS Tag</em> dan <em>Dependency Relation</em> CoNLL-U</h1>
+<p><strong><em>POS tag</em></strong></p>
+<p><span>2</span></p>
+<ol>
+<li><p>ADJ: <em>adjective</em></p></li>
+<li><p>ADP: <em>adposition</em></p></li>
+<li><p>ADV: <em>adverb</em></p></li>
+<li><p>AUX: <em>auxiliary</em></p></li>
+<li><p>CCONJ: <em>coordinating conjunction</em></p></li>
+<li><p>DET: <em>determiner</em></p></li>
+<li><p>INTJ: <em>interjection</em></p></li>
+<li><p>NOUN: <em>noun</em></p></li>
+<li><p>NUM: <em>numeral</em></p></li>
+<li><p>PART: <em>particle</em></p></li>
+<li><p>PRON: <em>pronoun</em></p></li>
+<li><p>PROPN: <em>proper noun</em></p></li>
+<li><p>PUNCT: <em>punctuation</em></p></li>
+<li><p>SCONJ: <em>subordinating conjunction</em></p></li>
+<li><p>SYM: <em>symbol</em></p></li>
+<li><p>VERB: <em>verb</em></p></li>
+<li><p>X: <em>other</em></p></li>
+</ol>
+<p><strong><em>Dependency Relation</em></strong></p>
+<p><span>2</span></p>
+<ol>
+<li><p>acl: <em>clausal modifier of noun (adjectival clause)</em></p></li>
+<li><p>advcl: <em>adverbial clause modifier</em></p></li>
+<li><p>advmod: <em>adverbial modifier</em></p></li>
+<li><p>amod: <em>adjectival modifier</em></p></li>
+<li><p>appos: <em>appositional modifier</em></p></li>
+<li><p>aux: <em>auxiliary</em></p></li>
+<li><p>case: <em>case marking</em></p></li>
+<li><p>cc: <em>coordinating conjunction</em></p></li>
+<li><p>ccomp: <em>clausal complement</em></p></li>
+<li><p>clf: <em>classifier</em></p></li>
+<li><p>compound: <em>compound</em></p></li>
+<li><p>conj: <em>conjunct</em></p></li>
+<li><p>cop: <em>copula</em></p></li>
+<li><p>csubj: <em>clausal subject</em></p></li>
+<li><p>dep: <em>unspecified dependency</em></p></li>
+<li><p>det: <em>determiner</em></p></li>
+<li><p>discourse: <em>discourse element</em></p></li>
+<li><p>dislocated: <em>dislocated elements</em></p></li>
+<li><p>expl: <em>expletive</em></p></li>
+<li><p>fixed: <em>fixed multiword expression</em></p></li>
+<li><p>flat: <em>flat multiword expression</em></p></li>
+<li><p>goeswith: <em>goes with</em></p></li>
+<li><p>iobj: <em>indirect object</em></p></li>
+<li><p>list: <em>list</em></p></li>
+<li><p>mark: <em>marker</em></p></li>
+<li><p>nmod: <em>nominal modifier</em></p></li>
+<li><p>nsubj: <em>nominal subject</em></p></li>
+<li><p>nummod: <em>numeric modifier</em></p></li>
+<li><p>obj: <em>object</em></p></li>
+<li><p>obl: <em>oblique nominal</em></p></li>
+<li><p>orphan: <em>orphan</em></p></li>
+<li><p>parataxis: <em>parataxis</em></p></li>
+<li><p>punct: <em>punctuation</em></p></li>
+<li><p>reparandum: <em>overridden disfluency</em></p></li>
+<li><p>root: <em>root</em></p></li>
+<li><p>vocative: <em>vocative</em></p></li>
+<li><p>xcomp: <em>open clausal complement</em></p></li>
+</ol>
+<div id="refs" class="references">
+<div id="ref-angeli2015leveraging">
+<p>Angeli, Gabor, Melvin Johnson Premkumar, and Christopher D Manning. 2015. “Leveraging Linguistic Structure for Open Domain Information Extraction.” In <em>Proceedings of the 53rd Annual Meeting of the Association for Computational Linguistics (Acl 2015)</em>.</p>
+</div>
+<div id="ref-auer2007dbpedia">
+<p>Auer, Sören, Christian Bizer, Georgi Kobilarov, Jens Lehmann, Richard Cyganiak, and Zachary Ives. 2007. “Dbpedia: A Nucleus for a Web of Open Data.” <em>The Semantic Web</em>. Springer, 722–35.</p>
+</div>
+<div id="ref-banko2007open">
+<p>Banko, Michele, Michael J Cafarella, Stephen Soderland, Matthew Broadhead, and Oren Etzioni. 2007. “Open Information Extraction from the Web.” In <em>IJCAI</em>, 7:2670–6.</p>
+</div>
+<div id="ref-breiman1996bagging">
+<p>Breiman, Leo. 1996. “Bagging Predictors.” <em>Machine Learning</em> 24 (2). Springer: 123–40.</p>
+</div>
+<div id="ref-breiman2001random">
+<p>———. 2001. “Random Forests.” <em>Machine Learning</em> 45 (1). Springer: 5–32.</p>
+</div>
+<div id="ref-chang2011libsvm">
+<p>Chang, Chih-Chung, and Chih-Jen Lin. 2011. “LIBSVM: A Library for Support Vector Machines.” <em>ACM Transactions on Intelligent Systems and Technology (TIST)</em> 2 (3). ACM: 27.</p>
+</div>
+<div id="ref-chen2014fast">
+<p>Chen, Danqi, and Christopher D Manning. 2014. “A Fast and Accurate Dependency Parser Using Neural Networks.” In <em>EMNLP</em>, 740–50.</p>
+</div>
+<div id="ref-cowie1996information">
+<p>Cowie, Jim, and Wendy Lehnert. 1996. “Information Extraction.” <em>Communications of the ACM</em> 39 (1). ACM: 80–91.</p>
+</div>
+<div id="ref-etzioni2011search">
+<p>Etzioni, Oren. 2011. “Search Needs a Shake-up.” <em>Nature</em> 476 (7358). Nature Publishing Group: 25–26.</p>
+</div>
+<div id="ref-etzioni2011open">
+<p>Etzioni, Oren, Anthony Fader, Janara Christensen, Stephen Soderland, and others. 2011. “Open Information Extraction: The Second Generation.” In <em>Twenty-Second International Joint Conference on Artificial Intelligence</em>.</p>
+</div>
+<div id="ref-exner2014refractive">
+<p>Exner, Peter, and Pierre Nugues. 2014. “REFRACTIVE: An Open Source Tool to Extract Knowledge from Syntactic and Semantic Relations.” In <em>LREC</em>, 2584–9.</p>
+</div>
+<div id="ref-fader2011identifying">
+<p>Fader, Anthony, Stephen Soderland, and Oren Etzioni. 2011. “Identifying Relations for Open Information Extraction.” In <em>Proceedings of the Conference on Empirical Methods in Natural Language Processing</em>, 1535–45. Association for Computational Linguistics.</p>
+</div>
+<div id="ref-fan2008liblinear">
+<p>Fan, Rong-En, Kai-Wei Chang, Cho-Jui Hsieh, Xiang-Rui Wang, and Chih-Jen Lin. 2008. “LIBLINEAR: A Library for Large Linear Classification.” <em>Journal of Machine Learning Research</em> 9 (Aug): 1871–4.</p>
+</div>
+<div id="ref-finkel2005incorporating">
+<p>Finkel, Jenny Rose, Trond Grenager, and Christopher Manning. 2005. “Incorporating Non-Local Information into Information Extraction Systems by Gibbs Sampling.” In <em>Proceedings of the 43rd Annual Meeting on Association for Computational Linguistics</em>, 363–70. Association for Computational Linguistics.</p>
+</div>
+<div id="ref-hall2009weka">
+<p>Hall, Mark, Eibe Frank, Geoffrey Holmes, Bernhard Pfahringer, Peter Reutemann, and Ian H Witten. 2009. “The Weka Data Mining Software: An Update.” <em>ACM SIGKDD Explorations Newsletter</em> 11 (1). ACM: 10–18.</p>
+</div>
+<div id="ref-hinton1989connectionist">
+<p>Hinton, Geoffrey E. 1989. “Connectionist Learning Procedures.” <em>Artificial Intelligence</em> 40 (1-3). Elsevier: 185–234.</p>
+</div>
+<div id="ref-joachims1998text">
+<p>Joachims, Thorsten. 1998. “Text Categorization with Support Vector Machines: Learning with Many Relevant Features.” <em>Machine Learning: ECML-98</em>. Springer, 137–42.</p>
+</div>
+<div id="ref-jurafsky2000speech">
+<p>Jurafsky, Dan. 2000. <em>Speech &amp; Language Processing</em>. Pearson Education India.</p>
+</div>
+<div id="ref-kohavi1995study">
+<p>Kohavi, Ron, and others. 1995. “A Study of Cross-Validation and Bootstrap for Accuracy Estimation and Model Selection.” In <em>Ijcai</em>, 14:1137–45. 2. Stanford, CA.</p>
+</div>
+<div id="ref-maccartney2007natural">
+<p>MacCartney, Bill, and Christopher D Manning. 2007. “Natural Logic for Textual Inference.” In <em>Proceedings of the Acl-Pascal Workshop on Textual Entailment and Paraphrasing</em>, 193–200. Association for Computational Linguistics.</p>
+</div>
+<div id="ref-manningptbtokenizer">
+<p>Manning, C, T Grow, T Grenager, J Finkel, and J Bauer. 2014. “PTBTokenizer.”</p>
+</div>
+<div id="ref-manning2008introduction">
+<p>Manning, Christopher D, Prabhakar Raghavan, Hinrich Schütze, and others. 2008. <em>Introduction to Information Retrieval</em>. Vol. 1. 1. Cambridge university press Cambridge.</p>
+</div>
+<div id="ref-mccallum2002mallet">
+<p>McCallum, Andrew Kachites. 2002. “Mallet: A Machine Learning for Language Toolkit.”</p>
+</div>
+<div id="ref-mingers1989empirical">
+<p>Mingers, John. 1989. “An Empirical Comparison of Selection Measures for Decision-Tree Induction.” <em>Machine Learning</em> 3 (4). Springer: 319–42.</p>
+</div>
+<div id="ref-mitchell1997machine">
+<p>Mitchell, Tom M. 1997. <em>Machine Learning. 1997</em>. <em>Burr Ridge, IL: McGraw Hill</em>. Vol. 45. 37.</p>
+</div>
+<div id="ref-mohri2012foundations">
+<p>Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2012. <em>Foundations of Machine Learning</em>. MIT press.</p>
+</div>
+<div id="ref-nair2010rectified">
+<p>Nair, Vinod, and Geoffrey E Hinton. 2010. “Rectified Linear Units Improve Restricted Boltzmann Machines.” In <em>Proceedings of the 27th International Conference on Machine Learning (Icml-10)</em>, 807–14.</p>
+</div>
+<div id="ref-ng2002discriminative">
+<p>Ng, Andrew Y, and Michael I Jordan. 2002. “On Discriminative Vs. Generative Classifiers: A Comparison of Logistic Regression and Naive Bayes.” <em>Advances in Neural Information Processing Systems</em> 2. MIT; 1998: 841–48.</p>
+</div>
+<div id="ref-nivre2016universal">
+<p>Nivre, Joakim, Marie-Catherine de Marneffe, Filip Ginter, Yoav Goldberg, Jan Hajic, Christopher D Manning, Ryan McDonald, et al. 2016. “Universal Dependencies V1: A Multilingual Treebank Collection.” In <em>Proceedings of the 10th International Conference on Language Resources and Evaluation (Lrec 2016)</em>, 1659–66.</p>
+</div>
+<div id="ref-schmitz2012open">
+<p>Schmitz, Michael, Robert Bart, Stephen Soderland, Oren Etzioni, and others. 2012. “Open Language Learning for Information Extraction.” In <em>Proceedings of the 2012 Joint Conference on Empirical Methods in Natural Language Processing and Computational Natural Language Learning</em>, 523–34. Association for Computational Linguistics.</p>
+</div>
+<div id="ref-singh2002open">
+<p>Singh, Push, Thomas Lin, Erik Mueller, Grace Lim, Travell Perkins, and Wan Li Zhu. 2002. “Open Mind Common Sense: Knowledge Acquisition from the General Public.” <em>On the Move to Meaningful Internet Systems 2002: CoopIS, DOA, and ODBASE</em>. Springer, 1223–37.</p>
+</div>
+<div id="ref-suhartono2014lemmatization">
+<p>Suhartono, Derwin. 2014. “Lemmatization Technique in Bahasa: Indonesian.” <em>Journal of Software</em> 9 (5): 1203.</p>
+</div>
+<div id="ref-theodoridis2015machine">
+<p>Theodoridis, Sergios. 2015. <em>Machine Learning: A Bayesian and Optimization Perspective</em>. Academic Press.</p>
+</div>
+<div id="ref-toutanova2003feature">
+<p>Toutanova, Kristina, Dan Klein, Christopher D Manning, and Yoram Singer. 2003. “Feature-Rich Part-of-Speech Tagging with a Cyclic Dependency Network.” In <em>Proceedings of the 2003 Conference of the North American Chapter of the Association for Computational Linguistics on Human Language Technology-Volume 1</em>, 173–80. Association for Computational Linguistics.</p>
+</div>
+<div id="ref-wasserman2015grid">
+<p>Wasserman, Daniel. 2015. “Grid Search Optimization.”</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Stanford Core NLP <a href="https://stanfordnlp.github.io/CoreNLP/" class="uri">https://stanfordnlp.github.io/CoreNLP/</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Resource Data Format W3C <a href="https://www.w3.org/RDF/" class="uri">https://www.w3.org/RDF/</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>CoNLL-U <a href="http://universaldependencies.org/format.html" class="uri">http://universaldependencies.org/format.html</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Database Jurnal Universitas Indonesia <a href="http://remote-lib.ui.ac.id" class="uri">http://remote-lib.ui.ac.id</a><a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>Google Scholar <a href="https://scholar.google.co.id/" class="uri">https://scholar.google.co.id/</a><a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p><em>Penn Treebank 3</em> <a href="https://catalog.ldc.upenn.edu/LDC99T42" class="uri">https://catalog.ldc.upenn.edu/LDC99T42</a><a href="#fnref6">↩</a></p></li>
+<li id="fn7"><p>UD <em>treebank</em> Indonesia <a href="https://github.com/UniversalDependencies/UD_Indonesian" class="uri">https://github.com/UniversalDependencies/UD_Indonesian</a><a href="#fnref7">↩</a></p></li>
+<li id="fn8"><p>NER Indonesia <a href="https://github.com/yusufsyaifudin/indonesia-ner" class="uri">https://github.com/yusufsyaifudin/indonesia-ner</a><a href="#fnref8">↩</a></p></li>
+<li id="fn9"><p>Python <a href="https://www.python.org" class="uri">https://www.python.org</a><a href="#fnref9">↩</a></p></li>
+<li id="fn10"><p>scikit-learn <a href="http://scikit-learn.org" class="uri">http://scikit-learn.org</a><a href="#fnref10">↩</a></p></li>
+<li id="fn11"><p>Repositori penelitian <a href="github.com/yohanesgultom/id-openie" class="uri">github.com/yohanesgultom/id-openie</a><a href="#fnref11">↩</a></p></li>
+</ol>
+</div>

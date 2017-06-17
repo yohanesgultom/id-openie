@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>Presentation</title>
+		<title>Presentasi Tesis</title>
 		<base href="/">
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/black.css">
@@ -27,11 +27,20 @@
 			}
 
 			.grey {
-				color: grey !important;
+				color: #aaa !important;
 			}
 
 			.centr {
 				text-align: center !important;
+			}
+
+			#open-ie-paradigm td {
+				font-size: 70% !important;
+				text-align: center;
+			}
+
+			#open-ie-paradigm thead th {
+				text-align: center;
 			}
 		</style>
 	</head>
@@ -48,7 +57,15 @@
 				</section>
 
 				<section>
-					<h2>Pendahuluan</h2>
+					<h3>Kerangka Presentasi</h3>
+					<ol>
+						<li>Pendahuluan</li>
+						<li>Tinjauan Pustaka</li>
+						<li>Rancangan Sistem</li>
+						<li>Demo Hasil Implementasi</li>
+						<li>Evaluasi dan Analisis</li>
+						<li>Kesimpulan dan Saran</li>
+					</ol>
 				</section>
 
 				<section>
@@ -75,50 +92,58 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h3>Open Domain Information Extraction</h3>
-					<table>
+					<h3>Perbandingan Karakteristik</h3>
+					<table id="open-ie-paradigm">
 						<thead>
 							<tr class="fragment">
 								<th></th>
 								<th><span class="grey">Information Extraction</span></th>
-								<th>Open IE</th>
+								<th>Open&nbsp;IE</th>
 								<th><span class="grey">Knowledge Extraction</span></th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr class="fragment">
 								<th>Domain</th>
-								<td title="(Cowie and Lehnert, 1996)"><span class="grey">Tertutup</span></td>
-								<td title="(Banko et al., 2007)">Terbuka</td>
-								<td title="(Auer et al., 2007)"><span class="grey">Terbuka</span></td>
+								<td><span class="grey">Tertutup <br> (Cowie and Lehnert, 1996)</span></td>
+								<td>Terbuka <br> (Banko et al., 2007)</td>
+								<td><span class="grey">Terbuka <br> (Auer et al., 2007)</span></td>
 							</tr>
 							<tr class="fragment">
 								<th>Format</th>
-								<td title="(Cowie and Lehnert, 1996)"><span class="grey">Tergantung domain</span></td>
-								<td title="(Banko et al., 2007)">Triples</td>
-								<td title="(Auer et al., 2007; Exner and Nugues, 2014)"><span class="grey">RDF Triples</span></td>
+								<td><span class="grey">Tergantung domain <br> (Cowie and Lehnert, 1996)</span></td>
+								<td>Triples <br> (Banko et al., 2007)</td>
+								<td><span class="grey">RDF Triples <br> (Auer et al., 2007; Exner and Nugues, 2014)</span></td>
 							</tr>
 							<tr class="fragment">
 								<th>Ontologi</th>
-								<td title="(Cowie and Lehnert, 1996)"><span class="grey">Tidak tersedia</span></td>
-								<td title="(Etzioni et al., 2011)">Opsional</td>
-								<td title="(Auer et al., 2007)"><span class="grey">Wajib</span></td>
+								<td><span class="grey">Tidak tersedia <br> (Cowie and Lehnert, 1996)</span></td>
+								<td>Opsional <br> (Etzioni et al., 2011)</td>
+								<td><span class="grey">Wajib <br> (Auer et al., 2007)</span></td>
 							</tr>
 						</tbody>
 					</table>
 				</section>
 
 				<section>
-					<h3>Tiga Langkah/Fase <em>Open IE</em></h3>
-					<p>(Etzioni et al., 2011)</p>
+					<h3>
+						Tiga Langkah/Fase <em>Open IE</em><br>
+						<small>(Etzioni et al., 2011)</small>
+					</h3>
 					<ol>
-						<li class="fragment"><strong>Label</strong> (<em>label</em>)
-							<div>Membangun dataset klasifikasi <em>triple</em></div></li>
-						<li class="fragment"><strong>Belajar</strong> (<em>learn</em>)
-							<div>Melatih <em>classifier</em> untuk mengekstrak triple dari kalimat</div></li>
-						<li class="fragment"><strong>Ekstrak</strong> (<em>extract</em>)
-							<div>Mengekstrak <em>triple</em> dari kalimat menggunakan <em>classifier</em>
-							</div></li>
+						<li class="fragment">
+							<strong>Label</strong> (<em>label</em>)
+							<div><small>Membangun dataset klasifikasi <em>triple</em></small></div>
+						</li>
+						<li class="fragment">
+							<strong>Belajar</strong> (<em>learn</em>)
+							<div><small>Melatih <em>classifier</em> untuk mengekstrak triple dari kalimat</small></div>
+						</li>
+						<li class="fragment">
+							<strong>Ekstrak</strong> (<em>extract</em>)
+							<div><small>Mengekstrak <em>triple</em> dari kalimat menggunakan <em>classifier</em></small>
+							</div>
+						</li>
 					</ol>
 				</section>
 
@@ -165,18 +190,22 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h2>Rancangan Sistem</h2>
-				</section>
-
-				<section>
 					<h3>Rancangan Sistem</h3>
 					<ol>
-						<li class="fragment" title="Mirip (Fader et al., 2011) tapi dengan NER dan NP chunker diganti dengan aturan"><strong>Label</strong><div>Dependency parser + NER + aturan + anotasi <em>triple</em> (manual)</div></li>
-						<li class="fragment" title="Mirip (Banko et al., 2007) tapi menggunakan random forest"><strong>Belajar</strong><div>Dependency parser + NER + aturan + random forest</div></li>
-						<li class="fragment" title="Mirip (Banko et al., 2007) tapi menggunakan random forest dan hanya merging sederhana tanpa normalization"><strong>Ekstrak</strong><div>Dependency parser + NER + aturan + random forest</div></li>
+						<li class="fragment">
+							<strong>Label</strong>
+							<div><small>Dependency parser + NER + aturan + anotasi <em>triple</em> (manual). Mirip (Fader et al., 2011) tapi dengan NER dan NP chunker diganti dengan aturan yang terinsipirasi (Angeli et al., 2015)</small></div>
+						</li>
+						<li class="fragment">
+							<strong>Belajar</strong>
+							<div><small>Dependency parser + NER + aturan + random forest. Mirip (Banko et al., 2007) tapi menggunakan <em>random forest</em></small></div>
+						</li>
+						<li class="fragment">
+							<strong>Ekstrak</strong>
+							<div><small>Dependency parser + NER + aturan + random forest. Mirip (Banko et al., 2007) tapi menggunakan <em>random forest</em> dan hanya menggunakan <em>merging</em> sederhana tanpa normalisasi</small></div>
+						</li>
 					</ol>
 				</section>
-
 
 				<section>
 					<h3>Rancangan Sistem</h3>
@@ -189,40 +218,82 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h3>NLP Pipeline</h3>
-					<ol>
-						<li class="fragment">PTBTokenizer (Manning et al., 2014)</li>
-						<li class="fragment">MaxentTagger (Toutanova et al., 2003)</li>
-						<li class="fragment">Indonesian Lemmatizer (Suhartono, 2014)</li>
-						<li class="fragment">Named-Entity CRFClassifier (Finkel et al., 2005)</li>
-						<li class="fragment">Transition-Based Neural Network Dependency Parser (Chen and Manning, 2014)</li>
-					</ol>
+					<section>
+						<h3>CoNLL-U</h3>
+						<p>Format anotasi <em>token-based</em> yang menggunakan <em>universal POS tag</em> dan <em>universal dependency relation</em> (Nivre et al., 2016)</p>
+					</section>
+
+					<section>
+						<h4>Contoh Input dan Output NLP Pipeline</h4>
+						<pre><code class="centr nohighlight" data-trim>
+	Sembungan adalah sebuah desa yang terletak di kecamatan
+	Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
+						</code></pre>
+						<img src="image/conllu_example.png" />
+					</section>
+
+
+					<section>
+						<h3>CoNLL-U</h3>
+						<ol style="font-size: 25pt">
+							<li>ID: Indeks token dalam kalimat</li>
+							<li>FORM: Bentuk asli dari token</li>
+							<li>LEMMA: Bentuk kamus dari token</li>
+							<li>UPOSTAG: POS tag universal</li>
+							<li>XPOSTAG: POS tag spesifik untuk bahasa tertentu</li>
+							<li>FEATS: Fitur tambahan atau spesifik untuk bahasa tertentu</li>
+							<li>HEAD: ID token yang merupakan kepala (head) dari token ini</li>
+							<li>DEPREL: dependency relation universal</li>
+							<li>DEPS: dependency graph khusus atau spesifik untuk bahasa tertentu</li>
+							<li>MISC: Anotasi tambahan yang belum tercakup di anotasi lainnya</li>
+						</ol>
+					</section>
 				</section>
 
 				<section>
-					<h3>CoNLL-U</h3>
-					<p>Format anotasi <em>token-based</em> yang menggunakan <em>universal POS tag</em> dan <em>universal dependency relation</em> (Nivre et al., 2016)</p>
-				</section>
+					<section>
+						<h3>NLP Pipeline</h3>
+						<ol>
+							<li class="fragment">
+								<div>PTBTokenizer (Manning et al., 2014)</div>
+								<small>Digunakan tanpa perubahan</small>
+							</li>
+							<li class="fragment">
+								<div>MaxentTagger (Toutanova et al., 2003)</div>
+								<small>Akurasi per token 93.68%, akurasi per kalimat <strong class="yellow">63.91%</strong></small>
+							</li>
+							<li class="fragment">
+								<div>Indonesian Lemmatizer (Suhartono, 2014)</div>
+								<small>Akurasi <strong class="yellow">99%</strong></small>
+							</li>
+							<li class="fragment">
+								<div>Named-Entity CRFClassifier (Finkel et al., 2005)</div>
+								<small>Precision 0.86, Recall 0.85, F1 <strong class="yellow">0.86</strong></small>
+							</li>
+							<li class="fragment">
+								<div>Transition-Based Neural Network Dependency Parser (Chen and Manning, 2014)</div>
+								<small>Unlabeled 70%, Labeled <strong class="yellow">46%</strong></small>
+							</li>
+						</ol>
+					</section>
 
-				<section>
-					<h3>CoNLL-U</h3>
-					<ol style="font-size: 25pt">
-						<li>ID: Indeks token dalam kalimat</li>
-						<li>FORM: Bentuk asli dari token</li>
-						<li>LEMMA: Bentuk kamus dari token</li>
-						<li>UPOSTAG: POS tag universal</li>
-						<li>XPOSTAG: POS tag spesifik untuk bahasa tertentu</li>
-						<li>FEATS: Fitur tambahan atau spesifik untuk bahasa tertentu</li>
-						<li>HEAD: ID token yang merupakan kepala (head) dari token ini</li>
-						<li>DEPREL: dependency relation universal</li>
-						<li>DEPS: dependency graph khusus atau spesifik untuk bahasa tertentu</li>
-						<li>MISC: Anotasi tambahan yang belum tercakup di anotasi lainnya</li>
-					</ol>
-				</section>
-
-				<section>
-					<h3>CoNLL-U</h3>
-					<img src="image/conllu_example.png" />
+					<section>
+						<h3>Dataset NLP Pipeline</h3>
+						<ul>
+							<li class="fragment">
+								<div>POS Tag &amp; Dependency</div>
+								<small>UD treebank Indonesia (5,036 kalimat latih + 559 kalimat uji) <a href="https://github.com/UniversalDependencies/UD_Indonesian">https://github.com/UniversalDependencies/UD_Indonesian</a></small>
+							</li>
+							<li class="fragment">
+								<div>Lemmatizer</div>
+								<small>Lemmatizer Indonesia (5,638 kata uji) <a href="https://github.com/davidchristiandy/lemmatizer">https://github.com/davidchristiandy/lemmatizer</a></small>
+							</li>
+							<li class="fragment">
+								<div>NER</div>
+								<small>Dataset kuliah NLP Fasilkom UI 2016 (1,700 kalimat latih  + 426 kalimat uji) dan NER Indonesia (1,835 kalimat latih) <a href="https://github.com/yusufsyaifudin/indonesia-ner">https://github.com/yusufsyaifudin/indonesia-ner</a></small>
+							</li>
+						</ul>
+					</section>
 				</section>
 
 				<section>
@@ -231,7 +302,62 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h3>Triple Candidate Generator</h3>
+					<h3>Aturan Pembangkitan Kandidat <em>Triple</em></h3>
+					<table style="font-size: 25pt">
+						<thead>
+						<tr class="header">
+						<th align="left"><strong>Jenis</strong></th>
+						<th align="left"><strong>Kondisi</strong></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr class="odd">
+						<td align="left">Subjek</td>
+						<td align="left"><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</td>
+						</tr>
+						<tr class="even">
+						<td align="left"></td>
+						<td align="left"><em>Token</em> bukan termasuk (“yang”, “adalah”)</td>
+						</tr>
+						<tr class="odd">
+						<td align="left"></td>
+						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</td>
+						</tr>
+						<tr class="even">
+						<td align="left"></td>
+						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</td>
+						</tr>
+						<tr class="odd">
+						<td align="left">Predikat</td>
+						<td align="left">Posisi <em>token</em> setelah Subjek</td>
+						</tr>
+						<tr class="even">
+						<td align="left"></td>
+						<td align="left"><em>POS tag</em> <em>token</em> termasuk (VERB, AUX)</td>
+						</tr>
+						<tr class="odd">
+						<td align="left">Objek</td>
+						<td align="left">Posisi <em>token</em> setelah Subjek dan Predikat</td>
+						</tr>
+						<tr class="even">
+						<td align="left"></td>
+						<td align="left"><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</td>
+						</tr>
+						<tr class="odd">
+						<td align="left"></td>
+						<td align="left"><em>Token</em> bukan termasuk (“yang”, “adalah”)</td>
+						</tr>
+						<tr class="even">
+						<td align="left"></td>
+						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</td>
+						</tr>
+						<tr class="odd">
+						<td align="left"></td>
+						<td align="left"><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</td>
+						</tr>
+						</tbody>
+						</table>
+
 				</section>
 
 				<section>
@@ -253,11 +379,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h2>Demo Hasil Implementasi</h2>
-				</section>
-
-				<section>
-					<h3>Implementasi</h3>
+					<h3>Hasil Implementasi</h3>
 					<ul>
 						<li>Implementasi dengan Java &amp; Python dengan pustaka utama Stanford Core NLP dan Sckit-Learn</li>
 						<li>Repositori publik: <a target="_blank" href="https://github.com/yohanesgultom/id-openie">https://github.com/yohanesgultom/id-openie</a></li>
