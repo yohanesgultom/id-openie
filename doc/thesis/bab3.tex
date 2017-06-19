@@ -219,11 +219,11 @@ Jika \textsc{TextRunner} menggunakan \textit{noun phrase chunker} \citep{banko20
 \hline
 \textbf{\#} & \textbf{Kondisi untuk \textit{token} subjek atau objek} & \textbf{Aksi} \\
 \hline
-1 & Jika relasi \textit{dependent} di antara()["compound", "name", "amod") & Ekspansi \\
+1 & Jika relasi \textit{dependent} di antara ("compound", "name", "amod") & Ekspansi \\
 2 & Jika \textit{dependent} memiliki \textit{named-entity} yang sama dengan \textit{token}  & Ekspansi \\
 3 & Jika \textit{dependent} dan token berada dalam kutipan (\textit{quote}) & Ekspansi \\
 4 & Jika \textit{token} merupakan \textit{root} kalimat & Abaikan \\
-5 & Jika \textit{POS tag} dependent CONJ atau termasuk simbol (",", "/) & Abaikan \\
+5 & Jika \textit{POS tag} dependent CONJ atau termasuk simbol (",", "/") & Abaikan \\
 6 & Jika \textit{POS tag} dependent termasuk ("VERB", "ADP")  & Abaikan \\
 7 & Jika \textit{dependent} memiliki \textit{dependent} dengan \textit{POS tag} "ADP" & Abaikan \\
 8 & Jika \textit{POS tag} \textit{dependent} di antara ("CONJ", "ADP") dan berada di depan frase & Buang \\

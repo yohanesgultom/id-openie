@@ -43,25 +43,32 @@
 				text-align: center;
 			}
 
-			#triple-selector-rules {
+			#triple-candidate-generator-rules {
 				font-size: 20pt;
 			}
 
-			#triple-selector-rules th {
+			#triple-candidate-generator-rules th {
 				vertical-align: middle;
 			}
 
-			#triple-selector-rules thead th {
+			#triple-candidate-generator-rules thead th {
 				text-align: center;
 			}
 
+			#triple-selector-features {
+				font-size: 70%;
+			}
+
+			#triple-selector-features td {
+				vertical-align: top;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
 
-				<section>
+				<section data-background="#ddd">
 					<h2><em>Open Domain Information Extraction</em> dari Teks Bahasa Indonesia</h2>
 					<small>
 						Oleh: Yohanes Gultom - 1506706345<br/>
@@ -73,12 +80,16 @@
 					<h3>Kerangka Presentasi</h3>
 					<ol>
 						<li>Pendahuluan</li>
-						<li>Tinjauan Pustaka</li>
 						<li>Rancangan Sistem</li>
-						<li>Demo Hasil Implementasi</li>
+						<li>Implementasi Sistem</li>
 						<li>Evaluasi dan Analisis</li>
-						<li>Kesimpulan dan Saran</li>
+						<li>Penutup</li>
 					</ol>
+				</section>
+
+				<section data-background="#ddd">
+					<h2>Pendahuluan</h2>
+					<small>Latar belakang, masalah, tinjauan pustaka</small>
 				</section>
 
 				<section>
@@ -93,12 +104,12 @@
 				<section>
 					<h3>Masalah</h3>
 					<p>Input</p>
-					<pre><code class="nohighlight" data-trim>
+					<pre><code class="nohighlight hljs" data-trim>
 Sembungan adalah sebuah desa yang terletak di kecamatan
 Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</code></pre>
 					<p>Output</p>
-					<pre><code class="nohighlight" data-trim>
+					<pre><code class="nohighlight hljs" data-trim>
 (Sembungan, adalah, desa)
 (Sembungan, terletak di, kecamatan Kejajar)
 					</code></pre>
@@ -202,8 +213,13 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</table>
 				</section>
 
+				<section data-background="#ddd">
+					<h2>Rancangan Sistem</h2>
+					<small>NLP Pipeline, Triple Candidate Generator, Triple Selector, Token Expander</small>
+				</section>
+
 				<section>
-					<h3>Rancangan Sistem</h3>
+					<h3>Tiga Langkah/Fase <em>Open IE</em></h3>
 					<ol>
 						<li class="fragment">
 							<strong>Label</strong>
@@ -220,102 +236,128 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</ol>
 				</section>
 
-				<section>
-					<h3>Rancangan Sistem</h3>
+				<section data-background="white">
+					<h3>Diagram Alir Fase Ekstrak</h3>
 					<img src="image/program_flowchart.png" />
 				</section>
 
-				<section>
+				<section data-background="white">
 					<h3>NLP Pipeline</h3>
 					<img src="image/program_flowchart_nlp_pipeline.png" />
 				</section>
 
 				<section>
-					<section>
-						<h3>CoNLL-U</h3>
-						<p>Format anotasi <em>token-based</em> yang menggunakan <em>universal POS tag</em> dan <em>universal dependency relation</em> (Nivre et al., 2016)</p>
-					</section>
-
-					<section>
-						<h4>Contoh Input dan Output NLP Pipeline</h4>
-						<pre><code class="centr nohighlight" data-trim>
-	Sembungan adalah sebuah desa yang terletak di kecamatan
-	Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
-						</code></pre>
-						<img src="image/conllu_example.png" />
-					</section>
-
-					<section>
-						<h3>CoNLL-U</h3>
-						<ol style="font-size: 25pt">
-							<li>ID: Indeks token dalam kalimat</li>
-							<li>FORM: Bentuk asli dari token</li>
-							<li>LEMMA: Bentuk kamus dari token</li>
-							<li>UPOSTAG: POS tag universal</li>
-							<li>XPOSTAG: POS tag spesifik untuk bahasa tertentu</li>
-							<li>FEATS: Fitur tambahan atau spesifik untuk bahasa tertentu</li>
-							<li>HEAD: ID token yang merupakan kepala (head) dari token ini</li>
-							<li>DEPREL: dependency relation universal</li>
-							<li>DEPS: dependency graph khusus atau spesifik untuk bahasa tertentu</li>
-							<li>MISC: Anotasi tambahan yang belum tercakup di anotasi lainnya</li>
-						</ol>
-					</section>
+					<h4>Contoh Input dan Output NLP Pipeline</h4>
+					<pre><code class="centr nohighlight hljs" data-trim>
+				Sembungan adalah sebuah desa yang terletak di kecamatan
+				Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
+					</code></pre>
+					<img src="image/conllu_example.png" />
 				</section>
 
 				<section>
-					<section>
-						<h3>NLP Pipeline</h3>
-						<ol>
-							<li class="fragment">
-								<div>PTBTokenizer (Manning et al., 2014)</div>
-								<small>Digunakan tanpa perubahan</small>
-							</li>
-							<li class="fragment">
-								<div>MaxentTagger (Toutanova et al., 2003)</div>
-								<small>Akurasi per token 93.68%, akurasi per kalimat <strong class="yellow">63.91%</strong></small>
-							</li>
-							<li class="fragment">
-								<div>Indonesian Lemmatizer (Suhartono, 2014)</div>
-								<small>Akurasi <strong class="yellow">99%</strong></small>
-							</li>
-							<li class="fragment">
-								<div>Named-Entity CRFClassifier (Finkel et al., 2005)</div>
-								<small>Precision 0.86, Recall 0.85, F1 <strong class="yellow">0.86</strong></small>
-							</li>
-							<li class="fragment">
-								<div>Transition-Based Neural Network Dependency Parser (Chen and Manning, 2014)</div>
-								<small>Unlabeled 70%, Labeled <strong class="yellow">46%</strong></small>
-							</li>
-						</ol>
-					</section>
-
-					<section>
-						<h3>Dataset NLP Pipeline</h3>
-						<ul>
-							<li class="fragment">
-								<div>POS Tag &amp; Dependency</div>
-								<small>UD treebank Indonesia (5,036 kalimat latih + 559 kalimat uji) <a href="https://github.com/UniversalDependencies/UD_Indonesian">https://github.com/UniversalDependencies/UD_Indonesian</a></small>
-							</li>
-							<li class="fragment">
-								<div>Lemmatizer</div>
-								<small>Lemmatizer Indonesia (5,638 kata uji) <a href="https://github.com/davidchristiandy/lemmatizer">https://github.com/davidchristiandy/lemmatizer</a></small>
-							</li>
-							<li class="fragment">
-								<div>NER</div>
-								<small>Dataset kuliah NLP Fasilkom UI 2016 (1,700 kalimat latih  + 426 kalimat uji) dan NER Indonesia (1,835 kalimat latih) <a href="https://github.com/yusufsyaifudin/indonesia-ner">https://github.com/yusufsyaifudin/indonesia-ner</a></small>
-							</li>
-						</ul>
-					</section>
+					<h3>
+						Kolom atau atribut CoNLL-U
+						<small>(Nivre et al., 2016)</small>
+					</h3>
+					<table style="font-size: 70%">
+						<tbody>
+							<tr>
+								<th>ID</th>
+								<td>Indeks token dalam kalimat</td>
+							</tr>
+							<tr>
+								<th>FORM</th>
+								<td>Bentuk asli dari token</td>
+							</tr>
+							<tr>
+								<th>LEMMA</th>
+								<td>Bentuk kamus dari token</td>
+							</tr>
+							<tr>
+								<th>UPOSTAG</th>
+								<td>POS tag universal</td>
+							</tr>
+							<tr>
+								<th>XPOSTAG</th>
+								<td>POS tag spesifik untuk bahasa tertentu</td>
+							</tr>
+							<tr>
+								<th>FEATS</th>
+								<td>Fitur tambahan atau spesifik untuk bahasa tertentu</td>
+							</tr>
+							<tr>
+								<th>HEAD</th>
+								<td>ID token yang merupakan kepala (head) dari token ini</td>
+							</tr>
+							<tr>
+								<th>DEPREL</th>
+								<td><em>Dependency relation</em> universal</td>
+							</tr>
+							<tr>
+								<th>DEPS</th>
+								<td>Dependency graph khusus atau spesifik untuk bahasa tertentu</td>
+							</tr>
+							<tr>
+								<th>MISC</th>
+								<td>Anotasi tambahan yang belum tercakup di anotasi lainnya</td>
+							</tr>
+						</tbody>
+					</table>
 				</section>
 
 				<section>
+					<h3>Algoritma NLP Pipeline</h3>
+					<ol>
+						<li class="fragment">
+							<div>PTBTokenizer (Manning et al., 2014)</div>
+							<small>Digunakan tanpa perubahan atau kontekstualisasi</small>
+						</li>
+						<li class="fragment">
+							<div>MaxentTagger (Toutanova et al., 2003)</div>
+							<small>Akurasi per token 93.68%, akurasi per kalimat <strong class="yellow">63.91%</strong></small>
+						</li>
+						<li class="fragment">
+							<div>Indonesian Lemmatizer (Suhartono, 2014)</div>
+							<small>Akurasi <strong class="yellow">99%</strong></small>
+						</li>
+						<li class="fragment">
+							<div>Named-Entity CRFClassifier (Finkel et al., 2005)</div>
+							<small>Precision 0.86, Recall 0.85, F1 <strong class="yellow">0.86</strong></small>
+						</li>
+						<li class="fragment">
+							<div>Transition-Based Neural Network Dependency Parser (Chen and Manning, 2014)</div>
+							<small>Unlabeled 70%, Labeled <strong class="yellow">46%</strong></small>
+						</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Dataset NLP Pipeline</h3>
+					<ul>
+						<li class="fragment">
+							<div>POS Tag &amp; Dependency</div>
+							<small>UD treebank Indonesia (5,036 kalimat latih + 559 kalimat uji) <a href="https://github.com/UniversalDependencies/UD_Indonesian">https://github.com/UniversalDependencies/UD_Indonesian</a></small>
+						</li>
+						<li class="fragment">
+							<div>Lemmatizer</div>
+							<small>Lemmatizer Indonesia (5,638 kata uji) <a href="https://github.com/davidchristiandy/lemmatizer">https://github.com/davidchristiandy/lemmatizer</a></small>
+						</li>
+						<li class="fragment">
+							<div>NER</div>
+							<small>Dataset kuliah NLP Fasilkom UI 2016 (1,700 kalimat latih  + 426 kalimat uji) dan NER Indonesia (1,835 kalimat latih) <a href="https://github.com/yusufsyaifudin/indonesia-ner">https://github.com/yusufsyaifudin/indonesia-ner</a></small>
+						</li>
+					</ul>
+				</section>
+
+				<section data-background="white">
 					<h3>Triple Candidate Generator</h3>
 					<img src="image/program_flowchart_triple_candidate_generator.png" />
 				</section>
 
 				<section>
 					<h4>Aturan Pembangkitan Kandidat <em>Triple</em></h4>
-					<table id="triple-selector-rules">
+					<table id="triple-candidate-generator-rules">
 						<thead>
 							<tr>
 								<th><strong>Jenis</strong></th>
@@ -359,42 +401,180 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</table>
 				</section>
 
-				<section>
+				<section data-background="white">
 					<h3>Triple Selector</h3>
 					<img src="image/program_flowchart_triple_selector.png" />
 				</section>
 
 				<section>
-					<h3>Triple Selector</h3>
+					<h3>Fitur Klasifikasi</h3>
+					<table id="triple-selector-features">
+						<tbody>
+							<tr>
+								<td>
+									<ol>
+										<li>POS tag dari token Subjek</li>
+										<li>Dependency relation dari token Subjek</li>
+										<li>POS tag dari head token Subjek</li>
+										<li>Named-entity dari token Subjek</li>
+										<li>Jarak Subjek ke token Predikat</li>
+										<li>Dependency relation dari token Subjek ke Predikat</li>
+										<li>POS tag dari token Predikat</li>
+										<li>Dependency relation dari token Predikat</li>
+										<li>POS tag dari head token Predikat</li>
+									</ol>
+								</td>
+								<td>
+									<ol start="10">
+										<li>Jumlah dependents token Predikat</li>
+										<li>POS tag dari token Objek</li>
+										<li>Dependency relation dari token Objek</li>
+										<li>POS tag dari head token Objek</li>
+										<li>Named-entity dari token Objek</li>
+										<li>Jumlah dependents dari token Objek</li>
+										<li>Jarak dari token Objek ke predikat</li>
+										<li>Dependency relation token Objek ke Predikat</li>
+									</ol>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</section>
 
-				<section>
+				<section data-background="white">
 					<h3>Token Expander</h3>
 					<img src="image/program_flowchart_token_expander.png" />
 				</section>
 
 				<section>
-					<h3>Token Expander</h3>
+					<h4>Aturan Ekspasi Token Subjek dan Objek</h4>
+					<table style="font-size: 60%">
+						<thead>
+							<th>No</th>
+							<th>Kondisi untuk token subjek atau objek</th>
+							<th>Aksi</th>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>Jika relasi dependent di antara (”compound”, ”name”, ”amod”)</td>
+								<td>Ekspansi</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Jika dependent memiliki named-entity yang sama dengan token</td>
+								<td>Ekspansi</td>
+							</tr>
+							<tr>
+								<td>3</td>
+								<td>Jika dependent dan token berada dalam kutipan (quote)</td> <td>Ekspansi</td>
+							</tr>
+							<tr>
+								<td>4</td>
+								<td>Jika token merupakan root kalimat</td>
+								<td>Abaikan</td>
+							</tr>
+							<tr>
+								<td>5</td>
+								<td>Jika POS tag dependent CONJ atau termasuk simbol (”,”, ”/”)</td> <td>Abaikan</td>
+							</tr>
+							<tr>
+								<td>6</td>
+								<td>Jika POS tag dependent termasuk (”VERB”, ”ADP”)</td>
+								<td>Abaikan</td>
+							</tr>
+							<tr>
+								<td>7</td>
+								<td>Jika dependent memiliki dependent dengan POS tag ”ADP”</td> <td>Abaikan</td>
+							</tr>
+							<tr>
+								<td>8</td>
+								<td>Jika POS tag dependent di antara (”CONJ”, ”ADP”) dan berada di depan frase</td>
+								<td>Buang</td>
+							</tr>
+							<tr>
+								<td>9</td>
+								<td>Jika dependent merupakan tanda kurung yang tidak lengkap</td> <td>Buang</td>
+							</tr>
+							<tr>
+								<td>10</td>
+								<td>Jika dependent merupakan kata ”yang” diakhir frase</td>
+								<td>Buang</td>
+							</tr>
+							<tr>
+								<td>11</td>
+								<td>Lain-lain</td>
+								<td>Abaikan</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section>
+					<h4>Aturan Ekspasi Token Predikat</h4>
+					<table style="font-size: 60%">
+						<thead>
+							<tr>
+								<th>No</th>
+								<th>Kondisi untuk <em>token</em> predikat</th>
+								<th>Aksi</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>1</td>
+								<td>Jika <em>dependent</em> adalah “tidak”</td>
+								<td>Ekspansi</td>
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>Lain-lain</td>
+								<td>Abaikan</td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section data-background="#ddd">
+					<h2>Implementasi Sistem</h2>
+					<small>Pustaka pemrograman dan demo</small>
 				</section>
 
 				<section>
 					<h3>Hasil Implementasi</h3>
 					<ul>
-						<li>Implementasi dengan Java &amp; Python dengan pustaka utama Stanford Core NLP dan Sckit-Learn</li>
+						<li>
+							Implementasi dengan <span class="yellow">Java</span> &amp; <span class="yellow">Python</span> dengan pustaka utama:
+							<ul>
+								<li>Stanford Core NLP: algoritma NLP</li>
+								<li>Sckit-Learn: algoritma <em>machine learning</em></li>
+								<li>Gradle: <em>build</em> &amp;<em> distribution</em></li>
+							</ul>
+						</li>
 						<li>Repositori publik: <a target="_blank" href="https://github.com/yohanesgultom/id-openie">https://github.com/yohanesgultom/id-openie</a></li>
+						<li>Demo</li>
 					</ul>
 				</section>
 
-				<section>
-					<h2>Hasil Evaluasi &amp; Analisis</h2>
+				<section data-background="#ddd">
+					<h2>Evaluasi dan Analisis</h2>
+					<small>Hasil eksperimen dan analisis</small>
 				</section>
 
-				<section>
-					<small>k-Fold Cross Validation (k = 3)</small>
+				<section data-background="white">
+					<h4>
+						<div>Evaluasi</div>
+						<small>k-Fold Cross Validation (k = 3)</small>
+					</h4>
 					<img src="image/models_performance.png" />
 				</section>
 
 				<section>
+					<h3>Analisis</h3>
+					<p>Hasil eksperimen pertama di mana nilai $F_1$ tertinggi hanya 0.58, mengindikasikan bahwa semua model mengalami kesulitan untuk mempelajari pola \textit{triples} dari \textit{dataset} yang diberikan. Kemungkinan penyebab hasil ini adalah masalah pada model (pemilihan fitur atau algoritma) atau kualitas \textit{dataset} yang digunakan (konflik pola atau ketidaklengkapan pola \textit{dataset}). Untuk memastikan penyebab dari hasil eksperimen pertama ini, \saya~melakukan eksperimen tambahan yaitu menguji tiap model \textit{triple selector} menggunakan \textit{dataset} latih (data yang sama). Hasil cukup baik yang ditunjukkan pada Gambar \ref{fig:models_performance_training} dan Tabel \ref{tab:models_performance_training}, di mana $F_1$ tertinggi \textbf{0.83}, \textit{recall} tertinggi \textbf{0.96} dan \textit{precision} tertinggi \textbf{0.88}, menunjukkan bahwa fitur yang dipilih dan model yang digunakan tidak memiliki masalah (kecuali model linier, \textit{logistic regression}). Oleh karena itu \saya~berargumen bahwa masalah utama terdapat pada \textit{dataset} yang digunakan, yaitu tidak cukupnya pola $\nicefrac{2}{3}$ data yang dipakai melatih untuk mengenali pola sisa $\nicefrac{1}{3}$ data yang dipakai untuk menguji.</p>
+				</section>
+
+				<section data-background="white">
 					<small>Validasi dengan Data Latih</small>
 					<img src="image/models_performance_training.png" />
 				</section>
@@ -419,7 +599,13 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
+					<h3>Analisis Uji Waktu Proses</h3>
+					<p>Sebagai tambahan, hasil eksperimen kedua menunjukkan bahwa waktu rata-rata 0.014 detik/kalimat yang dibutuhkan sistem \textit{open IE} untuk mengekstrak \textit{triple} dari dokumen yang berukuran 5,593 kalimat, cukup sebanding dengan sistem lain seperti \textsc{TextRunner} yang membutuhkan 0.036 detik/kalimat \citep{banko2007open}. Hal ini menunjukkan bahwa penggunaan fitur \textit{heavy linguistic} cukup efisien juga digunakan pada dokumen yang berukuran 138 - 5,593 kalimat. Kekurangan dari sistem ini tentu ada pada ekstraksi pada dokumen dengan kalimat kurang dari 138. Selain itu juga kedepannya perlu dikaji sejauh skalabilitas sistem ini dengan melakukan ekstraksi pada dokumen dengan jumlah kalimat lebih banyak.</p>
+				</section>
+
+				<section data-background="#ddd">
 					<h2>Penutup</h2>
+					<small>Kesimpulan dan saran</small>
 				</section>
 
 				<section>
