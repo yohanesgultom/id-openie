@@ -55,12 +55,25 @@
 				text-align: center;
 			}
 
-			#triple-selector-features {
-				font-size: 70%;
+			.pull-left {
+			  left:-8.33%;
+			  text-align: left;
+			  float: left;
+			  width:50%;
+			  z-index:-10;
 			}
 
-			#triple-selector-features td {
-				vertical-align: top;
+			.pull-right {
+			  left:31.25%;
+			  top: 75px;
+			  float: right;
+			  text-align: right;
+			  z-index:-10;
+			  width:50%;
+			}
+
+			.pull-left pre, .pull-right pre {
+				width: 96% !important;
 			}
 		</style>
 	</head>
@@ -68,15 +81,15 @@
 		<div class="reveal">
 			<div class="slides">
 
-				<section data-background="#ddd">
-					<h2><em>Open Domain Information Extraction</em> dari Teks Bahasa Indonesia</h2>
+				<section class="center" data-background="#ddd">
+					<h2><em>Open Domain Information Extraction</em> Otomatis dari Teks Bahasa Indonesia</h2>
 					<small>
 						Oleh: Yohanes Gultom - 1506706345<br/>
 						Pembimbing: Ir. Wahyu Catur Wibowo M.Sc., Ph.D.
 					</small>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>Kerangka Presentasi</h3>
 					<ol>
 						<li>Pendahuluan</li>
@@ -87,12 +100,12 @@
 					</ol>
 				</section>
 
-				<section data-background="#ddd">
+				<section class="center" data-background="#ddd">
 					<h2>Pendahuluan</h2>
 					<small>Latar belakang, masalah, tinjauan pustaka</small>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>Latar Belakang</h3>
 					<ul>
 						<li class="fragment">Kebutuhan akan proses ekstraksi informasi <span class="yellow">otomatis</span> dari dokumen <span class="yellow">lintas domain</span></li>
@@ -101,18 +114,28 @@
 					</ul>
 				</section>
 
-				<section>
-					<h3>Masalah</h3>
-					<p>Input</p>
-					<pre><code class="nohighlight hljs" data-trim>
+				<section class="center">
+					<h3>Rumusan Masalah</h3>
+					<p class="fragment">Input</p>
+					<pre class="fragment"><code class="nohighlight hljs" data-trim>
 Sembungan adalah sebuah desa yang terletak di kecamatan
 Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</code></pre>
-					<p>Output</p>
-					<pre><code class="nohighlight hljs" data-trim>
+					<p class="fragment">Output</p>
+					<pre class="fragment"><code class="nohighlight hljs" data-trim>
 (Sembungan, adalah, desa)
 (Sembungan, terletak di, kecamatan Kejajar)
 					</code></pre>
+				</section>
+
+				<section class="center">
+					<h3>Batasan Masalah</h3>
+					<ol>
+						<li class="fragment">Belum menangani <em>triple</em> implisit (secara sintaktik)</li>
+						<li class="fragment">Tidak menangani praproses dokumen</li>
+						<li class="fragment">Tidak menangani aturan-aturan khusus <em>tokenization</em> bahasa Indonesia</li>
+						<li class="fragment">Berfokus menghasilkan <em>baseline</em> untuk bahasa Indonesia</li>
+					</ol>
 				</section>
 
 				<section>
@@ -149,7 +172,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</table>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>
 						Tiga Langkah/Fase <em>Open IE</em><br>
 						<small>(Etzioni et al., 2011)</small>
@@ -213,13 +236,16 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</table>
 				</section>
 
-				<section data-background="#ddd">
+				<section class="center" data-background="#ddd">
 					<h2>Rancangan Sistem</h2>
 					<small>NLP Pipeline, Triple Candidate Generator, Triple Selector, Token Expander</small>
 				</section>
 
-				<section>
-					<h3>Tiga Langkah/Fase <em>Open IE</em></h3>
+				<section class="center">
+					<h3>
+						<div>Rancangan Sistem</div>
+						<small>Tiga Langkah/Fase <em>Open IE</em></small>
+					</h3>
 					<ol>
 						<li class="fragment">
 							<strong>Label</strong>
@@ -248,11 +274,11 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 
 				<section>
 					<h4>Contoh Input dan Output NLP Pipeline</h4>
-					<pre><code class="centr nohighlight hljs" data-trim>
+					<pre class="fragment"><code class="centr nohighlight hljs" data-trim>
 				Sembungan adalah sebuah desa yang terletak di kecamatan
 				Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</code></pre>
-					<img src="image/conllu_example.png" />
+					<img class="fragment" src="image/conllu_example.png" />
 				</section>
 
 				<section>
@@ -332,9 +358,9 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</ol>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>Dataset NLP Pipeline</h3>
-					<ul>
+					<ol>
 						<li class="fragment">
 							<div>POS Tag &amp; Dependency</div>
 							<small>UD treebank Indonesia (5,036 kalimat latih + 559 kalimat uji) <a href="https://github.com/UniversalDependencies/UD_Indonesian">https://github.com/UniversalDependencies/UD_Indonesian</a></small>
@@ -347,12 +373,48 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 							<div>NER</div>
 							<small>Dataset kuliah NLP Fasilkom UI 2016 (1,700 kalimat latih  + 426 kalimat uji) dan NER Indonesia (1,835 kalimat latih) <a href="https://github.com/yusufsyaifudin/indonesia-ner">https://github.com/yusufsyaifudin/indonesia-ner</a></small>
 						</li>
-					</ul>
+					</ol>
 				</section>
 
 				<section data-background="white">
 					<h3>Triple Candidate Generator</h3>
 					<img src="image/program_flowchart_triple_candidate_generator.png" />
+				</section>
+
+				<section>
+					<h3>Contoh Pembangkitan Kandidat</h3>
+					<p>Input: CoNLLU</p>
+					<img src="image/conllu_example.png" />
+				</section>
+
+				<section>
+					<h3>Contoh Pembangkitan Kandidat</h3>
+					<p>Output: Kandidat <em>triple</em></p>
+					<div class="pull-left">
+						<pre><code class="nohighlight hljs" data-trim>
+						(Sembungan, adalah, desa)
+						(Sembungan, adalah, terletak)
+						(Sembungan, adalah, kecamatan)
+						(Sembungan, adalah, kabupaten)
+						(Sembungan, adalah, Jawa)
+						(Sembungan, adalah, Tengah)
+						(Sembungan, adalah, Indonesia)
+						(Sembungan, terletak, kecamatan)
+						(Sembungan, terletak, kabupaten)
+						(Sembungan, terletak, Jawa)
+						(Sembungan, terletak, Tengah)
+						(Sembungan, terletak, Indonesia)
+						</code></pre>
+					</div>
+					<div class="pull-right">
+						<pre><code class="nohighlight hljs" data-trim>
+						(desa, terletak, kecamatan)
+						(desa, terletak, kabupaten)
+						(desa, terletak, Jawa)
+						(desa, terletak, Tengah)
+						(desa, terletak, Indonesia)
+						</code></pre>
+					</div>
 				</section>
 
 				<section>
@@ -407,38 +469,112 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
-					<h3>Fitur Klasifikasi</h3>
-					<table id="triple-selector-features">
-						<tbody>
-							<tr>
-								<td>
-									<ol>
-										<li>POS tag dari token Subjek</li>
-										<li>Dependency relation dari token Subjek</li>
-										<li>POS tag dari head token Subjek</li>
-										<li>Named-entity dari token Subjek</li>
-										<li>Jarak Subjek ke token Predikat</li>
-										<li>Dependency relation dari token Subjek ke Predikat</li>
-										<li>POS tag dari token Predikat</li>
-										<li>Dependency relation dari token Predikat</li>
-										<li>POS tag dari head token Predikat</li>
-									</ol>
-								</td>
-								<td>
-									<ol start="10">
-										<li>Jumlah dependents token Predikat</li>
-										<li>POS tag dari token Objek</li>
-										<li>Dependency relation dari token Objek</li>
-										<li>POS tag dari head token Objek</li>
-										<li>Named-entity dari token Objek</li>
-										<li>Jumlah dependents dari token Objek</li>
-										<li>Jarak dari token Objek ke predikat</li>
-										<li>Dependency relation token Objek ke Predikat</li>
-									</ol>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+					<h3>Contoh seleksi <em>triple</em></h3>
+					<p>Input: kandidat <em>triple</em></p>
+					<div class="pull-left">
+						<pre><code class="nohighlight hljs" data-trim>
+						(Sembungan, adalah, desa)
+						(Sembungan, adalah, terletak)
+						(Sembungan, adalah, kecamatan)
+						(Sembungan, adalah, kabupaten)
+						(Sembungan, adalah, Jawa)
+						(Sembungan, adalah, Tengah)
+						(Sembungan, adalah, Indonesia)
+						(Sembungan, terletak, kecamatan)
+						(Sembungan, terletak, kabupaten)
+						(Sembungan, terletak, Jawa)
+						(Sembungan, terletak, Tengah)
+						(Sembungan, terletak, Indonesia)
+						</code></pre>
+					</div>
+					<div class="pull-right">
+						<pre><code class="nohighlight hljs" data-trim>
+						(desa, terletak, kecamatan)
+						(desa, terletak, kabupaten)
+						(desa, terletak, Jawa)
+						(desa, terletak, Tengah)
+						(desa, terletak, Indonesia)
+						</code></pre>
+					</div>
+				</section>
+
+				<section>
+					<h3>Contoh seleksi <em>triple</em></h3>
+					<p>Output: <em>triple</em> yang valid</p>
+					<div class="pull-left">
+						<pre><code class="nohighlight hljs" data-noescape data-trim>
+						<mark class="highlight-block">(Sembungan, adalah, desa)</mark>
+						(Sembungan, adalah, terletak)
+						(Sembungan, adalah, kecamatan)
+						(Sembungan, adalah, kabupaten)
+						(Sembungan, adalah, Jawa)
+						(Sembungan, adalah, Tengah)
+						(Sembungan, adalah, Indonesia)
+						<mark class="highlight-block">(Sembungan, terletak, kecamatan)</mark>
+						<mark class="highlight-block">(Sembungan, terletak, kabupaten)</mark>
+						<mark class="highlight-block">(Sembungan, terletak, Jawa)</mark>
+						(Sembungan, terletak, Tengah)
+						<mark class="highlight-block">(Sembungan, terletak, Indonesia)</mark>
+						</code></pre>
+					</div>
+					<div class="pull-right">
+						<pre><code class="nohighlight data-noescape hljs" data-trim>
+						(desa, terletak, kecamatan)
+						(desa, terletak, kabupaten)
+						(desa, terletak, Jawa)
+						(desa, terletak, Tengah)
+						(desa, terletak, Indonesia)
+						</code></pre>
+					</div>
+				</section>
+
+				<section>
+					<h3>Ekstraksi Fitur</h3>
+					<div class="pull-left" style="font-size: 70%;">
+						<ol>
+							<li>POS tag dari token Subjek</li>
+							<li>POS tag dari head token Subjek</li>
+							<li>POS tag dari token Predikat</li>
+							<li>POS tag dari head token Predikat</li>
+							<li>POS tag dari token Objek</li>
+							<li>POS tag dari head token Objek</li>
+							<li>Dependency relation dari token Subjek</li>
+							<li>Dependency relation dari token Subjek ke Predikat</li>
+							<li>Dependency relation dari token Predikat</li>
+						</ol>
+					</div>
+					<div class="pull-right" style="font-size: 70%;">
+						<ol start="10">
+							<li>Dependency relation dari token Objek</li>
+							<li>Dependency relation token Objek ke Predikat</li>
+							<li>Jumlah dependents token Predikat</li>
+							<li>Jumlah dependents dari token Objek</li>
+							<li>Named-entity dari token Subjek</li>
+							<li>Named-entity dari token Objek</li>
+							<li>Jarak Subjek ke token Predikat</li>
+							<li>Jarak dari token Objek ke predikat</li>
+						</ol>
+					</div>
+				</section>
+
+				<section data-background="white">
+					<h3>Random Forest Classifier</h3>
+					<img src="image/random-forest.png" />
+				</section>
+
+				<section>
+					<h3>
+						<div>Random Forest Classifier</div>
+						<small>Hyperparameters</small>
+					</h3>
+					<ul style="font-size: 80%">
+						<li>Kriteria percabangan (criterion): <em>Gini Impurity</em></li>
+						<li>Jumlah sampel minimal untuk membuat cabang (min_samples_split): 5</li>
+						<li>Jumlah fitur maksimum (max_features): 4 (akar dari jumlah total fitur)</li>
+						<li>Kedalaman maksimum (max_depth): 8</li>
+						<li>Jumlah pohon (n_estimators): 20</li>
+						<li>Bobot kelas (class_weight): <em>balanced</em> (rasio dataset)</li>
+					</ul>
 				</section>
 
 				<section data-background="white">
@@ -447,8 +583,28 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section>
+					<h3>Contoh ekspansi <em>triple</em></h3>
+					<p class="fragment">Input: <em>triple</em> yang valid</p>
+					<pre class="fragment"><code class="nohighlight hljs" data-trim>
+					(Sembungan, adalah, desa)
+					(Sembungan, terletak, kecamatan)
+					(Sembungan, terletak, kabupaten)
+					(Sembungan, terletak, Jawa)
+					(Sembungan, terletak, Indonesia)
+					</code></pre>
+					<p class="fragment">Output: <em>triple</em> berisi klausa</p>
+					<pre class="fragment"><code class="nohighlight hljs" data-noescape data-trim>
+					(Sembungan, adalah, desa)
+					(Sembungan, terletak <mark class="highlight-inline">di</mark>, kecamatan <mark class="highlight-inline">Kejajar</mark>)
+					(Sembungan, terletak <mark class="highlight-inline">di</mark>, kabupaten <mark class="highlight-inline">Wonosobo</mark>)
+					(Sembungan, terletak <mark class="highlight-inline">di</mark>, Jawa <mark class="highlight-inline">Tengah</mark>)
+					(Sembungan, terletak <mark class="highlight-inline">di</mark>, Indonesia)
+					</code></pre>
+				</section>
+
+				<section>
 					<h4>Aturan Ekspasi Token Subjek dan Objek</h4>
-					<table style="font-size: 60%">
+					<table style="font-size: 60%; width: 100%;">
 						<thead>
 							<th>No</th>
 							<th>Kondisi untuk token subjek atau objek</th>
@@ -512,7 +668,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 
 				<section>
 					<h4>Aturan Ekspasi Token Predikat</h4>
-					<table style="font-size: 60%">
+					<table style="font-size: 60%; width: 100%;">
 						<thead>
 							<tr>
 								<th>No</th>
@@ -535,12 +691,12 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</table>
 				</section>
 
-				<section data-background="#ddd">
+				<section class="center" data-background="#ddd">
 					<h2>Implementasi Sistem</h2>
 					<small>Pustaka pemrograman dan demo</small>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>Hasil Implementasi</h3>
 					<ul>
 						<li>
@@ -556,30 +712,43 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</ul>
 				</section>
 
-				<section data-background="#ddd">
+				<section class="center" data-background="#ddd">
 					<h2>Evaluasi dan Analisis</h2>
 					<small>Hasil eksperimen dan analisis</small>
 				</section>
 
 				<section data-background="white">
-					<h4>
-						<div>Evaluasi</div>
+					<h4 style="margin-bottom: 0px;">
+						<div>Evaluasi <em>Triple Selector</em></div>
 						<small>k-Fold Cross Validation (k = 3)</small>
 					</h4>
-					<img src="image/models_performance.png" />
-				</section>
-
-				<section>
-					<h3>Analisis</h3>
-					<p>Hasil eksperimen pertama di mana nilai $F_1$ tertinggi hanya 0.58, mengindikasikan bahwa semua model mengalami kesulitan untuk mempelajari pola \textit{triples} dari \textit{dataset} yang diberikan. Kemungkinan penyebab hasil ini adalah masalah pada model (pemilihan fitur atau algoritma) atau kualitas \textit{dataset} yang digunakan (konflik pola atau ketidaklengkapan pola \textit{dataset}). Untuk memastikan penyebab dari hasil eksperimen pertama ini, \saya~melakukan eksperimen tambahan yaitu menguji tiap model \textit{triple selector} menggunakan \textit{dataset} latih (data yang sama). Hasil cukup baik yang ditunjukkan pada Gambar \ref{fig:models_performance_training} dan Tabel \ref{tab:models_performance_training}, di mana $F_1$ tertinggi \textbf{0.83}, \textit{recall} tertinggi \textbf{0.96} dan \textit{precision} tertinggi \textbf{0.88}, menunjukkan bahwa fitur yang dipilih dan model yang digunakan tidak memiliki masalah (kecuali model linier, \textit{logistic regression}). Oleh karena itu \saya~berargumen bahwa masalah utama terdapat pada \textit{dataset} yang digunakan, yaitu tidak cukupnya pola $\nicefrac{2}{3}$ data yang dipakai melatih untuk mengenali pola sisa $\nicefrac{1}{3}$ data yang dipakai untuk menguji.</p>
+					<img src="image/models_performance.png" style="max-width: 80%; margin-top: 0px;" />
 				</section>
 
 				<section data-background="white">
-					<small>Validasi dengan Data Latih</small>
-					<img src="image/models_performance_training.png" />
+					<h4 style="margin-bottom: 0px;">
+						<div>Evaluasi <em>Triple Selector</em></div>
+						<small>Training Dataset Validation</small>
+					</h4>
+					<img src="image/models_performance_training.png" style="max-width: 80%; margin-top: 0px;" />
 				</section>
 
 				<section>
+					<h3>Analisis Evaluasi <em>Triple Selector</em></h3>
+					<ul>
+						<li class="fragment">Model nonlinier memiliki $F_1$ lebih baik dari model linier</li>
+						<li class="fragment">Model dengan $F_1$ terbaik adalah Random Forest</li>
+						<li class="fragment">Masalah utama terdapat pada dataset:
+							<ul>
+								<li>Pola 66.6% data tidak mencakup pola sisa 33.4%</li>
+								<li>Terdapat sekitar 10-20% <em>noisy data</em></li>
+							</ul>
+						</li>
+						<li class="fragment">Kualitas dataset dapat diperbaiki dengan menambah data &amp; memperbaiki aturan <em>triple candidate generator</em></li>
+					</ul>
+				</section>
+
+				<section class="center">
 					<h3>Uji Waktu Proses</h3>
 					<table>
 						<thead>
@@ -598,41 +767,41 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</table>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>Analisis Uji Waktu Proses</h3>
-					<p>Sebagai tambahan, hasil eksperimen kedua menunjukkan bahwa waktu rata-rata 0.014 detik/kalimat yang dibutuhkan sistem \textit{open IE} untuk mengekstrak \textit{triple} dari dokumen yang berukuran 5,593 kalimat, cukup sebanding dengan sistem lain seperti \textsc{TextRunner} yang membutuhkan 0.036 detik/kalimat \citep{banko2007open}. Hal ini menunjukkan bahwa penggunaan fitur \textit{heavy linguistic} cukup efisien juga digunakan pada dokumen yang berukuran 138 - 5,593 kalimat. Kekurangan dari sistem ini tentu ada pada ekstraksi pada dokumen dengan kalimat kurang dari 138. Selain itu juga kedepannya perlu dikaji sejauh skalabilitas sistem ini dengan melakukan ekstraksi pada dokumen dengan jumlah kalimat lebih banyak.</p>
+					<ul>
+						<li class="fragment">Waktu eksekusi rata-rata terbaik 0.014 kalimat/detik cukup sebanding dengan TextRunner (Banko et al., 2007)</li>
+						<li class="fragment">Fitur-fitur <em>heavy linguistic</em> cukup efisien untuk dokumen 138 - 5,593 kalimat</li>
+						<li class="fragment">Kurang efisien untuk jumlah dokumen kurang dari 138 kalimat</li>
+						<li class="fragment">Perlu diujicoba dengan jumlah dokumen lebih besar</li>
+					</ul>
 				</section>
 
-				<section data-background="#ddd">
+				<section class="center" data-background="#ddd">
 					<h2>Penutup</h2>
 					<small>Kesimpulan dan saran</small>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>Kesimpulan</h3>
-					<ol style="font-size: 17pt">
-						<li>Kombinasi <em>NLP pipeline</em> dasar (<em>POS tagging</em>, <em>lemmatization</em>, <em>NER</em> dan <em>dependency parsing</em>) berbasis <em>Universal Dependency</em>, model heuristik dan <em>supervised learning</em> dapat melakukan <em>open domain information extraction</em> (<em>open IE</em>) dalam format <em>triple</em> (subjek, predikat, objek) dari teks bahasa Indonesia secara otomatis</li>
-
-						<li>Model <em>supervised-learning</em> yang paling sesuai untuk melakukan seleksi <em>triple</em> berdasarkan fitur berbasis <em>POS tag</em>, <em>named-entity</em> dan <em>dependency relation</em> adalah <em>random forest</em>, yang merupakan <em>ensemble classifier</em>. Model ini mencapai nilai $F_1$ 0.58, yang lebih tinggi dari tiga model linier dan nonlinier lain yang diujikan</li>
-
-						<li>Sistem <em>open IE</em> yang diajukan dapat melakukan ekstraksi 19,403 <em>triple</em> dari dokumen yang terdiri atas 5,593 kalimat bahasa Indonesia dalam waktu 78.6 detik atau 0.014 detik/kalimat. Dapat disimpulkan bahwa sistem ini cukup efisien untuk digunakan pada dokumen berukuran lebih besar dari 138 kalimat dan kurang dari 5,593 kalimat.</li>
+					<ol>
+						<li class="fragment">Kombinasi <em>NLP pipeline</em> dasar, model heuristik dan <em>supervised learning</em> dapat melakukan <em>open domain information extraction</em> dari teks bahasa Indonesia secara otomatis</li>
+						<li class="fragment">Model <em>supervised-learning</em> yang paling sesuai untuk <em>triple selector</em> adalah <em>Random Forest</em> (<em>ensemble classifier</em>) dengan mencapai nilai $F_1$ 0.58</li>
+						<li class="fragment">Sistem yang dihasilkan cukup efisien untuk digunakan pada dokumen berukuran 138 - 5,593 kalimat.</li>
 					</ol>
 				</section>
 
 				<section>
 					<h3>Saran</h3>
-					<ol style="font-size: 17pt">
-						<li>Memperbaiki kualitas <em>dataset</em> untuk melatih <em>triple selector</em> dengan menambah lebih banyak data</li>
-
-						<li>Mengembangkan <em>triple candidate generator</em> untuk bisa mengekstraksi kandidat <em>triple</em> implisit dan mengurangi kandidat <em>triple</em> yang invalid</li>
-
-						<li>Menggunakan kombinasi antara <em>ensemble classifier</em> seperti <em>random forest</em> dan <em>classifier</em> berpresisi tinggi seperti SVM sebagai <em>triple selector</em> untuk meningkatkan <em>precision</em> dan <em>$F_1$ score</em></li>
-
-						<li>Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar (berisi lebih banyak kaliat) serta membangun <em>dataset</em> untuk bisa mengevaluasi keseluruhan sistem secara lebih <em>reliable</em></li>
+					<ol>
+						<li class="fragment">Menambah lebih banyak dataset <em>triple selector</em></li>
+						<li class="fragment">Mengembangkan <em>triple candidate generator</em> untuk bisa mengekstraksi kandidat <em>triple</em> implisit dan mengurangi kandidat <em>triple</em> yang invalid</li>
+						<li class="fragment">Menggunakan kombinasi antara <em>ensemble classifier</em> seperti <em>random forest</em> dan <em>classifier</em> berpresisi tinggi seperti SVM sebagai <em>triple selector</em></li>
+						<li class="fragment">Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar</li>
 					</ol>
 				</section>
 
-				<section>
+				<section class="center" data-background="#ddd">
 					<h2>Sekian &amp; Terima Kasih</h2>
 				</section>
 
@@ -650,13 +819,14 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				controls: true,
 				progress: true,
 				history: true,
-				center: true,
+				center: false,
 				transition: 'fade', // none/fade/slide/convex/concave/zoom
 				dependencies: [
 					{ src: 'plugin/markdown/marked.js' },
 					{ src: 'plugin/markdown/markdown.js' },
 					{ src: 'plugin/notes/notes.js', async: true },
-					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/math/math.js', async: true }
 				]
 			});
 		</script>
