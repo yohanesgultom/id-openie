@@ -22,8 +22,8 @@ gradlew
 gradlew.bat
 scripts/*.tsv
 scripts/*.csv
+scripts/*.pkl
 !scripts/triple-selector.train.csv
-!scripts/triples-classifier-model.pkl
 src/main/resources/*
 src/test/resources/*
 !src/main/resources/*.sql

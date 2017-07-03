@@ -68,6 +68,67 @@ experiments = [
     },
 ]
 
+feature_sets = [
+    {
+        'name': '1',
+        'desc': 'Current POS tag + Head POS tag',
+        'features': [0, 2, 10, 12, 17, 19]
+    },
+    {
+        'name': '2',
+        'desc': 'Current POS tag + Head POS tag + DepRel',
+        'features': [0, 1, 2, 10, 11, 12, 17, 18, 19]
+    },
+    {
+        'name': '3',
+        'desc': 'Current POS tag + Head POS tag + DepRel + Named-Entity',
+        'features': [0, 1, 2, 3, 10, 11, 12, 13, 17, 18, 19, 20]
+    },
+    {
+        'name': '4',
+        'desc': 'Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate',
+        'features': [0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 19, 20, 22]
+    },
+    {
+        'name': '5',
+        'desc': 'Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count',
+        'features': [0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22]
+    },
+    {
+        'name': '6',
+        'desc': 'Current POS tag + Head POS tag + DepRel + Distance from Predicate + Dependents Count + Dependency with Predicate',
+        'features': [0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 21, 22, 23]
+    },
+    {
+        'name': '7',
+        'desc': 'Current POS tag + Head POS tag + DepRel + Subject and Object Named-Entities + Distance from Predicate + Dependents Count Predicate and Object + Dependency with Predicate',
+        'features': [0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]
+    },
+    {
+        'name': 'All',
+        'desc': 'Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count + Neighbouring POS tags + Dependency with Predicate',
+        'features': range(27)
+    }
+]
+
+def extract_features(dataset, selected_features):
+    total_features = dataset.shape[1] - 1
+
+    print('Total features: {}'.format(total_features))
+    print('Selected features: {} ({})'.format(selected_features, len(selected_features)))
+
+    X = dataset[:, selected_features]
+    y = dataset[:, -1]
+    scaler = StandardScaler().fit(X)
+    X = scaler.transform(X)
+
+    # collect dataset statistics
+    counter = collections.Counter(y)
+    print(counter)
+    pos = counter[1] * 1.0 / (counter[0] + counter[1])
+    neg = 1.0 - pos
+    return X, y, scaler
+
 
 def cross_validate_precision_recall_fbeta(model, X, y, cv=None):
     precision = cross_val_score(model, X, y, cv=cv, scoring='precision').mean()
@@ -80,7 +141,7 @@ def cross_validate_precision_recall_fbeta(model, X, y, cv=None):
     return precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std
 
 
-def plot_model_performance_comparison(experiments):
+def plot_model_comparison(experiments, title, score_field='best_score'):
     fig, ax = plt.subplots()
 
     # Example data
@@ -92,9 +153,9 @@ def plot_model_performance_comparison(experiments):
     }
     for exp in experiments:
         x_data.append(exp['name'])
-        y_dict['precision']['data'].append(exp['best_score']['precision'])
-        y_dict['recall']['data'].append(exp['best_score']['recall'])
-        y_dict['f1']['data'].append(exp['best_score']['f1'])
+        y_dict['precision']['data'].append(exp[score_field]['precision'])
+        y_dict['recall']['data'].append(exp[score_field]['recall'])
+        y_dict['f1']['data'].append(exp[score_field]['f1'])
 
     x = np.arange(len(x_data))
     width = 0.20
@@ -107,48 +168,36 @@ def plot_model_performance_comparison(experiments):
     ax.set_xticks(x + width * 2)
     ax.set_xticklabels(x_data)
     ax.set_yticks(np.arange(0.0, 1.1, 0.1))
-    ax.set_title('Triple Selector Models Performance')
+    ax.set_title(title)
 
     lgd = plt.legend(handles=legend_handles)
     plt.show()
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train triples classifier')
     parser.add_argument('dataset_path', help='Dataset path')
     parser.add_argument('-o', '--output_path', help='Output model path', default='triples-classifier-model.pkl')
     parser.add_argument('-s', '--scaler_output_path', help='Output scaler path', default='triples-classifier-scaler.pkl')
-    parser.add_argument('-b', '--best', help='search parameters that gives best model', action='store_true')
+    parser.add_argument('-m', '--mode', help='select mode', choices=['compare_models', 'compare_features', 'train_model'], default='train_model')
     parser.add_argument('--nocv', help='no cross-validation. training accuracy only', action='store_true')
     args = parser.parse_args()
 
     # load dataset
     dataset = np.genfromtxt(args.dataset_path, delimiter=',', dtype='float32')
-    total_features = dataset.shape[1] - 1
-
-    # feature selection
-    selected_features = get_best_features()
-    print('Total features: {}'.format(total_features))
-    print('Selected features: {} ({})'.format(selected_features, len(selected_features)))
-
-    X = dataset[:, selected_features]
-    y = dataset[:, -1]
-    scaler = StandardScaler().fit(X)
-    X = scaler.transform(X)
-    joblib.dump(scaler, args.scaler_output_path)
-
-    # collect dataset statistics
-    counter = collections.Counter(y)
-    print(counter)
-    pos = counter[1] * 1.0 / (counter[0] + counter[1])
-    neg = 1.0 - pos
 
     # exhaustive best parameters search
     cv = None
     print('')
-    if args.best:
+    if args.mode == 'compare_models':
         best_score = 0.0
         best_model = None
         count = 0
+
+        # feature selection
+        X, y, scaler = extract_features(dataset, get_best_features())
+        joblib.dump(scaler, args.scaler_output_path)
+
         for experiment in experiments:
             search = GridSearchCV(
                 estimator=experiment['model'],
@@ -162,7 +211,7 @@ if __name__ == '__main__':
                 precision, recall, fbeta, support = precision_recall_fscore_support(y, y_pred, average='binary')
                 fbeta_min = fbeta_max = fbeta_std = fbeta
             else:
-                precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(search.best_estimator_, X, y)
+                precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(search.best_estimator_, X, y, cv)
             print(search.best_estimator_)
             print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
                 precision,
@@ -184,13 +233,57 @@ if __name__ == '__main__':
         model = best_model
 
         # show plot
-        plot_model_performance_comparison(experiments)
+        plot_model_comparison(experiments, 'Triple Selector Models Performance', score_field='best_score')
 
-    else:
-        model = RandomForestClassifier(max_depth=8, class_weight='balanced', n_estimators=20, min_samples_split=5, max_features='auto', random_state=77)
+    elif args.mode == 'compare_features':
+        best_params = experiments[3]['params'][0]
+        model = RandomForestClassifier(
+            max_depth=best_params['max_depth'][0],
+            class_weight=best_params['class_weight'][0],
+            n_estimators=best_params['n_estimators'][0],
+            min_samples_split=best_params['min_samples_split'][0],
+            max_features=best_params['max_features'][0],
+            random_state=best_params['random_state'][0]
+        )
+
+        for feature_set in feature_sets:
+            X, y, scaler = extract_features(dataset, feature_set['features'])
+            precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y, cv)
+            feature_set['cv_score'] = {'precision': precision, 'recall': recall, 'f1': fbeta}
+            print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
+                precision,
+                recall,
+                fbeta,
+                fbeta_min,
+                fbeta_max,
+                fbeta_std,
+            ))
+
+        # show plot
+        plot_model_comparison(feature_sets, 'Triple Selector Feature Sets Performance', score_field='cv_score')
+
+        print('\nInformation:')
+        for feature_set in feature_sets:
+            print('{}\t{}\t{}'.format(feature_set['name'], feature_set['desc'], feature_set['features']))
+
+    else: # if args.mode == 'train_model'
+
+        # feature selection
+        X, y, scaler = extract_features(dataset, get_best_features())
+        joblib.dump(scaler, args.scaler_output_path)
+
+        best_params = experiments[3]['params'][0]
+        model = RandomForestClassifier(
+            max_depth=best_params['max_depth'][0],
+            class_weight=best_params['class_weight'][0],
+            n_estimators=best_params['n_estimators'][0],
+            min_samples_split=best_params['min_samples_split'][0],
+            max_features=best_params['max_features'][0],
+            random_state=best_params['random_state'][0]
+        )
 
         # cross validate best model to compare score
-        precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y)
+        precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y, cv)
         print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
             precision,
             recall,
@@ -201,6 +294,7 @@ if __name__ == '__main__':
         ))
 
     # save model to file
-    joblib.dump(model, args.output_path)
-    print('Model saved to {}'.format(args.output_path))
-    print('Scaler saved to {}'.format(args.scaler_output_path))
+    if model:
+        joblib.dump(model, args.output_path)
+        print('Model saved to {}'.format(args.output_path))
+        print('Scaler saved to {}'.format(args.scaler_output_path))

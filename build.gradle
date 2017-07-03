@@ -20,10 +20,10 @@ distributions {
             from('scripts') {
                 include('tripletools.py')
                 include('extract_triples.py')
-                include('triples-classifier-model.pkl')
-                include('triples-classifier-scaler.pkl')
             }
             from('data') {
+                include('triples-classifier-model.pkl')
+                include('triples-classifier-scaler.pkl')
                 include('plain.txt')
                 include('doc1.txt')
                 include('doc2.txt')
