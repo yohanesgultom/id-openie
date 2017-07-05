@@ -736,7 +736,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				<section>
 					<h3>Analisis Evaluasi <em>Triple Selector</em></h3>
 					<ul>
-						<li class="fragment">Model nonlinier memiliki $F_1$ lebih baik dari model linier</li>
+						<li>Model nonlinier mencapai $F_1$ lebih baik dari model linier</li>
 						<li class="fragment">Model dengan $F_1$ terbaik adalah Random Forest</li>
 						<li class="fragment">Masalah utama terdapat pada dataset:
 							<ul>
@@ -746,6 +746,98 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 						</li>
 						<li class="fragment">Kualitas dataset dapat diperbaiki dengan menambah data &amp; memperbaiki aturan <em>triple candidate generator</em></li>
 					</ul>
+				</section>
+
+				<section>
+					<h4>
+						<div>Evaluasi <em>Triple Selector</em></div>
+						<small>Himpunan Fitur Klasifikasi</small>
+					</h4>
+					<table class="pull-left" style="font-size: 50%">
+						<tr><td>0</td><td>Subject token's POS tag</td></tr>
+						<tr><td>1</td><td>Subject token's dependency relation</td></tr>
+						<tr><td>2</td><td>Subject token's head POS tag</td></tr>
+						<tr><td>3</td><td>Subject token's named entity</td></tr>
+						<tr><td>4</td><td>Subject token's dependents count</td></tr>
+						<tr><td>5</td><td>Subject token's distance from predicate</td></tr>
+						<tr><td>6</td><td>Subject token's dependency with predicate</td></tr>
+						<tr><td>7</td><td>Subject token's previous neighbour's POS tag</td></tr>
+						<tr><td>8</td><td>Subject token's next neighbour's POS tag</td></tr>
+						<tr><td>9</td><td>Subject token's nearest ADP token</td></tr>
+						<tr><td>10</td><td>Predicate token's POS tag</td></tr>
+						<tr><td>11</td><td>Predicate token's dependency relation</td></tr>
+						<tr><td>12</td><td>Predicate token's head POS tag</td></tr>
+						<tr><td>13</td><td>Predicate token's named entity</td></tr>
+					</table>
+
+					<table class="pull-right" style="font-size: 50%">
+						<tr><td>14</td><td>Predicate token's dependents count</td></tr>
+						<tr><td>15</td><td>Predicate token's previous neighbour's POS tag</td></tr>
+						<tr><td>16</td><td>Predicate token's next neighbour's POS tag</td></tr>
+						<tr><td>17</td><td>Object token's POS tag</td></tr>
+						<tr><td>18</td><td>Object token's dependency relation</td></tr>
+						<tr><td>19</td><td>Object token's head POS tag</td></tr>
+						<tr><td>20</td><td>Object token's named entity</td></tr>
+						<tr><td>21</td><td>Object token's dependents count</td></tr>
+						<tr><td>22</td><td>Object token's distance from predicate</td></tr>
+						<tr><td>23</td><td>Object token's dependency with predicate</td></tr>
+						<tr><td>24</td><td>Object token's previous neighbour's POS tag</td></tr>
+						<tr><td>25</td><td>Object token's next neighbour's POS tag</td></tr>
+						<tr><td>26</td><td>Object token's nearest ADP token</td></tr>
+						<tr><td colspan="3"></td></tr>
+					</table>
+				</section>
+
+				<section>
+					<h4>
+						<div>Evaluasi <em>Triple Selector</em></div>
+						<small>Variasi Kelompok Fitur Klasifikasi</small>
+					</h4>
+					<table style="font-size: 50%">
+						<thead>
+							<tr><th>No</th><th>Deskripsi</th><th>Indeks Fitur</th></tr>
+						</thead>
+						<tbody>
+							<tr><td>1</td><td>Current POS tag + Head POS tag</td><td>[0, 2, 10, 12, 17, 19]</td></tr>
+							<tr><td>2</td><td>Current POS tag + Head POS tag + DepRel</td><td>[0, 1, 2, 10, 11, 12, 17, 18, 19]</td></tr>
+							<tr><td>3</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity</td><td>[0, 1, 2, 3, 10, 11, 12, 13, 17, 18, 19, 20]</td></tr>
+							<tr><td>4</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate</td><td>[0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 19, 20, 22]</td></tr>
+							<tr><td>5</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count</td><td>[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22]</td></tr>
+							<tr><td>6</td><td>Current POS tag + Head POS tag + DepRel + Distance from Predicate + Dependents Count + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 21, 22, 23]</td></tr>
+							<tr><td>7</td><td>Current POS tag + Head POS tag + DepRel + Subject and Object Named-Entities + Distance from Predicate + Dependents Count Predicate and Object + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]</td></tr>
+							<tr><td>8</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count + Neighbouring POS tags + Dependency with Predicate</td><td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]</td></tr>
+						</tbody>
+					</table>
+				</section>
+
+				<section data-background="white">
+					<h4 style="margin-bottom: 0px;">
+						<div>Evaluasi <em>Triple Selector</em></div>
+						<small>Variasi Kelompok Fitur Klasifikasi</small>
+					</h4>
+					<img src="image/features_performance.png" style="width: 80%; max-width: 100%; margin-top: 0px;" />
+				</section>
+
+				<section>
+					<h4 style="margin-bottom: 0px;">
+						<div>Evaluasi <em>Triple Selector</em></div>
+						<small>Variasi Kelompok Fitur Klasifikasi</small>
+					</h4>
+					<table style="font-size: 50%">
+						<thead>
+							<tr><th>No</th><th>Deskripsi</th><th>Indeks Fitur</th></tr>
+						</thead>
+						<tbody>
+							<tr><td>1</td><td>Current POS tag + Head POS tag</td><td>[0, 2, 10, 12, 17, 19]</td></tr>
+							<tr><td>2</td><td>Current POS tag + Head POS tag + DepRel</td><td>[0, 1, 2, 10, 11, 12, 17, 18, 19]</td></tr>
+							<tr><td>3</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity</td><td>[0, 1, 2, 3, 10, 11, 12, 13, 17, 18, 19, 20]</td></tr>
+							<tr><td>4</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate</td><td>[0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 19, 20, 22]</td></tr>
+							<tr><td>5</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count</td><td>[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22]</td></tr>
+							<tr class="yellow"><td>6</td><td>Current POS tag + Head POS tag + DepRel + Distance from Predicate + Dependents Count + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 21, 22, 23]</td></tr>
+							<tr><td>7</td><td>Current POS tag + Head POS tag + DepRel + Subject and Object Named-Entities + Distance from Predicate + Dependents Count Predicate and Object + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]</td></tr>
+							<tr><td>8</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count + Neighbouring POS tags + Dependency with Predicate</td><td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]</td></tr>
+						</tbody>
+					</table>
 				</section>
 
 				<section class="center">
