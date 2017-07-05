@@ -26,7 +26,7 @@ To build from source:
   * [Gradle](https://gradle.org/)
   * [Python 2.7](https://www.python.org/)
   * [Pip](https://pip.pypa.io)
-  * [Tkinter](https://wiki.python.org/moin/TkInter) (or `python-tk` in Ubuntu) to display comparison charts 
+  * [Tkinter](https://wiki.python.org/moin/TkInter) (or `python-tk` in Ubuntu) to display comparison charts
 * Download and clone this repo
 * Install Python dependencies: `pip install -r scripts/requirements.txt`
 * Run build command from repo directory: `gradle clean build`
@@ -63,6 +63,8 @@ optional arguments:
 Example:
 
 ```
+python extract_triples.py -o plain.triples.json plain.txt
+python extract_triples.py -o plain.triples.json -f json plain.txt
 python extract_triples.py -o plain.triples.tsv -f tsv plain.txt
 ```
 
