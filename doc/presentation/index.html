@@ -82,9 +82,10 @@
 			<div class="slides">
 
 				<section class="center" data-background="#ddd">
+					<p>Presentasi Tesis</p>
 					<h2><em>Open Domain Information Extraction</em> Otomatis dari Teks Bahasa Indonesia</h2>
 					<small>
-						Oleh: Yohanes Gultom - 1506706345<br/>
+						Oleh: Yohanes Gultom - 1506706345<br>
 						Pembimbing: Ir. Wahyu Catur Wibowo M.Sc., Ph.D.
 					</small>
 				</section>
@@ -108,7 +109,7 @@
 				<section class="center">
 					<h3>Latar Belakang</h3>
 					<ul>
-						<li class="fragment">Kebutuhan akan proses ekstraksi informasi <span class="yellow">otomatis</span> dari dokumen <span class="yellow">lintas domain</span></li>
+						<li>Kebutuhan akan proses ekstraksi informasi <span class="yellow">otomatis</span> dari dokumen <span class="yellow">lintas domain</span></li>
 						<li class="fragment"><em>Open domain information extraction</em> (<em class="yellow">open IE</em>) dapat mengekstrak informasi dari dokumen lintas domain</li>
 						<li class="fragment">Belum ada sistem <em>open IE</em> untuk <span class="yellow">bahasa Indonesia</span></li>
 					</ul>
@@ -116,8 +117,8 @@
 
 				<section class="center">
 					<h3>Rumusan Masalah</h3>
-					<p class="fragment">Input</p>
-					<pre class="fragment"><code class="nohighlight hljs" data-trim>
+					<p>Input</p>
+					<pre><code class="nohighlight hljs" data-trim>
 Sembungan adalah sebuah desa yang terletak di kecamatan
 Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					</code></pre>
@@ -142,7 +143,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 					<h3>Perbandingan Karakteristik</h3>
 					<table id="open-ie-paradigm">
 						<thead>
-							<tr class="fragment">
+							<tr>
 								<th></th>
 								<th><span class="grey">Information Extraction</span></th>
 								<th>Open&nbsp;IE</th>
@@ -160,7 +161,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 								<th>Format</th>
 								<td><span class="grey">Tergantung domain <br> (Cowie and Lehnert, 1996)</span></td>
 								<td>Triples <br> (Banko et al., 2007)</td>
-								<td><span class="grey">RDF Triples <br> (Auer et al., 2007; Exner and Nugues, 2014)</span></td>
+								<td title="Resource Description Framework (RDF) W3C, 2004 (draft), 2014 (update)"><span class="grey">RDF Triples <br> (Auer et al., 2007; Exner and Nugues, 2014)</span></td>
 							</tr>
 							<tr class="fragment">
 								<th>Ontologi</th>
@@ -184,7 +185,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 						</li>
 						<li class="fragment">
 							<strong>Belajar</strong> (<em>learn</em>)
-							<div><small>Melatih <em>classifier</em> untuk mengekstrak triple dari kalimat</small></div>
+							<div><small>Melatih <em>classifier</em> untuk mengekstrak <em>triple</em> dari kalimat</small></div>
 						</li>
 						<li class="fragment">
 							<strong>Ekstrak</strong> (<em>extract</em>)
@@ -434,7 +435,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 										<li><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</li>
 										<li><em>Token</em> bukan termasuk (“yang”, “adalah”)</li>
 										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</li>
-										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</li>
+										<li><em>Dependency</em> dari <em>token</em> termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</li>
 									</ul>
 								</td>
 							</tr>
@@ -455,7 +456,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 										<li><em>POS tag</em> <em>token</em> termasuk (PROPN, NOUN, PRON, VERB)</li>
 										<li><em>Token</em> bukan termasuk (“yang”, “adalah”)</li>
 										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”)</li>
-										<li><em>Dependency</em> dari <em>token</em> bukan termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</li>
+										<li><em>Dependency</em> dari <em>token</em> termasuk (“compound”, “name”) tapi berjarak <span class="math inline">&gt;</span> 2 dari <em>head</em>-nya</li>
 									</ul>
 								</td>
 							</tr>
@@ -734,8 +735,8 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				</section>
 
 				<section class="center">
-					<h2>Analisis Evaluasi <em>Triple Selector</em></h2>
-					<ul>
+					<h3>Analisis Evaluasi <em>Triple Selector</em></h3>
+					<ul style="font-size: 80%">
 						<li>Model nonlinier mencapai $F_1$ lebih baik dari model linier</li>
 						<li class="fragment">Model dengan $F_1$ terbaik adalah Random Forest</li>
 						<li class="fragment">Masalah utama terdapat pada dataset:
@@ -754,36 +755,36 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 						<small>Himpunan Fitur Klasifikasi</small>
 					</h4>
 					<table class="pull-left" style="font-size: 50%">
-						<tr><td>0</td><td>Subject token's POS tag</td></tr>
-						<tr><td>1</td><td>Subject token's dependency relation</td></tr>
-						<tr><td>2</td><td>Subject token's head POS tag</td></tr>
-						<tr><td>3</td><td>Subject token's named entity</td></tr>
-						<tr><td>4</td><td>Subject token's dependents count</td></tr>
-						<tr><td>5</td><td>Subject token's distance from predicate</td></tr>
-						<tr><td>6</td><td>Subject token's dependency with predicate</td></tr>
-						<tr><td>7</td><td>Subject token's previous neighbour's POS tag</td></tr>
-						<tr><td>8</td><td>Subject token's next neighbour's POS tag</td></tr>
-						<tr><td>9</td><td>Subject token's nearest ADP token</td></tr>
-						<tr><td>10</td><td>Predicate token's POS tag</td></tr>
-						<tr><td>11</td><td>Predicate token's dependency relation</td></tr>
-						<tr><td>12</td><td>Predicate token's head POS tag</td></tr>
-						<tr><td>13</td><td>Predicate token's named entity</td></tr>
+						<tr><td>0</td><td>POS tag token Subjek</td></tr>
+						<tr><td>1</td><td>Relasi token Subjek dengan head</td></tr>
+						<tr><td>2</td><td>POS tag head token Subjek</td></tr>
+						<tr><td>3</td><td>Named-entity token Subjek</td></tr>
+						<tr><td>4</td><td>Jumlah dependents token Subjek</td></tr>
+						<tr><td>5</td><td>Jarak Predikat dari token Subjek</td></tr>
+						<tr><td>6</td><td>Adanya relasi token Subjek dengan Predikat</td></tr>
+						<tr><td>7</td><td>POS tag token sebelum token Subjek</td></tr>
+						<tr><td>8</td><td>POS tag token setelah Subjek</td></tr>
+						<tr><td>9</td><td>Token POS tag "ADP" terdekat dengan Subjek</td></tr>
+						<tr><td>10</td><td>POS tag token Predikat</td></tr>
+						<tr><td>11</td><td>Relasi token Predikat dengan head</td></tr>
+						<tr><td>12</td><td>POS tag head token Predikat</td></tr>
+						<tr><td>13</td><td>Named entity token Predikat</td></tr>
 					</table>
 
 					<table class="pull-right" style="font-size: 50%">
-						<tr><td>14</td><td>Predicate token's dependents count</td></tr>
-						<tr><td>15</td><td>Predicate token's previous neighbour's POS tag</td></tr>
-						<tr><td>16</td><td>Predicate token's next neighbour's POS tag</td></tr>
-						<tr><td>17</td><td>Object token's POS tag</td></tr>
-						<tr><td>18</td><td>Object token's dependency relation</td></tr>
-						<tr><td>19</td><td>Object token's head POS tag</td></tr>
-						<tr><td>20</td><td>Object token's named entity</td></tr>
-						<tr><td>21</td><td>Object token's dependents count</td></tr>
-						<tr><td>22</td><td>Object token's distance from predicate</td></tr>
-						<tr><td>23</td><td>Object token's dependency with predicate</td></tr>
-						<tr><td>24</td><td>Object token's previous neighbour's POS tag</td></tr>
-						<tr><td>25</td><td>Object token's next neighbour's POS tag</td></tr>
-						<tr><td>26</td><td>Object token's nearest ADP token</td></tr>
+						<tr><td>14</td><td>Jumlah dependents Token Predikat</td></tr>
+						<tr><td>15</td><td>POS tag token sebelum token Predikat</td></tr>
+						<tr><td>16</td><td>POS tag token setelah token Predikat</td></tr>
+						<tr><td>17</td><td>POS tag token Objek</td></tr>
+						<tr><td>18</td><td>Relasi token Objek dengan head</td></tr>
+						<tr><td>19</td><td>POS tag head token Objek</td></tr>
+						<tr><td>20</td><td>Named-entity token Objek</td></tr>
+						<tr><td>21</td><td>Jumlah dependents token Objek</td></tr>
+						<tr><td>22</td><td>Jarak Predikat dari token Objek</td></tr>
+						<tr><td>23</td><td>Adanya relasi token Objek dengan Predikat</td></tr>
+						<tr><td>24</td><td>POS tag token sebelum token Objek</td></tr>
+						<tr><td>25</td><td>POS tag token setelah token Objek</td></tr>
+						<tr><td>26</td><td>Token POS tag "ADP" terdekat dengan Objek</td></tr>
 						<tr><td colspan="3"></td></tr>
 					</table>
 				</section>
@@ -798,14 +799,14 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 							<tr><th>No</th><th>Deskripsi</th><th>Indeks Fitur</th></tr>
 						</thead>
 						<tbody>
-							<tr><td>1</td><td>Current POS tag + Head POS tag</td><td>[0, 2, 10, 12, 17, 19]</td></tr>
-							<tr><td>2</td><td>Current POS tag + Head POS tag + DepRel</td><td>[0, 1, 2, 10, 11, 12, 17, 18, 19]</td></tr>
-							<tr><td>3</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity</td><td>[0, 1, 2, 3, 10, 11, 12, 13, 17, 18, 19, 20]</td></tr>
-							<tr><td>4</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate</td><td>[0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 19, 20, 22]</td></tr>
-							<tr><td>5</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count</td><td>[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22]</td></tr>
-							<tr><td>6</td><td>Current POS tag + Head POS tag + DepRel + Distance from Predicate + Dependents Count + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 21, 22, 23]</td></tr>
-							<tr><td>7</td><td>Current POS tag + Head POS tag + DepRel + Subject and Object Named-Entities + Distance from Predicate + Dependents Count Predicate and Object + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]</td></tr>
-							<tr><td>8</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count + Neighbouring POS tags + Dependency with Predicate</td><td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]</td></tr>
+							<tr><td>1</td><td>POS tag token + POS tag head</td><td>[0, 2, 10, 12, 17, 19]</td></tr>
+							<tr><td>2</td><td>POS tag token + POS tag head + Relasi</td><td>[0, 1, 2, 10, 11, 12, 17, 18, 19]</td></tr>
+							<tr><td>3</td><td>POS tag token + POS tag head + Relasi + Named-Entity</td><td>[0, 1, 2, 3, 10, 11, 12, 13, 17, 18, 19, 20]</td></tr>
+							<tr><td>4</td><td>POS tag token + POS tag head + Relasi + Named-Entity + Jarak dari Predikat</td><td>[0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 19, 20, 22]</td></tr>
+							<tr><td>5</td><td>POS tag token + POS tag head + Relasi + Named-Entity + Jarak dari Predikat + Jumlah dependents</td><td>[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22]</td></tr>
+							<tr><td>6</td><td>POS tag token + POS tag head + Relasi + Jarak dari Predikat + Jumlah dependents + Adanya relasi dengan Predikat</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 21, 22, 23]</td></tr>
+							<tr><td>7</td><td>POS tag token + POS tag head + Relasi + Subjek and Objek Named-Entities + Jarak dari Predikat + Jumlah dependents Predikat and Objek + Adanya relasi dengan Predikat</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]</td></tr>
+							<tr><td>8</td><td>POS tag token + POS tag head + Relasi + Named-Entity + Jarak dari Predikat + Jumlah dependents + POS tag berdekatan + Adanya relasi dengan Predikat</td><td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]</td></tr>
 						</tbody>
 					</table>
 				</section>
@@ -815,7 +816,7 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 						<div>Evaluasi <em>Triple Selector</em></div>
 						<small>Variasi Kelompok Fitur Klasifikasi</small>
 					</h4>
-					<img src="image/features_performance.png" style="width: 80%; max-width: 100%; margin-top: 0px;" />
+					<img src="images/features_performance.png" style="width: 80%; max-width: 100%; margin-top: 0px;" />
 				</section>
 
 				<section>
@@ -828,16 +829,21 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 							<tr><th>No</th><th>Deskripsi</th><th>Indeks Fitur</th></tr>
 						</thead>
 						<tbody>
-							<tr><td>1</td><td>Current POS tag + Head POS tag</td><td>[0, 2, 10, 12, 17, 19]</td></tr>
-							<tr><td>2</td><td>Current POS tag + Head POS tag + DepRel</td><td>[0, 1, 2, 10, 11, 12, 17, 18, 19]</td></tr>
-							<tr><td>3</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity</td><td>[0, 1, 2, 3, 10, 11, 12, 13, 17, 18, 19, 20]</td></tr>
-							<tr><td>4</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate</td><td>[0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 19, 20, 22]</td></tr>
-							<tr><td>5</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count</td><td>[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22]</td></tr>
-							<tr><td>6</td><td>Current POS tag + Head POS tag + DepRel + Distance from Predicate + Dependents Count + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 21, 22, 23]</td></tr>
-							<tr class="yellow"><td>7</td><td>Current POS tag + Head POS tag + DepRel + Subject and Object Named-Entities + Distance from Predicate + Dependents Count Predicate and Object + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]</td></tr>
-							<tr><td>8</td><td>Current POS tag + Head POS tag + DepRel + Named-Entity + Distance from Predicate + Dependents Count + Neighbouring POS tags + Dependency with Predicate</td><td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]</td></tr>
+							<tr><td>1</td><td>POS tag token + POS tag head</td><td>[0, 2, 10, 12, 17, 19]</td></tr>
+							<tr><td>2</td><td>POS tag token + POS tag head + DepRel</td><td>[0, 1, 2, 10, 11, 12, 17, 18, 19]</td></tr>
+							<tr><td>3</td><td>POS tag token + POS tag head + DepRel + Named-Entity</td><td>[0, 1, 2, 3, 10, 11, 12, 13, 17, 18, 19, 20]</td></tr>
+							<tr><td>4</td><td>POS tag token + POS tag head + DepRel + Named-Entity + Jarak dari Predikat</td><td>[0, 1, 2, 3, 5, 10, 11, 12, 13, 17, 18, 19, 20, 22]</td></tr>
+							<tr><td>5</td><td>POS tag token + POS tag head + DepRel + Named-Entity + Jarak dari Predikat + Jumlah dependents</td><td>[0, 1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22]</td></tr>
+							<tr><td>6</td><td>POS tag token + POS tag head + DepRel + Jarak dari Predikat + Jumlah dependents + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 21, 22, 23]</td></tr>
+							<tr class="yellow"><td>7</td><td>POS tag token + POS tag head + DepRel + Subject and Object Named-Entities + Jarak dari Predikat + Jumlah dependents Predicate and Object + Dependency with Predicate</td><td>[0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]</td></tr>
+							<tr><td>8</td><td>POS tag token + POS tag head + DepRel + Named-Entity + Jarak dari Predikat + Jumlah dependents + Neighbouring POS tags + Dependency with Predicate</td><td>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]</td></tr>
 						</tbody>
 					</table>
+				</section>
+
+				<section data-background="white">
+					<h3>Uji Waktu Proses</h3>
+					<img src="images/extraction_performance.png" style="max-width: 100%; width: 70%;"/>
 				</section>
 
 				<section class="center">
@@ -877,19 +883,21 @@ Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.
 				<section class="center">
 					<h3>Kesimpulan</h3>
 					<ol>
-						<li class="fragment">Kombinasi <em>NLP pipeline</em> dasar, model heuristik dan <em>supervised learning</em> dapat melakukan <em>open domain information extraction</em> dari teks bahasa Indonesia secara otomatis</li>
-						<li class="fragment">Model <em>supervised-learning</em> yang paling sesuai untuk <em>triple selector</em> adalah <em>Random Forest</em> (<em>ensemble classifier</em>) dengan mencapai nilai $F_1$ 0.58</li>
-						<li class="fragment">Sistem yang dihasilkan cukup efisien untuk digunakan pada dokumen berukuran 138 - 5,593 kalimat.</li>
+						<li>Kombinasi <em>NLP pipeline</em> dasar, model heuristik &amp; <em>supervised learning</em> dapat melakukan <em>open domain information extraction</em> dari teks bahasa Indonesia secara otomatis</li>
+						<li class="fragment"><em>Supervised-learning</em> relatif paling sesuai untuk <em>triple selector</em>: <em>Random Forest</em> ($F_1$ 0.58)</li>
+						<li class="fragment">Sistem paling efisien untuk ekstraksi dokumen dengan 138 - 5,593 kalimat</li>
 					</ol>
 				</section>
 
-				<section>
+				<section class="center">
 					<h3>Saran</h3>
 					<ol>
-						<li class="fragment">Menambah lebih banyak dataset <em>triple selector</em></li>
-						<li class="fragment">Mengembangkan <em>triple candidate generator</em> untuk bisa mengekstraksi kandidat <em>triple</em> implisit dan mengurangi kandidat <em>triple</em> yang invalid</li>
-						<li class="fragment">Menggunakan kombinasi antara <em>ensemble classifier</em> seperti <em>random forest</em> dan <em>classifier</em> berpresisi tinggi seperti SVM sebagai <em>triple selector</em></li>
-						<li class="fragment">Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar</li>
+						<li>Menambah dataset (<em>triple selector</em>)</li>
+						<li class="fragment">Ekstraksi kandidat <em>triple</em> implisit (<em>triple candidate generator</em>)</li>
+						<li class="fragment">Mengurangi kandidat <em>triple</em> yang invalid (<em>triple candidate generator</em>)</li>
+						<li class="fragment">Kombinasi <em>ensemble classifier</em> dan <em>classifier</em> berpresisi tinggi (<em>triple selector</em>)</li>
+						<li class="fragment">Metrik pengujian sistem keseluruhan</li>
+						<li class="fragment">Dokumen uji lebih besar</li>
 					</ol>
 				</section>
 
