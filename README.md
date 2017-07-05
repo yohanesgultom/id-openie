@@ -21,7 +21,12 @@ Expected output:
 
 To build from source:
 
-* Install [Oracle JRE/JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html), [Gradle](https://gradle.org/) and [Python 2.7]()
+* Install build dependencies:
+  * [Oracle JRE/JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+  * [Gradle](https://gradle.org/)
+  * [Python 2.7](https://www.python.org/)
+  * [Pip](https://pip.pypa.io)
+  * [Tkinter](https://wiki.python.org/moin/TkInter) (or `python-tk` in Ubuntu) to display comparison charts 
 * Download and clone this repo
 * Install Python dependencies: `pip install -r scripts/requirements.txt`
 * Run build command from repo directory: `gradle clean build`

@@ -102,7 +102,7 @@ feature_sets = [
     {
         'name': '7',
         'desc': 'Current POS tag + Head POS tag + DepRel + Subject and Object Named-Entities + Distance from Predicate + Dependents Count Predicate and Object + Dependency with Predicate',
-        'features': [0, 1, 2, 4, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]
+        'features': [0, 1, 2, 3, 5, 6, 10, 11, 12, 14, 17, 18, 19, 20, 21, 22, 23]
     },
     {
         'name': 'All',
@@ -237,17 +237,16 @@ if __name__ == '__main__':
 
     elif args.mode == 'compare_features':
         best_params = experiments[3]['params'][0]
-        model = RandomForestClassifier(
-            max_depth=best_params['max_depth'][0],
-            class_weight=best_params['class_weight'][0],
-            n_estimators=best_params['n_estimators'][0],
-            min_samples_split=best_params['min_samples_split'][0],
-            max_features=best_params['max_features'][0],
-            random_state=best_params['random_state'][0]
-        )
-
         for feature_set in feature_sets:
             X, y, scaler = extract_features(dataset, feature_set['features'])
+            model = RandomForestClassifier(
+                max_depth=best_params['max_depth'][0],
+                class_weight=best_params['class_weight'][0],
+                n_estimators=best_params['n_estimators'][0],
+                min_samples_split=best_params['min_samples_split'][0],
+                max_features=best_params['max_features'][0],
+                random_state=best_params['random_state'][0]
+            )
             precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y, cv)
             feature_set['cv_score'] = {'precision': precision, 'recall': recall, 'f1': fbeta}
             print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
