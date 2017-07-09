@@ -112,3 +112,15 @@ List of Indonesian NLP datasets collected from various sources:
 1. Banko, M., Cafarella, M.J., Soderland, S., Broadhead, M. and Etzioni, O., 2007, January. Open Information Extraction from the Web. In IJCAI (Vol. 7, pp. 2670-2676).
 1. Angeli, G., Premkumar, M.J. and Manning, C.D., 2015, July. Leveraging linguistic structure for open domain information extraction. In Proceedings of the 53rd Annual Meeting of the Association for Computational Linguistics (ACL 2015).
 1. Suhartono, D., 2014. Lemmatization Technique in Bahasa: Indonesian. Journal of Software, 9(5), p.1203.
+
+**Citation**
+
+BibTex format:
+```
+@mastersthesis{gultom2017thesis,
+	author={Yohanes {Gultom}},
+	title={Automatic Open Domain Information Extraction from Indonesian Text},
+	school={Universitas Indonesia},
+	year={2017},
+}
+```
