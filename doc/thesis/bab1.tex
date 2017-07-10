@@ -30,8 +30,7 @@ Sistem open IE yang \saya~ajukan bertujuan untuk mengekstrak sejumlah \textit{tr
 %-----------------------------------------------------------------------------%
 \section{Permasalahan}
 %-----------------------------------------------------------------------------%
-Pada bagian ini akan dijelaskan mengenai definisi permasalahan yang ingin diselesaikan pada penelitian ini serta batasan yang ditetapkan.
-
+Pada bagian ini akan dijelaskan mengenai definisi permasalahan yang ingin diselesaikan pada penelitian ini dan batasan yang ditetapkan. Definisi permasalahan diperlukan supaya arah penelitian lebih jelas dan fokus. Sedangkan batas permasalahan dibutuhkan agar penelitian ini lebih efisien serta memberikan sedikit gambaran peluang pengembangan ke depan.
 
 %-----------------------------------------------------------------------------%
 \subsection{Definisi Permasalahan}
@@ -41,7 +40,8 @@ Permasalahan yang ditemukan dan ingin diselesaikan pada penelitian ini:
 
 \begin{enumerate}
 \item Bagaimana merancang sistem \textit{open IE} yang cocok untuk bahasa Indonesia?
-\item Bagaimana implementasi sistem \textit{open IE} tersebut?
+\item Model \textit{supervised learning} apa yang cocok untuk \textit{open IE} bahasa Indonesia?
+\item Bagaimana kinerja sistem \textit{open IE} yang dihasilkan?
 \end{enumerate}
 
 %-----------------------------------------------------------------------------%
@@ -65,30 +65,32 @@ Batasan permasalahan pada penelitian ini adalah:
 \section{Tujuan dan Manfaat}
 %-----------------------------------------------------------------------------%
 
-Tujuan dan manfaat dari penelitian ini adalah:\\
+Penyelesaian masalah yang telah dideskripsikan di atas melalui penelitian ini diharapkan dapat mencapai tujuan-tujuan dan memberikan manfaat-manfaat sebagai berikut:\\
 
 \textbf{Tujuan}
 
 \begin{enumerate}
-\item Merancang dan mengimplementasikan sistem \textit{open IE} untuk teks bahasa Indonesia.
-\item Mengumpulkan dan membangun \textit{dataset} yang diperlukan oleh sistem \textit{open IE} bahasa Indonesia.
-\item Mencari model \textit{supervised learning} yang sesuai \textit{sistem open IE} bahasa Indonesia.
+	\item Merancang dan mengimplementasikan sistem \textit{open IE} untuk teks bahasa Indonesia. Hasil akhir penelitian ini bukan hanya berupa rancangan tapi juga implementasi sistem yang dapat diakses secara terbuka dan dilengkapi petunjuk penggunaan sehingga mudah digunakan.
+	
+	\item Mencari model \textit{supervised learning} yang sesuai sistem \textit{open IE} bahasa Indonesia. Hasil eksperimen pemilihan model dari penelitian ini diharapkan dapat memberikan gambaran mengenai karakteristik masalah dan fondasi pengembangan model ke depannya.
+	
+	\item Mengukur kinerja sistem \textit{open IE} secara umum berdasarkan akurasi dan waktu prosesnya. Sekalipun belum mampu menyaingi sistem \textit{open IE} bahasa Inggris yang sudah dikembangkan sejak lama, hasil pengukuran kinerja sistem ini bisa menjadi acuan untuk penelitian di masa depan.
 \end{enumerate}
 
 \textbf{Manfaat}
 
 \begin{enumerate}
-\item Menghasilkan sistem \textit{open IE} yang dapat digunakan untuk mengekstrak entitas relasi dan argumen/entitas dalam format \textit{triple} dari teks bahasa Indonesia.
-
-\item Memberikan acuan untuk pengembangan sistem \textit{open IE} untuk bahasa Indonesia.
-
-\item Memberikan kontribusi terhadap perkembangan sumber daya bahasa (\textit{language resources}) Indonesia.
+	\item Menghasilkan sistem \textit{open IE} yang dapat digunakan untuk mengekstrak entitas relasi dan argumen/entitas dalam format \textit{triple} dari teks bahasa Indonesia. Hasil ekstraksi ini dapat diaplikasikan untuk berbagai keperluan yang lebih kompleks seperti pengecekan plagiarisme, \textit{question answering}, \textit{document retrieval} .dsb.
+	
+	\item Memberikan acuan untuk pengembangan sistem \textit{open IE} untuk bahasa Indonesia. Sebagai salah satu penelitian pertama untuk \textit{open IE} bahasa Indonesia, diharapkan penelitian ini dapat dikembangkan lebih jauh atau menjadi referensi penelitian pada bidan terkait.
+	
+	\item Memberikan kontribusi terhadap perkembangan sumber daya bahasa (\textit{language resources}) Indonesia. Penelitian terkait \textit{natural language processing} (NLP) bahasa Indonesia membantu menambah sumber daya bahasa seperti \textit{dataset} dan algoritma spesifik untuk bahasa Indonesia.
 \end{enumerate}
 
 %-----------------------------------------------------------------------------%
 \section{Sistematika Penulisan}
 %-----------------------------------------------------------------------------%
-Sistematika penulisan laporan adalah sebagai berikut:
+Laporan penelitian terdiri dari lima buah bab yang mencakup pendahuluan, tinjauan pustaka, metode penelitian, hasil dan analisis serta penutup (kesimpulan dan saran). Susunan dan penjelasan sistematis dari setiap bagian dari laporan adalah sebagai berikut:
 
 \begin{itemize}
 	\item Bab 1 \babSatu \\

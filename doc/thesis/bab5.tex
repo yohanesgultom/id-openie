@@ -26,16 +26,15 @@ Melalui penelitian ini telah diajukan rancangan sistem \textit{open IE} untuk ba
 \section{Saran}
 %-----------------------------------------------------------------------------%
 
-%In the future, we plan to improve the performance of our system finding better heuristics for triple candidates generator to reduce the negative samples. We also plan adding more training data for triple selector to improve the precision and recall score. We also need to create dataset for triple candidates generator and token expander in order to properly evaluate further improvement of both components. We also consider adding confidence level in the output of every phases (NLP pipelines, candidate generator, triple selector, token expander) and including them as features and/or heuristics may also improve the overall performance of the system.
-
 Berdasarkan hasil analisis, berikut adalah saran pengembangan penelitian ini ke depannya:
 
 \begin{enumerate}
-	\item Memperbaiki kualitas \textit{dataset} untuk melatih \textit{triple selector} dengan menambah lebih banyak data.
+	\item Memperbaiki kualitas \textit{dataset} untuk melatih \textit{triple selector} dengan menambah lebih banyak data. Seperti yang dijelaskan pada bagian analisis, rendahnya hasil eksperimen \textit{cross-validation} dengan $K = 3$ menunjukkan bahwa pola pada $\nicefrac{2}{3}$ data yang ada tidak cukup untuk mengenali sisa pola $\nicefrac{1}{3}$ data yang dipakai untuk menguji. Oleh karena itu perlu ditambahkan sampel \textit{triple} yang lebih banyak dan beragam sampai setidaknya $\nicefrac{2}{3}$ mampu mencerminkan sebagian atau seluruh dari sisa $\nicefrac{1}{3}$ data.
 	
-	\item Mengembangkan \textit{triple candidate generator} untuk bisa mengekstraksi kandidat \textit{triple} implisit dan mengurangi kandidat \textit{triple} yang invalid.
+	\item Mengembangkan \textit{triple candidate generator} untuk bisa mengekstraksi kandidat \textit{triple} implisit dan mengurangi kandidat \textit{triple} yang invalid. Timpangnya rasio sampel positif dan negatif dari \textit{dataset} yang dihasilkan \textit{triple candidate generator}, yaitu 1:11 menunjukkan bahwa aturan yang digunakan masih terlalu longgar. Perlu diteliti aturan-aturan yang dapat menyaring \textit{triple} yang invalid sehingga dapat dihasilkan \textit{dataset} yang seimbang (\textit{balanced}). Hal ini diharapkan dapat membuat sistem lebih efisien dan meningkatkan kinerja \textit{triple selector}.
 	
-	\item Menggunakan kombinasi antara \textit{ensemble classifier} seperti \textit{random forest} dan \textit{classifier} berpresisi tinggi seperti SVM sebagai \textit{triple selector} untuk meningkatkan \textit{precision} dan \textit{$F_1$ score}.
+	\item Menggunakan kombinasi antara \textit{ensemble classifier} seperti \textit{random forest} dan \textit{classifier} berpresisi tinggi seperti SVM sebagai \textit{triple selector} untuk meningkatkan \textit{precision} dan \textit{$F_1$ score}. Sekalipun pada eksperimen kalah dalam hal \textit{$F_1$ score} dari \textit{random forest}, SVM dinilai memiliki potensi karena unggul cukup jauh dalam hal presisi dari \textit{random forest} maupun model lainnya. Oleh karena itu perlu diteliti apakah penggabungan kedua model ini dapat mencapai hasil yang lebih baik.
 	
-	\item Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar (berisi lebih banyak kalimat) serta membangun \textit{dataset} untuk bisa mengevaluasi keseluruhan sistem secara lebih \textit{reliable}.
+	\item Melakukan pengujian sistem secara keseluruhan dengan dokumen yang lebih besar (berisi lebih banyak kalimat) serta membangun \textit{dataset} untuk bisa mengevaluasi keseluruhan sistem secara lebih \textit{reliable}. Meskipun kemampuan sistem secara keseluruhan dapat diaproksimasi dengan mengalikan akurasi \textit{NLP pipeline} dan \textit{triple selector} dan/atau menghitung secara manual akurasi hasil ekstraksi sistem, akan lebih ideal jika dibangun \textit{gold standard dataset} yang dapat dipakai untuk mengevaluasi sistem \textit{open IE} bahasa Indonesia terlepas dari cara kerjanya. Ukuran \textit{dataset} yang dikembangkan juga perlu dibuat cukup besar untuk mencerminkan ukuran dokumen yang diproses pada kasus nyata (\textit{realistic use case}).
+	
 \end{enumerate}
