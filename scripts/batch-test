@@ -1,0 +1,26 @@
+#!/bin/bash
+
+inputdir="$1"
+
+echo "rm *.conllu"
+rm *.conllu
+echo "rm *.tsv"
+rm *.tsv
+for i in "$inputdir"/*
+do
+	result="$i/$(basename $i).result.txt"
+	echo "rm $result"
+	rm "$result"
+	echo "rm $i/*.tsv"
+	rm "$i"/*.tsv
+	for j in "$i"/*
+	do
+		out="$j.triples.tsv"
+		echo "rm $out"
+		rm "$out"
+		echo "time python extract_triples.py -f tsv -o $out $j >> $result"
+		{ time python extract_triples.py -f tsv -o "$out" "$j"; } 2>> "$result"
+		triples=$(wc -l $out)
+		echo "Triples extracted: $triples" >> "$result"
+	done
+done

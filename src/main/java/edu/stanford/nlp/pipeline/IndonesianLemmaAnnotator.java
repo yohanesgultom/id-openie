@@ -751,7 +751,9 @@ public class IndonesianLemmaAnnotator implements Annotator {
                         List<Map.Entry<String, LinkedHashMap<String, String>>> complexPrefixEntries = new ArrayList<>(obj.getComplexPrefixTracker().entrySet());
                         for (int i = before; i < after; i++) {
                             obj.getComplexPrefixTracker().remove(complexPrefixEntries.get(i).getKey());
-                            obj.getRemovedDerivationalPrefixes().remove(i);
+			    if (obj.getRemovedDerivationalPrefixes().size() > i) {
+			        obj.getRemovedDerivationalPrefixes().remove(i);
+			    }
                         }
                     }
                 }

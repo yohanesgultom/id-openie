@@ -141,7 +141,7 @@ def cross_validate_precision_recall_fbeta(model, X, y, cv=None):
     return precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std
 
 
-def plot_model_comparison(experiments, title, score_field='best_score'):
+def plot_model_comparison(experiments, title, cv, score_field='best_score'):
     fig, ax = plt.subplots()
 
     # Example data
@@ -168,7 +168,7 @@ def plot_model_comparison(experiments, title, score_field='best_score'):
     ax.set_xticks(x + width * 2)
     ax.set_xticklabels(x_data)
     ax.set_yticks(np.arange(0.0, 1.1, 0.1))
-    ax.set_title(title)
+    ax.set_title('{} \n k-fold cross-validation k={}'.format(title, cv))
 
     lgd = plt.legend(handles=legend_handles)
     plt.show()
@@ -181,14 +181,15 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--scaler_output_path', help='Output scaler path', default='triples-classifier-scaler.pkl')
     parser.add_argument('-m', '--mode', help='select mode', choices=['compare_models', 'compare_features', 'train_model'], default='train_model')
     parser.add_argument('--nocv', help='no cross-validation. training accuracy only', action='store_true')
+    parser.add_argument('--cv', help='value of k for k-fold cross-validation', type=int, default=3)
     args = parser.parse_args()
 
     # load dataset
     dataset = np.genfromtxt(args.dataset_path, delimiter=',', dtype='float32')
 
     # exhaustive best parameters search
-    cv = None
-    print('')
+    cv = args.cv
+    print('cv = {}\n'.format(cv))
     if args.mode == 'compare_models':
         best_score = 0.0
         best_model = None
@@ -233,7 +234,7 @@ if __name__ == '__main__':
         model = best_model
 
         # show plot
-        plot_model_comparison(experiments, 'Triple Selector Models Performance', score_field='best_score')
+        plot_model_comparison(experiments, 'Triple Selector Models Performance', cv, score_field='best_score')
 
     elif args.mode == 'compare_features':
         best_params = experiments[3]['params'][0]
@@ -259,7 +260,7 @@ if __name__ == '__main__':
             ))
 
         # show plot
-        plot_model_comparison(feature_sets, 'Triple Selector Feature Sets Performance', score_field='cv_score')
+        plot_model_comparison(feature_sets, 'Triple Selector Feature Sets Performance', cv, score_field='cv_score')
 
         print('\nInformation:')
         for feature_set in feature_sets:
@@ -281,8 +282,13 @@ if __name__ == '__main__':
             random_state=best_params['random_state'][0]
         )
 
+        # train and test using trainig data
+        model.fit(X, y)
+        y_pred = model.predict(X)
+        precision, recall, fbeta, support = precision_recall_fscore_support(y, y_pred, average='binary')
+        fbeta_min = fbeta_max = fbeta_std = fbeta
         # cross validate best model to compare score
-        precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y, cv)
+        # precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y, cv)
         print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
             precision,
             recall,

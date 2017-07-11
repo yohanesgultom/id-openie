@@ -18,7 +18,7 @@ Melalui penelitian ini telah diajukan rancangan sistem \textit{open IE} untuk ba
 	
 	\item Model \textit{supervised-learning} yang paling sesuai untuk melakukan seleksi \textit{triple} berdasarkan fitur berbasis \textit{POS tag}, \textit{named-entity} dan \textit{dependency relation} adalah \textit{random forest}, yang merupakan \textit{ensemble classifier}. Model ini mencapai nilai $F_1$ 0.58, yang lebih tinggi dari tiga model linier dan nonlinier lain yang diujikan.
 	
-	\item Sistem \textit{open IE} yang diajukan dapat melakukan ekstraksi 19,403 \textit{triple} dari dokumen yang terdiri atas 5,593 kalimat bahasa Indonesia dalam waktu 78.6 detik atau 0.014 detik/kalimat. Dapat disimpulkan bahwa sistem ini cukup efisien untuk digunakan pada dokumen berukuran lebih besar dari 138 kalimat dan kurang dari 5,593 kalimat.
+	\item Sistem \textit{open IE} yang diajukan hanya membutuhkan waktu proses 0.02 detik/kalimat untuk dokumen berukuran 5,000 kalimat. Nilai ini cukup sebanding dengan yang dicapai oleh \textsc{TextRunner} \citep{banko2007open} sehingga mengindikasikan kinerja yang cukup baik. Disamping itu dapat disimpulkan juga bahwa sistem ini paling cocok digunakan untuk memproses dokumen dengan ukuran 5,000 kalimat. Jika diasumsikan trend yang ditampilkan pada grafik rata-rata waktu proses Gambar \ref{fig:system_performance} stabil dan mesin yang digunakan sanggup, maka sistem ini akan makin efisien seiring dengan bertambahnya ukuran dokumen.
 \end{enumerate}
 
 

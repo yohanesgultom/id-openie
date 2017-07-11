@@ -11,7 +11,7 @@ Pada bab ini dijelaskan hasil evaluasi dan analisis dari penelitian ini.
 
 Dua eksperimen pada penelitian ini dilakukan pada \textit{notebook} dengan sistem operasi \textit{Ubuntu 15.04 64-bit}, prosesor \textit{Intel Core i7 5500U} (\textit{dual cores}), RAM DDR3 8 GB dan penyimpanan SSD 250 GB. Program yang digunakan untuk melakukan eksperimen pertama adalah \verb|classifier.py| sedangkan eksperimen yang kedua menggunakan program \verb|extract_triples.py| (terlampir).
 
-Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan diuji menggunakan data kandidat \textit{triple} yang sudah diberikan label, diekstraksi menjadi 17 fitur dan dinormalisasi. Metode yang digunakan untuk melatih dan menguji adalah \textit{k-fold} \textit{cross-validation} \citep{kohavi1995study} dengan $k = 3$. Empat model yang dibandingkan beserta dengan konfigurasinya adalah sebagai berikut:
+Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan diuji menggunakan data kandidat \textit{triple} yang sudah diberikan label, diekstraksi menjadi 17 fitur dan dinormalisasi. Metode yang digunakan untuk melatih dan menguji adalah \textit{k-fold} \textit{cross-validation} \citep{kohavi1995study} dengan variasi nilai $k = {2, 3, 5, 7, 10}$. Empat model yang dibandingkan beserta dengan konfigurasinya adalah sebagai berikut:
 
 \begin{enumerate}
 
@@ -49,63 +49,203 @@ Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan di
 Eksperimen ini dilakukan dengan menjalankan program \verb|classifier.py| (di direktori yang sama dengan pustaka utama \verb|tripletools.py|) dengan input \textit{dataset} fitur yang sudah dinormalisasi dengan format \textit{comma separated value} (CSV) \verb|triple-selector.train.csv| pada \textit{terminal}:
 
 \begin{verbatim}
-	$ python classifier.py --best triple-selector.train.csv
+	$ python classifier.py --mode compare_models --cv 2 triple-selector.train.csv
+	$ python classifier.py --mode compare_models --cv 3 triple-selector.train.csv
+	$ python classifier.py --mode compare_models --cv 5 triple-selector.train.csv
+	$ python classifier.py --mode compare_models --cv 7 triple-selector.train.csv
+	$ python classifier.py --mode compare_models --cv 10 triple-selector.train.csv
 \end{verbatim}
 
-Hasil dari eksperimen pertama ini dapat dilihat pada Tabel \ref{tab:models_performance} dan visualisasinya pada Gambar \ref{fig:models_performance} di mana \textit{random forest} mencapai nilai \textit{recall} dan $F_1$ tertinggi, yaitu \textbf{0.58}. Sedangkan nilai \textit{precision} tertinggi, \textbf{0.68}, dicapai oleh SVM. 
-
-\begin{figure}
-	\includegraphics[width=\textwidth]{../images/models_performance.png}
-	\caption{Diagram hasil eksperimen perbandingan model \textit{supervised learning} untuk \textit{triple selector}}
-	\label{fig:models_performance}
-\end{figure}
+Hasil dari eksperimen pertama ini dapat dilihat pada Tabel \ref{tab:models_performance_k_2}, \ref{tab:models_performance_k_3}, \ref{tab:models_performance_k_5}, \ref{tab:models_performance_k_7} dan \ref{tab:models_performance_k_10}. Tetapi karena jika melihat standar deviasi yang terlalu tinggi (di atas 0.1) untuk $k > 3$ pada Tabel \ref{tab:models_performance_stdev} dan diagram Gambar \ref{fig:models_performance_stdev}, maka hasil yang kita amati adalah k-\textit{fold} \textit{cross-validation} dengan $k={2, 3}$ yang visualisasinya ditunjukkan pada Gambar \ref{fig:models_performance_k_2} dan Gambar \ref{fig:models_performance_k_3}. Dapat dilihat bahwa \textit{random forest} lebih tinggi dari model lainnya untuk $k=3$ dan sebanding dengan SVM untuk $k=2$. SVM hampir selalu mencapai nilai \textit{precision} tertinggi dalam semua eksperimen tetapi dengan nilai \textit{recall} yang lebih rendah dari model lain. Sedangkan \textit{random forest} bukan hanya mencapai nilai $F_1$ yang hampir selalu lebih tinggi, tapi juga memiliki nilai \textit{precision} dan \textit{recall} yang seimbang. 
 
 \begin{table}
-\caption{Hasil eksperimen perbandingan model \textit{supervised learning} untuk \textit{triple selector}}
-	\label{tab:models_performance}
+	\caption{Hasil k-\textit{fold} \textit{cross-validation} $k=2$ model \textit{supervised learning} untuk \textit{triple selector}}
+	\label{tab:models_performance_k_2}
 	\centering
 	\begin{tabular}{p{5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm}}
 		\hline
 		\textbf{Model} & \textbf{\textit{Precision}} & \textbf{\textit{Recall}} & \textbf{$F_1$} \\
 		\hline
-		Logistic Regression & 0.64 & 0.28 & 0.36 \\
-		SVM & \textbf{0.68} & 0.41 & 0.51 \\
-		MLP & 0.54 & 0.46 & 0.47 \\
+		Logistic Regression & 0.58 & 0.29 & 0.38 \\
+		SVM & \textbf{0.70} & 0.39 & \textbf{0.50} \\
+		MLP & 0.46 & 0.35 & 0.39 \\
+		Random Forest & 0.52 & \textbf{0.49} & \textbf{0.50} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}
+\caption{Hasil k-\textit{fold} \textit{cross-validation} $k=3$ model \textit{supervised learning} untuk \textit{triple selector}}
+	\label{tab:models_performance_k_3}
+	\centering
+	\begin{tabular}{p{5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm}}
+		\hline
+		\textbf{Model} & \textbf{\textit{Precision}} & \textbf{\textit{Recall}} & \textbf{$F_1$} \\
+		\hline
+		Logistic Regression & 0.64 & 0.28 & 0.37 \\
+		SVM & \textbf{0.69} & 0.42 & 0.51 \\
+		MLP & 0.55 & 0.46 & 0.47 \\
 		Random Forest & 0.62 & \textbf{0.58} & \textbf{0.58} \\
 		\hline
 	\end{tabular}
 \end{table}
 
-Pada eksperimen kedua, sistem \textit{open IE} dipakai untuk mengekstrak \textit{triple} dari tiga buah dokumen dengan ukuran (jumlah kalimat) bervariasi. Metrik utama pada eksperimen ini adalah waktu total eksekusi yang dipakai untuk menghitung waktu eksekusi rata-rata per kalimat. Sebagai tambahan, diamati juga jumlah \textit{triple} yang dapat diekstraksi dari tiap dokumen. Eksperimen ini dilakukan dengan menjalankan program utama \verb|extract_triples.py| untuk setiap dokumen (\verb|doc1.txt|, \verb|doc2.txt|, \verb|doc3.txt|) yang berisi satu kalimat per baris:
-
-\begin{verbatim}
-	$ python extract_triples.py -f tsv doc1.txt
-	$ python extract_triples.py -f tsv doc2.txt
-	$ python extract_triples.py -f tsv doc3.txt
-\end{verbatim}
-
-Hasil eksperimen tersebut ditunjukkan pada Tabel \ref{tab:system_extraction_time} di mana waktu eksekusi rata-rata per kalimat \textbf{0.014 detik/kalimat} dicapai untuk ukuran dokumen terbesar 5,593 kalimat. Dapat dilihat bahwa rata-rata waktu yang dibutuhkan untuk memproses satu kalimat semakin menurun seiring dengan bertambahnya jumlah kalimat pada dokumen. Rata-rata jumlah \textit{triple} yang diekstraksi dari setiap dokumen adalah \textbf{3.3 \textit{triple}/kalimat}.
-
 \begin{table}
-	\caption{Waktu eksekusi sistem \textit{open IE} \textit{end-to-end}}
-	\label{tab:system_extraction_time}
+	\caption{Hasil k-\textit{fold} \textit{cross-validation} $k=5$ model \textit{supervised learning} untuk \textit{triple selector}}
+	\label{tab:models_performance_k_5}
 	\centering
-	\begin{tabular}{p{4cm} p{2.5cm} p{2.5cm} p{2.5cm}}
+	\begin{tabular}{p{5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm}}
 		\hline
-		\textbf{Jumlah kalimat} & \textbf{\textit{Triple}} & \textbf{Total (detik)} & \textbf{Per kalimat (detik)} \\
+		\textbf{Model} & \textbf{\textit{Precision}} & \textbf{\textit{Recall}} & \textbf{$F_1$} \\
 		\hline
-		2 & 7 & 6.1 & 3.050 \\
-		138 & 429 & 11.3 & 0.082 \\
-		5,593 & 19,403 & 78.6 & \textbf{0.014} \\
+		Logistic Regression & 0.69 & 0.26 & 0.36 \\
+		SVM & \textbf{0.74} & 0.39 & \textbf{0.49} \\
+		MLP & 0.54 & 0.39 & 0.41 \\
+		Random Forest & 0.59 & \textbf{0.52} & \textbf{0.49} \\
 		\hline
 	\end{tabular}
 \end{table}
 
+\begin{table}
+	\caption{Hasil k-\textit{fold} \textit{cross-validation} $k=7$ model \textit{supervised learning} untuk \textit{triple selector}}
+	\label{tab:models_performance_k_7}
+	\centering
+	\begin{tabular}{p{5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm}}
+		\hline
+		\textbf{Model} & \textbf{\textit{Precision}} & \textbf{\textit{Recall}} & \textbf{$F_1$} \\
+		\hline
+		Logistic Regression & 0.71 & 0.27 & 0.36 \\
+		SVM & \textbf{0.69} & 0.38 & \textbf{0.47} \\
+		MLP & 0.50 & 0.38 & 0.38 \\
+		Random Forest & 0.52 & \textbf{0.49} & \textbf{0.47} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\caption{Hasil k-\textit{fold} \textit{cross-validation} $k=10$ model \textit{supervised learning} untuk \textit{triple selector}}
+	\label{tab:models_performance_k_10}
+	\centering
+	\begin{tabular}{p{5cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm} >{\centering\arraybackslash}p{2cm}}
+		\hline
+		\textbf{Model} & \textbf{\textit{Precision}} & \textbf{\textit{Recall}} & \textbf{$F_1$} \\
+		\hline
+		Logistic Regression & 0.70 & 0.26 & 0.36 \\
+		SVM & \textbf{0.76} & 0.37 & 0.46 \\
+		MLP & 0.59 & 0.36 & 0.40 \\
+		Random Forest & 0.54 & \textbf{0.48} & \textbf{0.47} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\caption{Standar deviasi k-\textit{fold} \textit{cross-validation} $k={2, 3, 5, 7, 10}$ model \textit{supervised learning} untuk \textit{triple selector}}
+	\label{tab:models_performance_stdev}
+	\centering
+	\begin{tabular}{l r r r r r}
+		\hline
+		\textbf{Model} & $k=2$ & $k=3$ & $k=5$ & $k=7$ & $k=10$ \\
+		\hline
+		Logistic Regression & 0.03 & 0.05 & 0.06 & 0.10 & 0.13 \\
+		SVM & 0.03 & 0.05 & 0.06 & 0.10 & 0.13 \\
+		MLP & 0.03 & 0.05 & 0.06 & 0.10 & 0.13 \\
+		Random Forest & 0.04 & 0.09 & 0.12 & 0.13 & 0.23 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{../images/models_performance_stdev.png}
+	\caption{Diagram standar deviasi k-\textit{fold} \textit{cross-validation} $k={2, 3, 5, 7, 10}$ model \textit{supervised learning} untuk \textit{triple selector}}
+	\label{fig:models_performance_stdev}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{../images/models_performance_k_2.png}
+	\caption{Diagram k-\textit{fold} \textit{cross-validation} model \textit{supervised learning} untuk \textit{triple selector} dengan $k=2$}
+	\label{fig:models_performance_k_2}
+\end{figure}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{../images/models_performance_k_3.png}
+	\caption{Diagram k-\textit{fold} \textit{cross-validation} model \textit{supervised learning} untuk \textit{triple selector} dengan $k=3$}
+	\label{fig:models_performance_k_3}
+\end{figure}
+
+
+Pada eksperimen kedua, sistem \textit{open IE} dipakai untuk mengekstrak \textit{triple} dokumen dengan lima variasi ukuran/jumlah kalimat, yaitu 5, 10, 100, 1,000 dan 5,000 kalimat per dokumen. Untuk setiap variasi ukuran dokumen, digunakan 10 buah dokumen yang berbeda dengan ukuran yang identik sehingga total ada 50 dokumen berbeda yang digunakan dalam eksperimen ini. Kalimat-kalimat dalam dokumen uji ini diambil secara acak dari berbagai jenis artikel berita dan ensiklopedia bahasa Indonesia di internet sehingga dapat mewakili karakteristik \textit{open domain}.
+
+Metrik pada eksperimen ini adalah waktu proses per kalimat (detik) dan jumlah \textit{triple} yang diekstraksi per kalimat. Eksperimen ini dilakukan dengan menjalankan program utama \verb|extract_triples.py| untuk setiap dokumen dengan format perintah:
+
+\begin{verbatim}
+	$ python extract_triples.py -f tsv doc.txt
+\end{verbatim}
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{../images/system_performance.png}
+	\caption{Rata-rata waktu proses per kalimat dan rata-rata jumlah \textit{triple} yang dihasilkan per kalimat pada variasi ukuran dokumen}
+	\label{fig:system_performance}
+\end{figure}
+
+\begin{table}
+	\caption{Waktu proses per kalimat (detik)}
+	\label{tab:system_extraction_time}
+	\centering
+	\begin{tabular}{l *{5}{c}}
+		\hline
+		\textbf{No} & \multicolumn{5}{c}{\textbf{Ukuran Dokumen}} \\
+		\cline{2-6}
+		& \textbf{5} & \textbf{10} & \textbf{100} & \textbf{1,000} & \textbf{5,000} \\
+		\hline			
+		1 & 4.65 & 1.71 & 0.23 & 0.05 & 0.02 \\
+		2 & 2.59 & 1.69 & 0.21 & 0.05 & 0.02 \\
+		3 & 3.82 & 1.50 & 0.25 & 0.05 & 0.02 \\
+		4 & 3.69 & 1.66 & 0.25 & 0.05 & 0.02 \\
+		5 & 3.47 & 1.63 & 0.25 & 0.05 & 0.02 \\
+		6 & 3.52 & 1.49 & 0.24 & 0.05 & 0.02 \\
+		7 & 2.60 & 1.50 & 0.26 & 0.05 & 0.02 \\
+		8 & 3.42 & 1.52 & 0.50 & 0.05 & 0.02 \\
+		9 & 5.61 & 1.77 & 0.23 & 0.05 & 0.02 \\
+		10 & 3.16 & 1.64 & 0.22 & 0.05 & 0.02 \\
+		\hline
+		\textbf{Rata-rata} & \textbf{3.65} & \textbf{1.61} & \textbf{0.26} & \textbf{0.05} & \textbf{0.02} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\caption{Jumlah \textit{triple} yang diekstraksi per kalimat}
+	\label{tab:system_extraction_triple}
+	\centering
+	\begin{tabular}{l *{5}{c}}
+		\hline
+		\textbf{No} & \multicolumn{5}{c}{\textbf{Ukuran Dokumen}} \\
+		\cline{2-6}
+		& \textbf{5} & \textbf{10} & \textbf{100} & \textbf{1,000} & \textbf{5,000} \\
+		\hline			
+		1 & 1.80 & 1.90 & 3.25 & 2.98 & 2.88 \\
+		2 & 1.80 & 3.00 & 3.43 & 2.95 & 2.74 \\
+		3 & 1.60 & 3.20 & 2.97 & 2.74 & 2.86 \\
+		4 & 2.40 & 3.70 & 3.16 & 3.00 & 2.95 \\
+		5 & 1.00 & 4.00 & 3.02 & 3.04 & 2.93 \\
+		6 & 2.40 & 4.30 & 3.62 & 2.80 & 2.80 \\
+		7 & 2.20 & 3.70 & 2.96 & 2.94 & 2.87 \\
+		8 & 3.20 & 1.30 & 3.13 & 2.92 & 3.00 \\
+		9 & 4.80 & 3.00 & 3.09 & 2.98 & 2.91 \\
+		10 & 4.60 & 3.10 & 2.56 & 2.98 & 2.89 \\
+		\hline
+		\textbf{Rata-rata} & \textbf{2.58} & \textbf{3.12} & \textbf{3.12} & \textbf{2.93} & \textbf{2.88} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+
+Hasil eksperimen tersebut ditunjukkan pada Tabel \ref{tab:system_extraction_time} di mana waktu proses rata-rata per kalimat \textbf{0.02 detik/kalimat} dicapai untuk ukuran dokumen terbesar 5,000 kalimat. Dapat dilihat bahwa rata-rata waktu yang dibutuhkan untuk memproses satu kalimat semakin menurun seiring dengan bertambahnya jumlah kalimat pada dokumen. Sedangkan pada Tabel \ref{tab:system_extraction_triple}, terlihat bahwa rata-rata jumlah \textit{triple} yang diekstraksi dari setiap kalimat cukup konsisten untuk setiap variasi ukuran dokumen yaitu antara \textbf{2.58} - \textbf{3.12} \textit{triple}/kalimat. 
+
+
 %-----------------------------------------------------------------------------%
 \section{Analisis}
 %-----------------------------------------------------------------------------%
-
-%The first experiment shows that all classifiers are still having problem learning the pattern of triples when cross-validated using $k=3$ which means two thirds of our dataset is insufficient to cover the patterns in other one third part. The dataset also suffers unbalance 1:11 ratio of positive and negative samples which is caused by lack of efficiency in triple candidates generator. To solve this issue, we plan to annotate more sentences to increase the coverage and improve the efficiency of triple candidates generator. The low performance of linear logistic regression indicates that this problem is not linearly separable. The random forest performs better than other nonlinear models (SVM and MLP) because it is easily tuned to balance the precision and recall by changing the number and the depth of decision trees.
 
 Hasil eksperimen pertama di mana nilai $F_1$ tertinggi hanya 0.58, mengindikasikan bahwa semua model mengalami kesulitan untuk mempelajari pola \textit{triples} dari \textit{dataset} yang diberikan. Kemungkinan penyebab hasil ini adalah masalah pada model (pemilihan fitur atau algoritma) atau kualitas \textit{dataset} yang digunakan (konflik pola atau ketidaklengkapan pola \textit{dataset}). Untuk memastikan penyebab dari hasil eksperimen pertama ini, \saya~melakukan eksperimen tambahan yaitu menguji tiap model \textit{triple selector} menggunakan \textit{dataset} latih (data yang sama). Hasil cukup baik yang ditunjukkan pada Gambar \ref{fig:models_performance_training} dan Tabel \ref{tab:models_performance_training}, di mana $F_1$ tertinggi \textbf{0.83}, \textit{recall} tertinggi \textbf{0.96} dan \textit{precision} tertinggi \textbf{0.88}, menunjukkan bahwa fitur yang dipilih dan model yang digunakan tidak memiliki masalah (kecuali model linier, \textit{logistic regression}). Oleh karena itu \saya~berargumen bahwa masalah utama terdapat pada \textit{dataset} yang digunakan, yaitu tidak cukupnya pola $\nicefrac{2}{3}$ data yang dipakai melatih untuk mengenali pola sisa $\nicefrac{1}{3}$ data yang dipakai untuk menguji.
 
@@ -146,12 +286,8 @@ Selain disebabkan oleh kurangnya jumlah kalimat yang dianotasi, permasalahan pad
 	
 \end{enumerate}
 
-%The token expander is having problem in expanding token to implicitly expected clauses such as \textit{"seorang pelatih sepak bola"} from \textit{"seorang pelatih dan pemain sepak bola"} or \textit{"satu buah torpedo"} from \textit{"satu atau dua buah torpedo"}. We expect there will be more patterns that need to be considered in order to properly expand the token so further research on effective model to achieve this is required. Also, in order to properly evaluate the performance of these components, we need to create test datasets for both triple candidates generator and token expander.
-
 Hal menarik yang ditemukan dari hasil eksperimen pertama adalah \textit{random forest}, yang mewakili \textit{ensemble classifier}, merupakan pemodelan yang paling cocok dibandingkan pemodelan linier (\textit{logistic regression}), nonlinier dengan optimalisasi margin (SVM) dan jaringan syaraf tiruan (MLP). \saya~menyimpulkan bahwa dibutuhkan pemodelan yang keseimbangan antara \textit{precision} dan \textit{recall}-nya relatif mudah disesuaikan untuk module \textit{triple selector}. Sekalipun tidak memiliki \textit{precision} setinggi SVM, \textit{Random forest} lebih unggul karena penyesuaian jumlah dan kedalaman \textit{tree} memudahkan penyeimbangan \textit{precision} dan \textit{recall} yang menghasilkan $F_1$ yang paling baik. Potensi SVM yang mampu mencapai \textit{precision} yang paling tinggi ini juga mungkin bisa dimanfaatkan dengan melakukan \textit{bagging} \citep{breiman1996bagging} SVM dan \textit{random forest} untuk meningkatkan kinerja lebih jauh.
 
+Hasil eksperimen kedua menunjukkan bahwa waktu rata-rata ekstraksi per kalimat dari dokumen yang berukuran 5,000 kalimat, 0.002 detik/kalimat, terlihat lebih cepat dari \textsc{TextRunner} yang membutuhkan 0.036 detik/kalimat \citep{banko2007open}. Sekalipun sistem ini tidak bisa diklaim lebih cepat karena adanya perbedaan data uji dan sistem yang digunakan, hasil ini tetap menunjukkan bahwa penggunaan fitur \textit{heavy linguistic} ternyata cukup efisien untuk digunakan pada dokumen dengan ukuran 5,000 kalimat. Trend dari grafik rata-rata waktu proses pada Gambar \ref{fig:system_performance} juga mengindikasikan bahwa sistem akan tetap atau bahkan semakin efisien untuk ukuran dokumen yang lebih besar. 
 
-%Additionally, through the second experiment, we also find that our system average extraction performance is 0.014 seconds/sentence (for 5,593 sentences document) which is still comparable to TextRunner\citep{banko2007open}. Therefore, in contrast to the argument proposed in the related work\citep{banko2007open}\citep{etzioni2011open}, this experiment shows that the heavy linguistic tasks such as dependency parsing doesn't cause performance drawback in big document, assuming the average number of sentences in document do not exceed 5,593.
-
-Sebagai tambahan, hasil eksperimen kedua menunjukkan bahwa waktu rata-rata 0.014 detik/kalimat yang dibutuhkan sistem \textit{open IE} untuk mengekstrak \textit{triple} dari dokumen yang berukuran 5,593 kalimat, cukup sebanding dengan sistem lain seperti \textsc{TextRunner} yang membutuhkan 0.036 detik/kalimat \citep{banko2007open}. Hal ini menunjukkan bahwa penggunaan fitur \textit{heavy linguistic} cukup efisien juga digunakan pada dokumen yang berukuran 138 - 5,593 kalimat. Kekurangan dari sistem ini tentu ada pada ekstraksi pada dokumen dengan kalimat kurang dari 138. Selain itu juga kedepannya perlu dikaji sejauh skalabilitas sistem ini dengan melakukan ekstraksi pada dokumen dengan jumlah kalimat lebih banyak.
-
+Grafik rata-rata jumlah \textit{triple} yang diekstraksi per kalimat pada Gambar \ref{fig:system_performance} juga menunjukkan nilai yang cukup konstan pada rentang 2.58-3.12 \textit{triple}/kalimat. Hal ini menunjukkan bahwa sistem berfungsi normal karena seharusnya jumlah \textit{triple} yang dihasilkan per kalimat tidak dipengaruhi oleh ukuran dokumen. Selain itu rata-rata jumlah \textit{triple} yang dihasilkan sistem ini juga sebanding dengan \textsc{TextRunner} yang rata-rata menghasilkan 2.2 \textit{triple}/kalimat \citep{banko2007open}.

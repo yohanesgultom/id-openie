@@ -21,6 +21,7 @@ gradle
 gradlew
 gradlew.bat
 scripts/*.tsv
+scripts/**/*.tsv
 scripts/*.csv
 scripts/*.pkl
 !scripts/triple-selector.train.csv
@@ -39,3 +40,4 @@ doc/presentation/*.md
 doc/presentation/*.yml
 !doc/presentation/test/
 !doc/presentation/lib/
+
