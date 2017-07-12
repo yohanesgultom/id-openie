@@ -41,7 +41,7 @@ Hasil ekstraksi \textit{open IE} berguna untuk berbagai \textit{task} seperti \t
 \section{\textit{Natural Language Processing}}
 %-----------------------------------------------------------------------------%
 
-Pemrosesan bahasa natural atau \textit{natural language processing} (NLP) tidak bisa dipisahkan dari \textit{information extraction} \citep{banko2007open,fader2011identifying,etzioni2011open,angeli2015leveraging}. Semua model sistem \textit{open IE} juga selalu membutuhkan informasi yang dihasilkan oleh \textit{task} NLP seperti \textit{part of speech tagging}, \textit{dependency parsing} dan \textit{named-entity recognition}. Informasi tersebut digunakan sebagai variabel dalam heuristik \textit{open IE} dan juga sebagai fitur untuk \textit{classifier}.
+Pemrosesan bahasa natural atau \textit{natural language processing} (NLP) tidak bisa dipisahkan dari \textit{information extraction} \citep{banko2007open,fader2011identifying,etzioni2011open,angeli2015leveraging}. Semua model sistem \textit{open IE} juga selalu membutuhkan informasi yang dihasilkan oleh \textit{task} NLP seperti \textit{part of speech tagging}, \textit{dependency parsing} dan \textit{named-entity recognition}. Informasi tersebut digunakan sebagai variabel dalam heuristik \textit{open IE} dan juga sebagai fitur untuk \textit{classifier}. Berikut ini adalah \textit{task} NLP yang digunakan dalam penelitian ini beserta penjelasannya:
 
 \subsection{\textit{Tokenization}}
 
@@ -92,7 +92,7 @@ Algoritma \textit{POS tagging} umumnya dapat dikelompokkan menjadi dua: berbasis
 
 \subsection{CoNLL-U}
 
-CoNLL-U\footnote{CoNLL-U \url{http://universaldependencies.org/format.html}} adalah format anotasi berbasis \textit{token} (\textit{token-based}) yang menggunakan himpunan \textit{POS tag} dan \textit{dependency relation} yang berlaku untuk banyak bahasa atau universal \citep{nivre2016universal} (terlampir). CoNLL-U merupakan pengembangan dari CoNLL-X, format yang disepakati dalam \textit{Conference on Computational Natural Language Learning} ke sepuluh dan juga dijadikan format standar oleh \textit{dependency parser} pada \textit{Stanford Core NLP}. Setiap \textit{token} pada CoNLL-U memiliki sepuluh kolom atau atribut:
+Format anotasi NLP yang digunakan pada penelitian ini adalah CoNLL-U\footnote{CoNLL-U \url{http://universaldependencies.org/format.html}} (\textit{Conference on Computational Natural Language Learning - Universal}). CoNLL-U merupakan format anotasi berbasis \textit{token} (\textit{token-based}) yang menggunakan himpunan \textit{POS tag} dan \textit{dependency relation} yang berlaku untuk banyak bahasa atau universal \citep{nivre2016universal} (terlampir). CoNLL-U merupakan pengembangan dari CoNLL-X, format yang disepakati dalam \textit{Conference on Computational Natural Language Learning} ke sepuluh dan juga dijadikan format standar oleh \textit{dependency parser} pada \textit{Stanford Core NLP}. Setiap \textit{token} pada CoNLL-U memiliki sepuluh kolom atau atribut:
 
 \begin{enumerate}
 	\item ID: Indeks \textit{token} dalam kalimat (mulai dari 1)
@@ -228,3 +228,25 @@ Penelitian berikutnya memperkenalkan \textsc{Ollie} (\textit{Open Language Learn
 \end{figure}
 
 Salah satu riset terbaru memperkenalkan model sistem \textit{open IE} yang mengganti penggunaan banyak \textit{open pattern}/\textit{template} untuk mengekstrak \textit{triple} pada \textsc{Ollie} \citep{schmitz2012open} dengan hanya enam pola atomik (\textit{atomic patterns}) \citep{angeli2015leveraging}. Enam pola atomik itu digunakan untuk mengekstrak \textit{triple} dari klausa yang \textit{self-contained} dan \textit{maximally compact}. Modul ekstraktor \textit{inter-clauses}, yang menggunakan \textit{multinomial logistic regression classifier}, bertanggungjawab menghasilkan klausa yang \textit{self-contained} (independen secara sintaktik dan semantik), dan modul ekstraktor \textit{intra-clause}, yang menggunakan model \textit{natural logic} \citep{maccartney2007natural}, mengubahnya menjadi klausa yang \textit{maximally compact} (tidak mengandung kata redundan). Model sistem ini diimplementasikan dalam \textsc{Stanford Open IE}, yang merupakan bagian dari kakas NLP \textit{opensource}, \textit{Stanford Core NLP}\footnote{Stanford Core NLP \url{https://stanfordnlp.github.io/CoreNLP/}}.
+
+\begin{table}
+\caption{Rangkuman penelitian terkait dan posisi penelitian}
+\label{tab:related_works_summary}
+{\footnotesize
+\begin{tabular}{l >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.7cm}}
+	\hline 
+	\textbf{Aspek} & \textbf{\textsc{TextRunner} \citep{banko2007open}} & \textbf{\textsc{ReVerb} \citep{fader2011identifying}} & \textbf{\textsc{R2A2} \citep{etzioni2011open}} & \textbf{\textsc{Ollie} \citep{schmitz2012open}} & \textbf{\textsc{Stanford Open IE} \citep{angeli2015leveraging}} & \textbf{Penelitian ini} \\ 
+	\hline 
+	\textbf{Fase Label} & NP chunker + dependency parser + aturan (otomatis)  & NP chunker + aturan + anotasi relasi (manual)  & ReVerb + anotasi  argumen (manual)  & ReVerb + dependency parser + anotasi open pattern (manual)  & Dependency parser + anotasi clause splitter (manual) & Dependency parser + NER + aturan + anotasi triple (manual) \\ 
+	\hline
+	\textbf{Fase Belajar} & Naive Bayes Classifier  & Logistic Regression  & REPTree + CRF  & Open Pattern Learning & Logistic Regression  & Random Forest  \\ 
+	\hline
+	\textbf{Fase Ekstrak} & Normalization + merging  & Normalization + merging  & Normalization + merging  & Context analysis & Natural logic  & Merging \\ 
+	\hline
+	\textbf{Bahasa} & Inggris  &  Inggris & Inggris  & Inggris  & Inggris  & Indonesia \\ 
+	\hline 
+\end{tabular}
+} 
+\end{table}
+
+Seperti yang ditunjukkan pada rangkuman dari penelitian terkait \textit{open IE} ditunjukkan pada Tabel \ref{tab:related_works_summary}, posisi dari penelitian ini adalah memberikan kontribusi aturan dan model \textit{supervised learning} untuk bahasa Indonesia, penggunaan NER untuk menambah fitur aturan \& model \textit{supervised learning} serta penggunaan \textit{Random Forest} sebagai \textit{classifier}. Proses pada fase Label pada penelitian ini terinsipirasi dari \textsc{TextRunner} \citep{banko2007open} tapi dengan penggunaan \textit{named-entity} dan anotasi manual untuk fitur klasifikasi \textit{triple}. Sedangkan untuk pembentukan klausa, teknik yang digunakan pada penelitian ini terinspirasi dari \textit{clause splitter} pada \textsc{Stanford Open IE} \citep{angeli2015leveraging}. Penjelasan rinci mengenai rancangan sistem \textit{open IE} bahasa Indonesia ini berikut seluruh modul/komponennya akan dijelaskan pada bab berikutnya.
