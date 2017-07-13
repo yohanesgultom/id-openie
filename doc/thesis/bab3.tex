@@ -13,7 +13,9 @@ Pada bab ini dijelaskan mengenai tahapan penelitian, seperti yang ditunjukkan pa
 \hline
 \textbf{Tahapan} & \textbf{Alat} & \textbf{Hasil} \\
 \hline
-Studi literatur & Mesin pencari buku dan jurnal elektronik & Latar belakang masalah, rumusan masalah, rangkuman penelitian terkait dan ide rancangan sistem \\
+Studi literatur & Mesin pencari buku dan jurnal elektronik Database Jurnal Universitas Indonesia dan \textit{Google Scholar} & Latar belakang masalah, rumusan masalah, rangkuman penelitian terkait dan ide rancangan sistem \\
+\hline
+Pengumpulan data & Mesin pencari \textit{online} \textit{Google} dan respositori kode publik \textit{GitHub} & \textit{Dataset} untuk POS \textit{tagging}, \textit{dependency parsing} dan \textit{named-entity recognition} \\
 \hline
 Perancangan dan pengimplentasian sistem & Java, Python, Git, editor kode & Sistem \textit{Open IE} \\
 \hline
@@ -26,13 +28,37 @@ Evaluasi dan analisis & Python & Tabel hasil, diagram hasil, kesimpulan dan sara
 \section{Studi Literatur}
 %-----------------------------------------------------------------------------%
 
-Pada tahap ini \saya~mengumpulkan dan menelaah dokumen ilmiah seperti \textit{paper} dan artikel elektronik terkait \textit{open IE} untuk memahami topik ini secara lebih mendalam dan mengetahui pencapaian penelitian-penelitian terkait. Pencarian dilakukan digunakan menggunakan mesin pencari\footnote{Database Jurnal Universitas Indonesia \url{http://remote-lib.ui.ac.id}}\footnote{Google Scholar \url{https://scholar.google.co.id/}} jurnal dan artikel ilmiah elektronik nasional dan internasional. Hasil penelaahan ini berupa latar belakang dan rumusan masalah yang dituangkan pada bab \ref{chap:babSatu}, rangkuman dan perbandingan sistem \textit{open IE} pada bab \ref{chap:babDua}, serta ide rancangan sistem \textit{open IE} untuk bahasa Indonesia yang akan dijelaskan pada subbab berikutnya.
+Pada tahap ini dilakukan pengumpulan dan penelaahan dokumen ilmiah seperti \textit{paper} dan artikel elektronik terkait \textit{open IE} untuk memahami topik ini secara lebih mendalam dan mengetahui pencapaian penelitian-penelitian terkait. Langkah dalam tahapan ini meliputi pencarian dan pemilihan publikasi elektronik, peringkasan isi, penelusuran sitasi dan pembandingan publikasi.
+
+Tahapan ini dimulai dengan proses pencarian literatur menggunakan mesin pencari Database Jurnal Universitas Indonesia\footnote{Database Jurnal Universitas Indonesia \url{http://remote-lib.ui.ac.id}} dan \textit{Google Scholar}\footnote{Google Scholar \url{https://scholar.google.co.id/}} untuk mendapatkan jurnal dan artikel ilmiah elektronik nasional dan internasional. Kata kunci yang digunakan adalah \textit{"open information extration"}, \textit{"open domain information extration"} dan \textit{"knowledge extraction"}. Selanjutnya dilakukan seleksi terhadap hasil pencarian dengan membaca abstrak publikasi dan mengunduh versi digital dari publikasi yang dianggap relevan.
+
+Sekumpulan publikasi yang didapatkan dari tahap pencarian kemudian diurutkan berdasarkan tahun publikasi untuk mencari publikasi yang memulai atau merintis penelitian mengenai \textit{open domain information extraction} dan mencari publikasi termutakhir pada bidang ini. Setelah itu dilakukan peringkasan (\textit{summarization}) pada publikasi dimulai dari publikasi yang paling mutakhir. Pada proses ini juga ditelusuri sitasi terhadap penelitian-penelitian yang relevan untuk menambah informasi dan sumber studi literatur. Dari kumpulan publikasi yang diringkas dan ditelusuri kemudian dipilih lagi sejumlah publikasi yang memberikan inspirasi untuk penelitian ini untuk dijadikan referensi utama. Selai itu diambil juga publikasi-publikasi yang dibuat mengacu pada referensi utama atau menjelaskan teori atau teknik yang digunakan pada referensi utama.
+
+Kumpulan publikasi yang dianggap sebagai referensi utama kemudian ditelaah lebih dalam untuk menghasilkan latar belakang dan rumusan masalah penelitian ini yang dituangkan pada bab \ref{chap:babSatu}. Kemudian dilakukan juga perbandingan persamaan dan perbedaan satu referensi dengan yang lain (\textit{compare and contrast}) untuk menghasilkan rangkuman dan perbandingan sistem \textit{open IE} pada bab \ref{chap:babDua}. Hasil dari proses tersebut juga memberikan ide untuk rancangan sistem \textit{open IE} bahasa Indonesia serta ide untuk eksperimen yang akan dilakukan pada penelitian ini.
+
+%-----------------------------------------------------------------------------%
+\section{Pengumpulan Data}
+%-----------------------------------------------------------------------------%
+
+Data yang dibutuhkan pada penelitian ini berupa \textit{dataset} untuk melatih \textit{NLP pipeline} dan \textit{dataset} untuk melatih \textit{triple selector}. \textit{Dataset} yang digunakan untuk melatih \textit{NLP pipeline} didapatkan dengan menelusuri internet dan referensi publikasi yang digunakan:
+
+\begin{enumerate}
+	\item \textit{Dataset} POS \textit{tagging} dan \textit{dependency parsing} diperoleh dari UD treebank Indonesia\footnote{\url{https://github.com/UniversalDependencies/UD_Indonesian}} berisi 5,036 kalimat latih + 559 kalimat uji.
+	
+	\item \textit{Dataset} pengujian \textit{lemmatizer} diperoleh dari repositori kode publik \textit{Lemmatizer} Indonesia\footnote{\url{https://github.com/davidchristiandy/lemmatizer}} \citep{suhartono2014lemmatization}.
+	
+	\item \textit{Dataset} NER diperoleh dari Fasilkom UI (1,700 kalimat latih + 426 kalimat uji) dan repositori publik NER Indonesia\footnote{\url{https://github.com/yusufsyaifudin/indonesia-ner}} (1,835 kalimat latih) \citep{fachri2014nerindonesia}.
+	
+\end{enumerate}
+
+Sedangkan \textit{dataset} untuk melatih \textit{triple selector} harus dibangun dan dianotasi secara manual berdasarkan \textit{dataset} dari UD Indonesia. Hal ini harus dilakukan karena belum ada \textit{dataset} yang tersedia untuk \textit{open IE} bahasa Indonesia.
+
 
 %-----------------------------------------------------------------------------%
 \section{Rancangan dan Implementasi Sistem}
 %-----------------------------------------------------------------------------%
 
-Pada tahap ini \saya~merancang sistem \textit{open IE} untuk bahasa Indonesia yang mengadaptasi beberapa teknik pada sistem \textit{open IE} pada penelitian terkait. Berdasarkan komponen/modul, proses dan aliran data seperti yang ditunjukkan pada Gambar \ref{fig:program_flowchart}, rancangan sistem ini berisi empat modul utama yaitu: 
+Pada tahap ini dilakukan perancangan sistem \textit{open IE} untuk bahasa Indonesia yang mengadaptasi beberapa teknik pada sistem \textit{open IE} pada penelitian terkait. Berdasarkan komponen/modul, proses dan aliran data seperti yang ditunjukkan pada Gambar \ref{fig:program_flowchart}, rancangan sistem ini berisi empat modul utama yaitu: 
 
 \begin{enumerate}
 	\item \textit{NLP pipeline} (rangkaian NLP)
@@ -81,10 +107,10 @@ Sedangkan mengacu pada tiga fase atau langkah \textit{open IE} \citep{etzioni201
 \textit{Lemmatizer} ini mencapai akurasi \textbf{99\%} saat diuji dengan 5.638 pasangan kata dan \textit{lemma} bahasa Indonesia dari \cite{suhartono2014lemmatization}.
 
 \item \textit{Named-Entity Recognizer} (NER) \\
-\textit{Named-entity recognizer} (NER) yang digunakan dalam rangkaian ini adalah \verb|CRFClassifier| \citep{finkel2005incorporating} dari pustaka \textit{Stanford Core NLP}. NER berbasis \textit{Conditional Random Field (CRF) sequence models} ini dilatih dan diuji menggunakan \textit{dataset} yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik\footnote{NER Indonesia \url{https://github.com/yusufsyaifudin/indonesia-ner}}. \textit{dataset} ini berisi kalimat-kalimat yang setiap \textit{token}-nya yang relevan sudah diberi anotasi dari lima kelas: \textit{Person}, \textit{Organization}, \textit{Quantity} dan \textit{Time}. Hasil pelatihan dengan 3,535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, \textit{recall} 0.85 dan \textit{$F_1$-score} \textbf{0.86}.
+\textit{Named-entity recognizer} (NER) yang digunakan dalam rangkaian ini adalah \verb|CRFClassifier| \citep{finkel2005incorporating} dari pustaka \textit{Stanford Core NLP}. NER berbasis \textit{Conditional Random Field (CRF) sequence models} ini dilatih dan diuji menggunakan \textit{dataset} yang didapatkan dari dua sumber, yaitu dari Fakultas Ilmu Komputer, Universitas Indonesia dan dari repositori kode publik\footnote{NER Indonesia \url{https://github.com/yusufsyaifudin/indonesia-ner}} \citep{fachri2014nerindonesia}. \textit{dataset} ini berisi kalimat-kalimat yang setiap \textit{token}-nya yang relevan sudah diberi anotasi dari lima kelas: \textit{Person}, \textit{Organization}, \textit{Quantity} dan \textit{Time}. Hasil pelatihan dengan 3,535 kalimat dan pengujian dengan 426 kalimat adalah model yang mencapai rata-rata presisi 0.86, \textit{recall} 0.85 dan \textit{$F_1$-score} \textbf{0.86}.
 
 \item \textit{Dependency Parser} \\
-\textit{Dependency parser} yang digunakan dalam rangkaian ini adalah salah satu modul dalam pustaka \textit{Standford Core NLP}, yaitu \verb|nndep.DependencyParser| \citep{chen2014fast}. \textit{Dependency parser} ini berbasiskan jaringan syaraf tiruan (\textit{artificial neural network}) yang mempelajari pola transisi antar \textit{token} dalam kalimat dalam membentuk \textit{dependency tree}. \textit{\textit{dataset}set} yang digunakan untuk melatih dan menguji \textit{dependency parser} ini diperoleh dari \textit{treebank} \textit{universal dependency} (UD) bahasa Indonesia (sama dengan yang digunakan untuk \textit{POS tagger}). Model yang dihasilkan dengan melatih \textit{dependency parser} menggunakan 5,036 kalimat bahasa Indonesia ini mencapai nilai \textbf{70\%} UAS (\textit{Unlabeled Attachment Score}) dan \textbf{46\%} LAS (\textit{Labeled Attachment Score}) ketika diuji dengan 559 kalimat.
+\textit{Dependency parser} yang digunakan dalam rangkaian ini adalah salah satu modul dalam pustaka \textit{Standford Core NLP}, yaitu \verb|nndep.DependencyParser| \citep{chen2014fast}. \textit{Dependency parser} ini berbasiskan jaringan syaraf tiruan (\textit{artificial neural network}) yang mempelajari pola transisi antar \textit{token} dalam kalimat dalam membentuk \textit{dependency tree}. \textit{\textit{dataset}set} yang digunakan untuk melatih dan menguji \textit{dependency parser} ini diperoleh dari \textit{treebank} \textit{universal dependency} (UD) \citep{nivre2016universal} bahasa Indonesia (sama dengan yang digunakan untuk \textit{POS tagger}). Model yang dihasilkan dengan melatih \textit{dependency parser} menggunakan 5,036 kalimat bahasa Indonesia ini mencapai nilai \textbf{70\%} UAS (\textit{Unlabeled Attachment Score}) dan \textbf{46\%} LAS (\textit{Labeled Attachment Score}) ketika diuji dengan 559 kalimat.
 
 \end{enumerate}
 
