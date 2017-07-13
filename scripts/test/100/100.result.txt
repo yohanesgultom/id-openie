@@ -1,50 +1,50 @@
 
-real	0m9,985s
-user	0m24,168s
-sys	0m0,620s
-Triples extracted: 325 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xaa.triples.tsv
+real	0m9,674s
+user	0m23,812s
+sys	0m0,660s
+Triples extracted: 303 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xaa.triples.tsv
 
-real	0m10,022s
-user	0m24,104s
-sys	0m0,684s
-Triples extracted: 343 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xab.triples.tsv
+real	0m10,513s
+user	0m26,664s
+sys	0m0,668s
+Triples extracted: 352 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xab.triples.tsv
 
-real	0m10,628s
-user	0m24,416s
+real	0m11,210s
+user	0m28,316s
 sys	0m0,704s
-Triples extracted: 297 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xac.triples.tsv
+Triples extracted: 283 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xac.triples.tsv
 
-real	0m9,832s
-user	0m22,812s
-sys	0m0,720s
-Triples extracted: 316 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xad.triples.tsv
+real	0m12,037s
+user	0m28,920s
+sys	0m0,648s
+Triples extracted: 301 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xad.triples.tsv
 
-real	0m10,242s
-user	0m24,340s
+real	0m10,583s
+user	0m23,144s
+sys	0m0,592s
+Triples extracted: 291 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xae.triples.tsv
+
+real	0m10,793s
+user	0m26,984s
+sys	0m0,648s
+Triples extracted: 344 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xaf.triples.tsv
+
+real	0m10,465s
+user	0m26,652s
+sys	0m0,684s
+Triples extracted: 298 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xag.triples.tsv
+
+real	0m10,270s
+user	0m24,840s
+sys	0m0,704s
+Triples extracted: 314 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xah.triples.tsv
+
+real	0m10,101s
+user	0m24,596s
+sys	0m0,736s
+Triples extracted: 286 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xai.triples.tsv
+
+real	0m9,687s
+user	0m22,640s
 sys	0m0,728s
-Triples extracted: 302 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xae.triples.tsv
-
-real	0m10,384s
-user	0m23,308s
-sys	0m0,720s
-Triples extracted: 362 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xaf.triples.tsv
-
-real	0m10,009s
-user	0m23,628s
-sys	0m0,708s
-Triples extracted: 296 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xag.triples.tsv
-
-real	0m11,060s
-user	0m29,588s
-sys	0m0,700s
-Triples extracted: 313 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xah.triples.tsv
-
-real	0m10,329s
-user	0m25,260s
-sys	0m0,728s
-Triples extracted: 309 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xai.triples.tsv
-
-real	0m9,452s
-user	0m22,136s
-sys	0m0,744s
-Triples extracted: 256 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xaj.triples.tsv
+Triples extracted: 245 /home/yohanesgultom/Workspace/id-openie/scripts/test/100/xaj.triples.tsv

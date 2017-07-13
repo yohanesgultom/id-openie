@@ -48,6 +48,7 @@ public class DependencyParser {
         // Create the Stanford CoreNLP pipeline
         this.props = PropertiesUtils.asProperties(
                 "annotators", "tokenize,ssplit,pos,lemma,ner,depparse",
+                "ssplit.eolonly", "true",
                 "ner.model", nerModel,
                 "ner.useSUTime", "false",
                 "pos.model", taggerModel,
@@ -127,7 +128,11 @@ public class DependencyParser {
         String outputDir = ns.getString("outputDir");
         try {
             if (text != null) {
-                System.out.println(new DependencyParser().parse(text.trim()));
+                text = text.trim();
+                if (!text.endsWith(".")) {
+                  text += ".";
+                }
+                System.out.println(new DependencyParser().parse(text));
             } else if (files != null) {
                 List<File> fileList = new ArrayList<>();
                 List<String> outputFiles = new ArrayList<>();

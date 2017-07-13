@@ -242,6 +242,24 @@ Metrik pada eksperimen ini adalah waktu proses per kalimat (detik) dan jumlah \t
 
 Hasil eksperimen tersebut ditunjukkan pada Tabel \ref{tab:system_extraction_time} di mana waktu proses rata-rata per kalimat \textbf{0.02 detik/kalimat} dicapai untuk ukuran dokumen terbesar 5,000 kalimat. Dapat dilihat bahwa rata-rata waktu yang dibutuhkan untuk memproses satu kalimat semakin menurun seiring dengan bertambahnya jumlah kalimat pada dokumen. Sedangkan pada Tabel \ref{tab:system_extraction_triple}, terlihat bahwa rata-rata jumlah \textit{triple} yang diekstraksi dari setiap kalimat cukup konsisten untuk setiap variasi ukuran dokumen yaitu antara \textbf{2.58} - \textbf{3.12} \textit{triple}/kalimat. 
 
+\begin{table}
+	\caption{Presisi hasil ekstrasi \textit{triple} dari tiga dokumen}
+	\label{tab:system_extraction_precision}
+	\centering
+	\begin{tabular}{l p{2cm} p{2cm} p{2cm} p{2cm} p{2cm}}
+		\hline
+		\textbf{Jumlah Kalimat} & \textbf{Jumlah Triple} & \textbf{Jumlah Triple Valid} & \textbf{Jumlah Triple Invalid} & \textbf{\textit{Precision}} \\
+		\hline			
+		5 & 9 & 5 & 4 & 55.56\% \\
+		10 & 19 & 4 & 15 & 21.05\% \\
+		100 & 303 & 65 & 238 & 21.45\% \\
+		\hline
+		\textbf{Rata-rata} & & & & \textbf{32.69}\% \\
+		\hline
+	\end{tabular}
+\end{table}
+
+Tahap berikutnya pada eksperimen ini adalah menghitung \textit{precision} (presisi) dari \textit{triple} yang dihasilkan oleh sistem. Untuk menghitung presisi tersebut, diambil hasil ekstraksi dari tiga buah dokumen dengan ukuran yang berbeda untuk dihitung secara manual berapa jumlah \textit{triple} yang valid dan invalid kemudian dihitung presisinya. Hasil dari perhitungan ini ditunjukkan pada Tabel \ref{tab:system_extraction_precision}, yang menunjukkan bahwa rata-rata presisi hasil ekstraksi sistem adalah \textbf{32.69\%}. Nilai \textit{recall} dari sistem tidak dihitung karena belum tersedianya \textit{dataset} yang memadai untuk bahasa Indonesia.
 
 %-----------------------------------------------------------------------------%
 \section{Analisis}
@@ -291,3 +309,45 @@ Hal menarik yang ditemukan dari hasil eksperimen pertama adalah \textit{random f
 Hasil eksperimen kedua menunjukkan bahwa waktu rata-rata ekstraksi per kalimat dari dokumen yang berukuran 5,000 kalimat, 0.002 detik/kalimat, terlihat lebih cepat dari \textsc{TextRunner} yang membutuhkan 0.036 detik/kalimat \citep{banko2007open}. Sekalipun sistem ini tidak bisa diklaim lebih cepat karena adanya perbedaan data uji dan sistem yang digunakan, hasil ini tetap menunjukkan bahwa penggunaan fitur \textit{heavy linguistic} ternyata cukup efisien untuk digunakan pada dokumen dengan ukuran 5,000 kalimat. Trend dari grafik rata-rata waktu proses pada Gambar \ref{fig:system_performance} juga mengindikasikan bahwa sistem akan tetap atau bahkan semakin efisien untuk ukuran dokumen yang lebih besar. 
 
 Grafik rata-rata jumlah \textit{triple} yang diekstraksi per kalimat pada Gambar \ref{fig:system_performance} juga menunjukkan nilai yang cukup konstan pada rentang 2.58-3.12 \textit{triple}/kalimat. Hal ini menunjukkan bahwa sistem berfungsi normal karena seharusnya jumlah \textit{triple} yang dihasilkan per kalimat tidak dipengaruhi oleh ukuran dokumen. Selain itu rata-rata jumlah \textit{triple} yang dihasilkan sistem ini juga sebanding dengan \textsc{TextRunner} yang rata-rata menghasilkan 2.2 \textit{triple}/kalimat \citep{banko2007open}.
+
+Hasil pengukuran rata-rata \textit{precision} (presisi) hasil ekstraksi sistem menunjukkan hasil yang rendah, yaitu 32.69\%. Secara umum, hal ini disebabkan oleh rendahnya akurasi komponen \textit{NLP pipeline} karena kinerja komponen \textit{triple candidate generator}, \textit{triple selector} dan \textit{token expander} bergantung pada hasil anotasi \textit{NLP pipeline}. Dengan kalkulasi sederhana pada Persamaan \ref{eq:system_precision}, didapatkan estimasi presisi 37\%, yang tidak terlalu jauh dari presisi hasil eksperimen.
+
+\noindent \begin{align} \label{eq:system_precision}
+	\textit{Presisi Sistem} &= \textit{Presisi NLP Pipeline} \times \textit{Presisi Triple Selector} \\ \nonumber
+	&= 0.65 \times 0.58 \\ \nonumber
+	&= 0.37
+\end{align}
+
+Secara lebih rinci, berikut adalah hasil analisis dari penyebab rendahnya presisi hasil ekstraksi sistem pada eksperimen:
+
+\begin{enumerate}
+	
+	\item Penyebab paling dominan dari kesalahan ekstraksi \textit{triple} adalah kesalahan POS \textit{tagging} dan \textit{dependency parsing} pada dokumen CoNLL-U yang dihasilkan \textit{NLP pipeline}. Contoh kesalahan POS \textit{tagging} yang ditemukan adalah dideteksinya kata dengan huruf awal kapital sebagai PROPN (\textit{proper noun}) dan dideteksinya kata dengan POS \textit{tag} lain sebagai VERB (kata kerja). Sebagai contoh, pada kalimat "\textit{Meski gagal, Boaz tetap mencoba mengambil sisi positif atas kekalahan timnas di final Piala AFF 2016.}", kata "Meski" dideteksi sebagai PROPN sehingga menghasilkan \textit{triple} invalid \textit{(\textbf{Meski}, mengambil, sisi positif)}. Kesalahan juga terjadi pada kata "gagal" yang dideteksi sebagai VERB yang kemudian menyebabkan kegagalan \textit{dependency parsing} yaitu dideteksinya kata "gagal" sebagai ROOT (kepala kalimat pada \textit{dependency tree}). Kesalahan ini yang paling banyak ditemukan saat menelusuri penyebab \textit{triple} invalid pada saat pengukuran presisi hasil ekstraksi. 
+	
+	\item Selain karena kesalahan pada \textit{NLP pipeline}, aturan ekspansi pada \textit{token expander} masih memerlukan banyak perbaikan. Salah satu kekurangan dari aturan pada \ref{tab:token_expansion_rules_s_o} adalah yang mengabaikan kemungkinan adanya klausa yang mengandung \textit{token} VERB (kata kerja) sehingga membuat banyak \textit{triple} kehilangan makna. Salah satu contoh terjadi pada kalimat "\textit{Batalnya Bocelli Pada wawancara dengan CNBC, seperti dikutip dari NME, Thomas J Barrack Jr, ketua Presidential Inaugural Committee mengatakan Trump tidak menawarkan penyanyi opera veteran itu bernyanyi di malam inagurasi.
+	}" yang menghasilkan \textit{triple} invalid:
+
+	\begin{itemize}
+		\item \textit{(Thomas J Barrack Jr, mengatakan, Trump)}
+		\item \textit{(Thomas J Barrack Jr,	mengatakan, tidak menawarkan)}
+		\item \textit{(Thomas J Barrack Jr, mengatakan,	penyanyi opera veteran itu)}
+		\item \textit{(Thomas J Barrack Jr, mengatakan,	untuk bernyanyi)}
+	\end{itemize}
+	
+	Di mana seharusnya salah \textit{triple} yang dihasilkan memiliki objek berupa klausa dengan kata kerja \textit{(Thomas J Barrack Jr, mengatakan, \textbf{Trump tidak menawarkan penyanyi opera veteran itu bernyanyi})}. 
+	
+	3. Masalah lain yang diakibatkan oleh aturan ekspansi \textit{token expander} pada Tabel \ref{tab:token_expansion_rules_p} adalah belum mengakomodir \textit{token} dengan POS \textit{tag} lain seperti NOUN (kata benda) dan ADV (keterangan kata kerja) dalam predikat. Contoh masalah yang ditimbulkan oleh kesalahan ini adalah pada kalimat \textit{"Presiden Joko Widodo memberikan arahan kepada jajaran kepolisian."} yang menghasilkan \textit{triple} \textit{(Presiden Joko Widodo, memberikan kepada, jajaran kepolisian)} di mana \textit{triple} yang seharusnya dihasilkan adalah \textit{(Presiden Joko Widodo, memberikan \textbf{arahan} kepada, jajaran kepolisian)} di mana "arahan" memiliki POS \textit{tag} NOUN. Contoh lainnya adalah kalimat \textit{"Nantinya stadion tersebut bisa menjadi home base klub sepak bola Persija Jakarta."} yang menghasilkan \textit{triple} invalid \textit{(Nantinya stadion tersebut \textbf{bisa}, menjadi, home base klub sepak bola Persija Jakarta)} di mana \textit{triple} yang valid adalah \textit{(Nantinya stadion tersebut, \textbf{bisa} menjadi, home base klub sepak bola Persija Jakarta)}.
+	
+	\item Selain itu ada beberapa masalah lain yang juga menyebabkan \textit{triple} yang invalid yang perlu diteliti lebih jauh:
+	
+	\begin{itemize}
+	\item Kata majemuk. Contoh: \textit{"Juru bicara"}
+	\item Entitas khusus bahasa Indonesia. Contoh: \textit{"Peraturan Menteri ESDM No. 36 tahun 2016"}.
+	\item Kalimat majemuk kompleks. Contoh: \textit{"Kebalikan dari bahasa fusional adalah bahasa aglutinatif, yang membentuk kata-kata dengan menggabungkan morfem-morfem dalam satu rantai, tapi dengan setiap morfem sebagai suatu unit diskrit semantik."}
+	\item Kalimat yang posisi subjek-predikat-objeknya tidak berurutan. Contoh: \textit{"Karena disebabkan hujan deras, demonstrasi itu bubar"}
+	\item Kesalahan ketik. Contoh: \textit{"di embargo"}
+	\end{itemize}
+	
+\end{enumerate} 
+
+Untuk memperbaiki kesalahan yang diakibatkan kesalahan POS \textit{tagging} dan \textit{dependency parsing}, perlu dibangun \textit{dataset} yang lebih berkualitas untuk POS \textit{tagging} dan \textit{dependency parsing} serta melakukan penelitian untuk meningkatkan kinerja algoritma POS \textit{tagger} dan \textit{dependency parser} sehingga dapat dihasilkan komponen \textit{NLP pipeline} yang lebih baik. Sedangkan untuk memperbaiki pada aturan \textit{token expander} perlu dipertimbangkan untuk meneliti aturan yang lebih baik atau menggunakan NP chunker seperti pada \textsc{TextRunner} \citep{banko2007open} untuk mengekstraksi klausa argumen (subjek dan objek). 
