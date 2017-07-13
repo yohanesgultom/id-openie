@@ -11,7 +11,7 @@ Pada bab ini dijelaskan hasil evaluasi dan analisis dari penelitian ini.
 
 Dua eksperimen pada penelitian ini dilakukan pada \textit{notebook} dengan sistem operasi \textit{Ubuntu 15.04 64-bit}, prosesor \textit{Intel Core i7 5500U} (\textit{dual cores}), RAM DDR3 8 GB dan penyimpanan SSD 250 GB. Program yang digunakan untuk melakukan eksperimen pertama adalah \verb|classifier.py| sedangkan eksperimen yang kedua menggunakan program \verb|extract_triples.py| (terlampir).
 
-Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan diuji menggunakan data kandidat \textit{triple} yang sudah diberikan label, diekstraksi menjadi 17 fitur dan dinormalisasi. Metode yang digunakan untuk melatih dan menguji adalah \textit{k-fold} \textit{cross-validation} \citep{kohavi1995study} dengan variasi nilai $k = {2, 3, 5, 7, 10}$. Empat model yang dibandingkan beserta dengan konfigurasinya adalah sebagai berikut:
+Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan diuji menggunakan data kandidat \textit{triple} yang sudah diberikan label, diekstraksi menjadi 17 fitur dan dinormalisasi. Metode yang digunakan untuk melatih dan menguji adalah \textit{k-fold} \textit{cross-validation} \citep{kohavi1995study} dengan variasi nilai $k = \{2, 3, 5, 7, 10\}$. Empat model yang dibandingkan beserta dengan konfigurasinya adalah sebagai berikut:
 
 \begin{enumerate}
 
@@ -46,17 +46,19 @@ Pada eksperimen pertama, empat model \textit{supervised learning} dilatih dan di
 
 \end{enumerate}
 
-Eksperimen ini dilakukan dengan menjalankan program \verb|classifier.py| (di direktori yang sama dengan pustaka utama \verb|tripletools.py|) dengan input \textit{dataset} fitur yang sudah dinormalisasi dengan format \textit{comma separated value} (CSV) \verb|triple-selector.train.csv| pada \textit{terminal}:
+Eksperimen ini dilakukan dengan menjalankan program \verb|classifier.py| (di direktori yang sama dengan pustaka utama \verb|tripletools.py|) dengan input \textit{dataset} fitur yang sudah dinormalisasi dengan format \textit{comma separated value} (CSV) \verb|triple-selector.train.csv| pada \textit{terminal Ubuntu}:
 
+{\scriptsize
 \begin{verbatim}
-	$ python classifier.py --mode compare_models --cv 2 triple-selector.train.csv
-	$ python classifier.py --mode compare_models --cv 3 triple-selector.train.csv
-	$ python classifier.py --mode compare_models --cv 5 triple-selector.train.csv
-	$ python classifier.py --mode compare_models --cv 7 triple-selector.train.csv
-	$ python classifier.py --mode compare_models --cv 10 triple-selector.train.csv
+$ python classifier.py --mode compare_models --cv 2 triple-selector.train.csv
+$ python classifier.py --mode compare_models --cv 3 triple-selector.train.csv
+$ python classifier.py --mode compare_models --cv 5 triple-selector.train.csv
+$ python classifier.py --mode compare_models --cv 7 triple-selector.train.csv
+$ python classifier.py --mode compare_models --cv 10 triple-selector.train.csv
 \end{verbatim}
+}
 
-Hasil dari eksperimen pertama ini dapat dilihat pada Tabel \ref{tab:models_performance_k_2}, \ref{tab:models_performance_k_3}, \ref{tab:models_performance_k_5}, \ref{tab:models_performance_k_7} dan \ref{tab:models_performance_k_10}. Tetapi karena jika melihat standar deviasi yang terlalu tinggi (di atas 0.1) untuk $k > 3$ pada Tabel \ref{tab:models_performance_stdev} dan diagram Gambar \ref{fig:models_performance_stdev}, maka hasil yang kita amati adalah k-\textit{fold} \textit{cross-validation} dengan $k={2, 3}$ yang visualisasinya ditunjukkan pada Gambar \ref{fig:models_performance_k_2} dan Gambar \ref{fig:models_performance_k_3}. Dapat dilihat bahwa \textit{random forest} lebih tinggi dari model lainnya untuk $k=3$ dan sebanding dengan SVM untuk $k=2$. SVM hampir selalu mencapai nilai \textit{precision} tertinggi dalam semua eksperimen tetapi dengan nilai \textit{recall} yang lebih rendah dari model lain. Sedangkan \textit{random forest} bukan hanya mencapai nilai $F_1$ yang hampir selalu lebih tinggi, tapi juga memiliki nilai \textit{precision} dan \textit{recall} yang seimbang. 
+Hasil dari eksperimen pertama ini dapat dilihat pada Tabel \ref{tab:models_performance_k_2}, \ref{tab:models_performance_k_3}, \ref{tab:models_performance_k_5}, \ref{tab:models_performance_k_7} dan \ref{tab:models_performance_k_10}. Tetapi karena standar deviasi yang terlalu tinggi (di atas 0.1) untuk $k > 3$ pada Tabel \ref{tab:models_performance_stdev} dan diagram Gambar \ref{fig:models_performance_stdev}, maka hasil yang kita amati adalah k-\textit{fold} \textit{cross-validation} dengan $k=\{2, 3\}$ yang visualisasinya ditunjukkan pada Gambar \ref{fig:models_performance_k_2} dan Gambar \ref{fig:models_performance_k_3}. Dapat dilihat bahwa \textit{random forest} lebih tinggi dari model lainnya untuk $k=3$ dan sebanding dengan SVM untuk $k=2$. SVM hampir selalu mencapai nilai \textit{precision} tertinggi dalam semua eksperimen tetapi dengan nilai \textit{recall} yang lebih rendah dari model lain. Sedangkan \textit{random forest} bukan hanya mencapai nilai $F_1$ yang hampir selalu lebih tinggi, tapi juga memiliki nilai \textit{precision} dan \textit{recall} yang seimbang. 
 
 \begin{table}
 	\caption{Hasil k-\textit{fold} \textit{cross-validation} $k=2$ model \textit{supervised learning} untuk \textit{triple selector}}
@@ -172,7 +174,6 @@ Hasil dari eksperimen pertama ini dapat dilihat pada Tabel \ref{tab:models_perfo
 	\label{fig:models_performance_k_3}
 \end{figure}
 
-
 Pada eksperimen kedua, sistem \textit{open IE} dipakai untuk mengekstrak \textit{triple} dokumen dengan lima variasi ukuran/jumlah kalimat, yaitu 5, 10, 100, 1,000 dan 5,000 kalimat per dokumen. Untuk setiap variasi ukuran dokumen, digunakan 10 buah dokumen yang berbeda dengan ukuran yang identik sehingga total ada 50 dokumen berbeda yang digunakan dalam eksperimen ini. Kalimat-kalimat dalam dokumen uji ini diambil secara acak dari berbagai jenis artikel berita dan ensiklopedia bahasa Indonesia di internet sehingga dapat mewakili karakteristik \textit{open domain}.
 
 Metrik pada eksperimen ini adalah waktu proses per kalimat (detik) dan jumlah \textit{triple} yang diekstraksi per kalimat. Eksperimen ini dilakukan dengan menjalankan program utama \verb|extract_triples.py| untuk setiap dokumen dengan format perintah:
@@ -265,7 +266,7 @@ Tahap berikutnya pada eksperimen ini adalah menghitung \textit{precision} (presi
 \section{Analisis}
 %-----------------------------------------------------------------------------%
 
-Hasil eksperimen pertama di mana nilai $F_1$ tertinggi hanya 0.58, mengindikasikan bahwa semua model mengalami kesulitan untuk mempelajari pola \textit{triples} dari \textit{dataset} yang diberikan. Kemungkinan penyebab hasil ini adalah masalah pada model (pemilihan fitur atau algoritma) atau kualitas \textit{dataset} yang digunakan (konflik pola atau ketidaklengkapan pola \textit{dataset}). Untuk memastikan penyebab dari hasil eksperimen pertama ini, \saya~melakukan eksperimen tambahan yaitu menguji tiap model \textit{triple selector} menggunakan \textit{dataset} latih (data yang sama). Hasil cukup baik yang ditunjukkan pada Gambar \ref{fig:models_performance_training} dan Tabel \ref{tab:models_performance_training}, di mana $F_1$ tertinggi \textbf{0.83}, \textit{recall} tertinggi \textbf{0.96} dan \textit{precision} tertinggi \textbf{0.88}, menunjukkan bahwa fitur yang dipilih dan model yang digunakan tidak memiliki masalah (kecuali model linier, \textit{logistic regression}). Oleh karena itu \saya~berargumen bahwa masalah utama terdapat pada \textit{dataset} yang digunakan, yaitu tidak cukupnya pola $\nicefrac{2}{3}$ data yang dipakai melatih untuk mengenali pola sisa $\nicefrac{1}{3}$ data yang dipakai untuk menguji.
+Hasil eksperimen pertama di mana nilai $F_1$ tertinggi hanya 0.58, mengindikasikan bahwa semua model mengalami kesulitan untuk mempelajari pola \textit{triples} dari \textit{dataset} yang diberikan. Kemungkinan penyebab hasil ini adalah masalah pada model (pemilihan fitur atau algoritma) atau kualitas \textit{dataset} yang digunakan (konflik pola atau ketidaklengkapan pola \textit{dataset}). Untuk memastikan penyebab dari hasil eksperimen pertama ini, dilakukan eksperimen tambahan yaitu menguji tiap model \textit{triple selector} menggunakan \textit{dataset} latih (data yang sama). Hasil cukup baik yang ditunjukkan pada Gambar \ref{fig:models_performance_training} dan Tabel \ref{tab:models_performance_training}, di mana $F_1$ tertinggi \textbf{0.83}, \textit{recall} tertinggi \textbf{0.96} dan \textit{precision} tertinggi \textbf{0.88}, menunjukkan bahwa fitur yang dipilih dan model yang digunakan tidak memiliki masalah (kecuali model linier, \textit{logistic regression}). Berdasarkan itu argumen yang mungkin adalah bahwa masalah utama terdapat pada \textit{dataset} yang digunakan, yaitu tidak cukupnya pola $\nicefrac{2}{3}$ data yang dipakai melatih untuk mengenali pola sisa $\nicefrac{1}{3}$ data yang dipakai untuk menguji.
 
 \begin{figure}
 	\includegraphics[width=\textwidth]{../images/models_performance_training.png}
@@ -289,7 +290,7 @@ Hasil eksperimen pertama di mana nilai $F_1$ tertinggi hanya 0.58, mengindikasik
 	\end{tabular}
 \end{table}
 
-Selain disebabkan oleh kurangnya jumlah kalimat yang dianotasi, permasalahan pada \textit{dataset} \textit{triple selector} ini juga tentu dipengaruhi oleh kemampuan \textit{triple candidate generator} untuk menghasilkan jumlah kandidat \textit{triple} valid (data positif) yang sebanding jumlahnya dengan kandidat yang tidak valid (data negatif). \saya~berpendapat bahwa, selain menambah data, ada minimal dua solusi yang dapat dilakukan untuk meningkatkan kualitas \textit{dataset}, yaitu:
+Selain disebabkan oleh kurangnya jumlah kalimat yang dianotasi, permasalahan pada \textit{dataset} \textit{triple selector} ini juga tentu dipengaruhi oleh kemampuan \textit{triple candidate generator} untuk menghasilkan jumlah kandidat \textit{triple} valid (data positif) yang sebanding jumlahnya dengan kandidat yang tidak valid (data negatif). Selain menambah data, ada minimal dua solusi yang dapat dilakukan untuk meningkatkan kualitas \textit{dataset}, yaitu:
 
 \begin{enumerate}
 	\item Mengekstrak \textit{triple} implisit dari kalimat \\
@@ -304,7 +305,7 @@ Selain disebabkan oleh kurangnya jumlah kalimat yang dianotasi, permasalahan pad
 	
 \end{enumerate}
 
-Hal menarik yang ditemukan dari hasil eksperimen pertama adalah \textit{random forest}, yang mewakili \textit{ensemble classifier}, merupakan pemodelan yang paling cocok dibandingkan pemodelan linier (\textit{logistic regression}), nonlinier dengan optimalisasi margin (SVM) dan jaringan syaraf tiruan (MLP). \saya~menyimpulkan bahwa dibutuhkan pemodelan yang keseimbangan antara \textit{precision} dan \textit{recall}-nya relatif mudah disesuaikan untuk module \textit{triple selector}. Sekalipun tidak memiliki \textit{precision} setinggi SVM, \textit{Random forest} lebih unggul karena penyesuaian jumlah dan kedalaman \textit{tree} memudahkan penyeimbangan \textit{precision} dan \textit{recall} yang menghasilkan $F_1$ yang paling baik. Potensi SVM yang mampu mencapai \textit{precision} yang paling tinggi ini juga mungkin bisa dimanfaatkan dengan melakukan \textit{bagging} \citep{breiman1996bagging} SVM dan \textit{random forest} untuk meningkatkan kinerja lebih jauh.
+Hal menarik yang ditemukan dari hasil eksperimen pertama adalah \textit{random forest}, yang mewakili \textit{ensemble classifier}, merupakan pemodelan yang paling cocok dibandingkan pemodelan linier (\textit{logistic regression}), nonlinier dengan optimalisasi margin (SVM) dan jaringan syaraf tiruan (MLP). Dapat diisimpulkan bahwa dibutuhkan pemodelan yang keseimbangan antara \textit{precision} dan \textit{recall}-nya relatif mudah disesuaikan untuk module \textit{triple selector}. Sekalipun tidak memiliki \textit{precision} setinggi SVM, \textit{Random forest} lebih unggul karena penyesuaian jumlah dan kedalaman \textit{tree} memudahkan penyeimbangan \textit{precision} dan \textit{recall} yang menghasilkan $F_1$ yang paling baik. Potensi SVM yang mampu mencapai \textit{precision} yang paling tinggi ini juga mungkin bisa dimanfaatkan dengan melakukan \textit{bagging} \citep{breiman1996bagging} SVM dan \textit{random forest} untuk meningkatkan kinerja lebih jauh.
 
 Hasil eksperimen kedua menunjukkan bahwa waktu rata-rata ekstraksi per kalimat dari dokumen yang berukuran 5,000 kalimat, 0.002 detik/kalimat, terlihat lebih cepat dari \textsc{TextRunner} yang membutuhkan 0.036 detik/kalimat \citep{banko2007open}. Sekalipun sistem ini tidak bisa diklaim lebih cepat karena adanya perbedaan data uji dan sistem yang digunakan, hasil ini tetap menunjukkan bahwa penggunaan fitur \textit{heavy linguistic} ternyata cukup efisien untuk digunakan pada dokumen dengan ukuran 5,000 kalimat. Trend dari grafik rata-rata waktu proses pada Gambar \ref{fig:system_performance} juga mengindikasikan bahwa sistem akan tetap atau bahkan semakin efisien untuk ukuran dokumen yang lebih besar. 
 
@@ -336,7 +337,7 @@ Secara lebih rinci, berikut adalah hasil analisis dari penyebab rendahnya presis
 	
 	Di mana seharusnya salah \textit{triple} yang dihasilkan memiliki objek berupa klausa dengan kata kerja \textit{(Thomas J Barrack Jr, mengatakan, \textbf{Trump tidak menawarkan penyanyi opera veteran itu bernyanyi})}. 
 	
-	3. Masalah lain yang diakibatkan oleh aturan ekspansi \textit{token expander} pada Tabel \ref{tab:token_expansion_rules_p} adalah belum mengakomodir \textit{token} dengan POS \textit{tag} lain seperti NOUN (kata benda) dan ADV (keterangan kata kerja) dalam predikat. Contoh masalah yang ditimbulkan oleh kesalahan ini adalah pada kalimat \textit{"Presiden Joko Widodo memberikan arahan kepada jajaran kepolisian."} yang menghasilkan \textit{triple} \textit{(Presiden Joko Widodo, memberikan kepada, jajaran kepolisian)} di mana \textit{triple} yang seharusnya dihasilkan adalah \textit{(Presiden Joko Widodo, memberikan \textbf{arahan} kepada, jajaran kepolisian)} di mana "arahan" memiliki POS \textit{tag} NOUN. Contoh lainnya adalah kalimat \textit{"Nantinya stadion tersebut bisa menjadi home base klub sepak bola Persija Jakarta."} yang menghasilkan \textit{triple} invalid \textit{(Nantinya stadion tersebut \textbf{bisa}, menjadi, home base klub sepak bola Persija Jakarta)} di mana \textit{triple} yang valid adalah \textit{(Nantinya stadion tersebut, \textbf{bisa} menjadi, home base klub sepak bola Persija Jakarta)}.
+	\item Masalah lain yang diakibatkan oleh aturan ekspansi \textit{token expander} pada Tabel \ref{tab:token_expansion_rules_p} adalah belum mengakomodir \textit{token} dengan POS \textit{tag} lain seperti NOUN (kata benda) dan ADV (keterangan kata kerja) dalam predikat. Contoh masalah yang ditimbulkan oleh kesalahan ini adalah pada kalimat \textit{"Presiden Joko Widodo memberikan arahan kepada jajaran kepolisian."} yang menghasilkan \textit{triple} \textit{(Presiden Joko Widodo, memberikan kepada, jajaran kepolisian)} di mana \textit{triple} yang seharusnya dihasilkan adalah \textit{(Presiden Joko Widodo, memberikan \textbf{arahan} kepada, jajaran kepolisian)} di mana "arahan" memiliki POS \textit{tag} NOUN. Contoh lainnya adalah kalimat \textit{"Nantinya stadion tersebut bisa menjadi home base klub sepak bola Persija Jakarta."} yang menghasilkan \textit{triple} invalid \textit{(Nantinya stadion tersebut \textbf{bisa}, menjadi, home base klub sepak bola Persija Jakarta)} di mana \textit{triple} yang valid adalah \textit{(Nantinya stadion tersebut, \textbf{bisa} menjadi, home base klub sepak bola Persija Jakarta)}.
 	
 	\item Selain itu ada beberapa masalah lain yang juga menyebabkan \textit{triple} yang invalid yang perlu diteliti lebih jauh:
 	

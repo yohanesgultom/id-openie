@@ -32,7 +32,7 @@ Pada tahap ini dilakukan pengumpulan dan penelaahan dokumen ilmiah seperti \text
 
 Tahapan ini dimulai dengan proses pencarian literatur menggunakan mesin pencari Database Jurnal Universitas Indonesia\footnote{Database Jurnal Universitas Indonesia \url{http://remote-lib.ui.ac.id}} dan \textit{Google Scholar}\footnote{Google Scholar \url{https://scholar.google.co.id/}} untuk mendapatkan jurnal dan artikel ilmiah elektronik nasional dan internasional. Kata kunci yang digunakan adalah \textit{"open information extration"}, \textit{"open domain information extration"} dan \textit{"knowledge extraction"}. Selanjutnya dilakukan seleksi terhadap hasil pencarian dengan membaca abstrak publikasi dan mengunduh versi digital dari publikasi yang dianggap relevan.
 
-Sekumpulan publikasi yang didapatkan dari tahap pencarian kemudian diurutkan berdasarkan tahun publikasi untuk mencari publikasi yang memulai atau merintis penelitian mengenai \textit{open domain information extraction} dan mencari publikasi termutakhir pada bidang ini. Setelah itu dilakukan peringkasan (\textit{summarization}) pada publikasi dimulai dari publikasi yang paling mutakhir. Pada proses ini juga ditelusuri sitasi terhadap penelitian-penelitian yang relevan untuk menambah informasi dan sumber studi literatur. Dari kumpulan publikasi yang diringkas dan ditelusuri kemudian dipilih lagi sejumlah publikasi yang memberikan inspirasi untuk penelitian ini untuk dijadikan referensi utama. Selai itu diambil juga publikasi-publikasi yang dibuat mengacu pada referensi utama atau menjelaskan teori atau teknik yang digunakan pada referensi utama.
+Sekumpulan publikasi yang didapatkan dari tahap pencarian kemudian diurutkan berdasarkan tahun publikasi untuk mencari publikasi yang memulai atau merintis penelitian mengenai \textit{open domain information extraction} (\textit{open IE}) dan mencari publikasi termutakhir pada bidang ini. Setelah itu dilakukan peringkasan (\textit{summarization}) pada publikasi dimulai dari publikasi yang paling mutakhir. Pada proses ini juga ditelusuri sitasi terhadap penelitian-penelitian yang relevan untuk menambah informasi dan sumber studi literatur. Berdasarkan hasil ringkasan tersebut, kemudian dipilih lagi sejumlah publikasi yang memberikan inspirasi untuk penelitian ini sebagai referensi utama. Selain itu, sebagai tambahan referensi, diambil juga publikasi-publikasi yang dibuat mengacu pada referensi utama atau menjelaskan teori atau teknik yang digunakan pada referensi utama.
 
 Kumpulan publikasi yang dianggap sebagai referensi utama kemudian ditelaah lebih dalam untuk menghasilkan latar belakang dan rumusan masalah penelitian ini yang dituangkan pada bab \ref{chap:babSatu}. Kemudian dilakukan juga perbandingan persamaan dan perbedaan satu referensi dengan yang lain (\textit{compare and contrast}) untuk menghasilkan rangkuman dan perbandingan sistem \textit{open IE} pada bab \ref{chap:babDua}. Hasil dari proses tersebut juga memberikan ide untuk rancangan sistem \textit{open IE} bahasa Indonesia serta ide untuk eksperimen yang akan dilakukan pada penelitian ini.
 
@@ -43,11 +43,11 @@ Kumpulan publikasi yang dianggap sebagai referensi utama kemudian ditelaah lebih
 Data yang dibutuhkan pada penelitian ini berupa \textit{dataset} untuk melatih \textit{NLP pipeline} dan \textit{dataset} untuk melatih \textit{triple selector}. \textit{Dataset} yang digunakan untuk melatih \textit{NLP pipeline} didapatkan dengan menelusuri internet dan referensi publikasi yang digunakan:
 
 \begin{enumerate}
-	\item \textit{Dataset} POS \textit{tagging} dan \textit{dependency parsing} diperoleh dari UD treebank Indonesia\footnote{\url{https://github.com/UniversalDependencies/UD_Indonesian}} berisi 5,036 kalimat latih + 559 kalimat uji.
+	\item \textit{Dataset} POS \textit{tagging} dan \textit{dependency parsing} diperoleh dari UD treebank Indonesia\footnote{\url{https://github.com/UniversalDependencies/UD_Indonesian}} berisi 5,036 kalimat latih dan 559 kalimat uji.
 	
 	\item \textit{Dataset} pengujian \textit{lemmatizer} diperoleh dari repositori kode publik \textit{Lemmatizer} Indonesia\footnote{\url{https://github.com/davidchristiandy/lemmatizer}} \citep{suhartono2014lemmatization}.
 	
-	\item \textit{Dataset} NER diperoleh dari Fasilkom UI (1,700 kalimat latih + 426 kalimat uji) dan repositori publik NER Indonesia\footnote{\url{https://github.com/yusufsyaifudin/indonesia-ner}} (1,835 kalimat latih) \citep{fachri2014nerindonesia}.
+	\item \textit{Dataset} NER diperoleh dari Fasilkom UI (1,700 kalimat latih dan 426 kalimat uji) dan repositori publik NER Indonesia\footnote{\url{https://github.com/yusufsyaifudin/indonesia-ner}} (1,835 kalimat latih) \citep{fachri2014nerindonesia}.
 	
 \end{enumerate}
 
@@ -83,7 +83,7 @@ Sedangkan mengacu pada tiga fase atau langkah \textit{open IE} \citep{etzioni201
 \end{enumerate}
 
 
-\subsection{NLP Pipeline}
+\subsection{\textit{NLP Pipeline}}
 
 \textit{NLP pipeline} adalah modul yang berisi serangkaian \textit{NLP task} yang menganotasi kalimat bahasa Indonesia dan menyimpannya sebagai dokumen dengan format CoNLL-U. Modul ini menerima dokumen teks yang berisi satu atau lebih kalimat yang dipisahkan oleh karakter baris baru (\textit{newline}) dan menghasilkan dokumen teks berisi kalimat yang telah dipotong menjadi \textit{token} dan diberi anotasi dengan format CoNLL-U. Rangkaian ini diimplementasikan menggunakan pustaka \textit{Stanford Core NLP}, seperti yang ditunjukkan pada berkas \verb|DependencyParser.java| pada lampiran, dan didistribusikan dalam format \textit{Java Archieve} (JAR) sehingga mudah dintegrasikan dengan modul lain. \textit{NLP task} yang terdapat pada rangkaian ini adalah sebagai berikut:
 
@@ -288,13 +288,15 @@ Pada fase Label, \textit{token expander} digunakan untuk mengekspansi kandidat \
 \section{Evaluasi dan Analisis}
 %-----------------------------------------------------------------------------%
 
+Pada subbab ini akan dijelaskan mengenai eksperimen-eksperimen yang dilakukan untuk mengevaluasi hasil implementasi rancangan sistem \textit{open IE} di atas. Kemudian akan dijelaskan juga hasil analisis dari semua eksperimen yang dilakukan.
+
 \subsection{Evaluasi}
 
-Evaluasi sistem \textit{open IE} ini akan difokuskan pada modul \textit{triple selector} karena modul ini ditopang oleh modul \textit{triple candidate generator} dan \textit{token expander} yang, bersama dengan \textit{triple selector}, merupakan pusat kontribusi dari penelitian ini. Selain karena tidak banyak kontribusi yang diberikan melalui modul \textit{NLP pipeline}, kinerja dari modul ini tidak dievaluasi secara khusus melainkan hanya akan dievaluasi secara tidak langsung pada evaluasi efisiensi sistem \textit{open IE} ini. Evaluasi pada penelitian ini akan dibagi menjadi dua eksperimen:
+Evaluasi sistem \textit{open IE} ini dilakukan menggunakan dua buah eksperimen. Eksperimen pertama akan dilakukan untuk memilih model \textit{supervised learning} terbaik untuk modul \textit{triple selector}. Eksperimen hanya dilakukan pada modul ini karena dianggap sudah mewakili modul \textit{triple candidate generator} dan \textit{token expander}. Selain karena tidak banyak kontribusi yang diberikan melalui modul \textit{NLP pipeline}, kinerja dari modul tersebut tidak dievaluasi secara khusus melainkan hanya akan dievaluasi secara tidak langsung pada evaluasi kinerja sistem. Untuk mengevaluasi kinerja sistem secara keseluruhan, dilakukan eksperimen kedua yang mengukur waktu proses dan presisi hasil ekstraksi menggunakan beberapa dokumen dengan variasi ukuran (jumlah kalimat). Berikut penjelasan rinci dari dua eksperimen tersebut.
 
 \subsubsection{Eksperimen Model \textit{Triple Selector}}
 
-Pada eksperimen ini akan dibandingkan kinerja empat buah model \textit{supervised learning} untuk melakukan klasifikasi \textit{triple} untuk menentukan apakah \textit{random forest} \citep{wasserman2015grid} adalah model yang paling cocok. Empat buah model tersebut adalah \textit{linear logistic regression}  \citep{fan2008liblinear}, \textit{polynomial support vector machine} (SVM) \citep{chang2011libsvm}, \textit{multi-layer perceptron} (MLP) \citep{hinton1989connectionist} dan \textit{random forest} sendiri. Keempat model ini akan dilatih dan diuji dengan metode \textit{k-fold cross-validation} menggunakan \textit{dataset} yang telah dijelaskan pada subbab \ref{Triple Candidate Generator}. Karena \textit{dataset} yang digunakan memiliki rasio kelas positif dan negatif yang tidak seimbang, maka digunakan $k = 3$ pada \textit{cross-validation} untuk mencegah adanya potongan (\textit{fold}) \textit{dataset} yang hanya terdiri dari kelas negatif.
+Pada eksperimen ini akan dibandingkan kinerja empat buah model \textit{supervised learning} untuk melakukan klasifikasi \textit{triple} untuk menentukan apakah \textit{random forest} \citep{wasserman2015grid} adalah model yang paling cocok. Empat buah model tersebut adalah \textit{linear logistic regression}  \citep{fan2008liblinear}, \textit{polynomial support vector machine} (SVM) \citep{chang2011libsvm}, \textit{multi-layer perceptron} (MLP) \citep{hinton1989connectionist} dan \textit{random forest} sendiri. Keempat model ini akan dilatih dan diuji dengan metode \textit{k-fold cross-validation} dengan variasi nilai $k = \{2, 3, 5, 7, 10\}$ dan menggunakan \textit{dataset} yang telah dijelaskan pada subbab \ref{Triple Candidate Generator}.
 
 Metrik yang akan dibandingkan pada eksperimen ini adalah \textit{precision}, \textit{recall} dan \textit{$F_1$ score} hanya untuk kelas positif (\textit{triple} valid) karena pada \textit{open IE} data negatif tidak diperlukan. Karena untuk \textit{task} klasifikasi \textit{triple} ini \textit{precision} dan \textit{recall} sama-sama penting, maka metrik yang dipandang lebih penting adalah rerata dari dua metrik tersebut, yaitu \textit{$F_1$-score} \citep{angeli2015leveraging}. Persamaan untuk menghitung \textit{precision}, \textit{recall} dan \textit{$F_1$-score} untuk data positif ditunjukkan secara berurutan pada persamaan \ref{eq:precision}, \ref{eq:recall} dan \ref{eq:f1}.
 
@@ -311,16 +313,14 @@ Metrik yang akan dibandingkan pada eksperimen ini adalah \textit{precision}, \te
 \end{align}
 
 
-\subsubsection{Eksperimen Waktu Ekstraksi \textit{Triple}}
+\subsubsection{Eksperimen Kinerja Sistem}
 
-Pada eksperimen ini diukur waktu eksekusi total sistem \textit{open IE} yang diajukan pada tiga dokumen input yang memiliki jumlah kalimat yang bervariasi. Tujuan dari eksperimen ini adalah mengukur efisiensi sistem secara umum dan membandingkannya dengan penelitian terkait. Dokumen yang digunakan sebagai input pada eksperimen ini adalah:
+Pada eksperimen ini diukur waktu eksekusi total sistem \textit{open IE} yang diajukan pada 50 dokumen yang dikelompokkan menjadi lima berdasarkan jumlah kalimatnya, yaitu 5, 10, 100, 1,000 dan 5,000 kalimat per dokumen. Setelah itu, diambil hasil ekstraksi dari tiga buah dokumen berukuran 5, 10 dan 100 kalimat untuk dihitung jumlah \textit{triple} yang valid sehingga dapat diketahui presisi (\textit{precision}) hasil ekstraksi berdasarkan rumus Persamaan \ref{eq:sys_precision}. Tujuan dari eksperimen ini adalah mengukur kinerja sistem secara keseluruhan. Dokumen yang digunakan sebagai input pada eksperimen ini berisi kalimat-kalimat acak yang diambil dari artikel berita dan ensiklopedia dari bermacam-macam domain seperti olahraga, politik, teknologi .dsb.
 
-\begin{enumerate}
-\item Dokumen berisi 2 kalimat dari \textit{dataset} pelatihan
-\item Dokumen berisi 138 kalimat dari proposal penelitian
-\item Dokumen berisi 5,593 dari \textit{dataset} pelatihan
-\end{enumerate}
+\noindent \begin{align}\label{eq:sys_precision}
+	\textit{system precision}_+ = \frac{|\textit{valid triples}|}{|\textit{extracted triples}|}
+\end{align}
 
 \subsection{Analisis}
 
-Analisis akan dilakukan terhadap hasil eksperimen yang telah dijelaskan di atas dengan tujuan mengukur pencapaian pada penelitian ini relatif terhadap penelitian-penelitian terkait, memapaparkan alasan di balik hasil eksperimen yang diperoleh serta mencari alternatif perbaikan atau peningkatan yang dapat dilakukan pada penelitian ini ke depannya.
+Analisis dilakukan terhadap hasil dua eksperimen yang telah dijelaskan di atas dengan tujuan mengukur pencapaian pada penelitian ini relatif terhadap penelitian-penelitian terkait, memapaparkan alasan di balik hasil eksperimen yang diperoleh serta menyarankan alternatif perbaikan atau peningkatan yang dapat mungkin dapat dilakukan. Dengan adanya hasil analisis ini diharapkan dapat memberikan gambaran yang jelas mengenai pencapaian dan kekurangan sistem ini sehingga dapat dimanfaatkan dengan optimal.
