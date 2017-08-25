@@ -140,21 +140,30 @@ The vast amount of digital documents, that have surpassed human processing capab
 
 \section{Introduction}
 
-Open domain information extraction (open IE) is a paradigm that facilitates domain-independent discovery of triple relations from text document\cite{banko2007open}. It extracts relations from sentence in three-values tuples or triples format $(x, r, y)$ where $x$ and $y$ called arguments and $r$ is the relation\cite{etzioni2011open}. In more linguistic term, the arguments are also referred as subject and object while relation are referred as predicate\cite{angeli2015leveraging}. The example of this extraction is described in Figure \ref{fig_example_io_openie}.
+Open domain information extraction (open IE) is a paradigm that facilitates domain-independent discovery of triple relations from text document\cite{banko2007open}. It extracts relations from sentence in three-values tuples or triples format $(x, r, y)$ where $x$ and $y$ are called arguments and $r$ is the relation\cite{etzioni2011open}. In more linguistic term, the arguments are also referred as subject and object while relation are referred as predicate\cite{angeli2015leveraging}. The example of this extraction is described in Figure \ref{fig_example_io_openie}.
 
 \begin{figure}
 \begin{mdframed}
 \textbf{Input} \\[0.1cm]
-"Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia." \\[0.5cm]
+Indonesian: "\textit{Sembungan adalah sebuah desa yang terletak di kecamatan Kejajar, kabupaten Wonosobo, Jawa Tengah, Indonesia.}" \\
+
+English: "Sembungan is a village located in Kejajar district, Wonosobo regency, West Java, Indonesia." \\[0.5cm]
+
 \textbf{Output} \\[0.1cm]
+Indonesian: \\
 1. (Sembungan, adalah, desa) \\
-2. (Sembungan, terletak di, kecamatan Kejajar)
+2. (Sembungan, terletak di, kecamatan Kejajar) \\
+
+English: \\
+1. (Sembungan, is a, village) \\
+2. (Sembungan, is located in, Kejajar district)
+
 \end{mdframed}
-\caption{Example of expected input and some possible output of open domain information extraction for Indonesian text}
+\caption{Example of expected input and some possible output of open domain information extraction for Indonesian text and their English translations}
 \label{fig_example_io_openie}
 \end{figure}
 
-As described in Table \ref{table_paradigm_comparison}, unlike traditional information extraction (IE), open IE extracts domain-independent relations from sentence. While it retrieves relations in triples format similar to knowledge extraction (KE), open IE doesn't follow whole Resource Data Format (RDF) specification\footnote{Resource Data Format W3C \url{https://www.w3.org/RDF/}} like KE\cite{auer2007dbpedia} \cite{exner2014refractive}. Although mapping to existing relation schema is required in real word task such as slot filling\cite{angeli2015leveraging}, ontology is not in the scope of open IE research. Open IE has also been reported to be useful for tasks such as question answering\cite{fader2011identifying} and information retrieval\cite{etzioni2011search}. 
+As described in Table \ref{table_paradigm_comparison}, unlike traditional information extraction (IE), open IE extracts domain-independent relations from sentence. While it retrieves relations in triples format similar to knowledge extraction (KE), open IE doesn't follow whole Resource Description Framework (RDF) specification\footnote{Resource Description Framework W3C \url{https://www.w3.org/RDF/}} like KE\cite{auer2007dbpedia} \cite{exner2014refractive}. Although mapping to existing relation schema is required in real-world task such as slot filling\cite{angeli2015leveraging}, ontology is not in the scope of open IE research. Open IE has also been reported to be useful for tasks such as question answering\cite{fader2011identifying} and information retrieval\cite{etzioni2011search}. 
 
 \begin{table}
 \renewcommand{\arraystretch}{1.5}
@@ -166,15 +175,15 @@ As described in Table \ref{table_paradigm_comparison}, unlike traditional inform
 \textbf{Aspect} & \textbf{IE} & \textbf{Open IE} & \textbf{KE} \\ 
 \hline 
 \textbf{Domain} & Closed & Open & Open \\ 
-\textbf{Format} & Depends on domain & Triples & RDF Triples \\ 
+\textbf{Format} & Domain-dependent & Triples & RDF Triples \\ 
 \textbf{Ontology} & Not available & Optional & Mandatory \\ 
 \hline 
 \end{tabular} 
 \end{table}
 
-Due to the nature of NLP tasks and heuristics used in open IE system, it is only applicable for a specific language\cite{banko2007open}. So, in order to extract open domain information from Indonesian text, a specific system has to be defined for this language. Furthermore, considering the scarcity of Indonesian NLP resources, the system need to effectively utilize them to achieve the objective. Through this paper, we propose an open IE system that addresses these issues.
+Due to the nature of NLP tasks and heuristics used in open IE system, it is only applicable for a specific language\cite{banko2007open}. So, in order to extract open domain information from Indonesian text, a specific system has to be defined for this language. Furthermore, since reliable Indonesian NLP datasets are only available for basic tasks (POS tagging, NER and dependency parsing), the system has to rely on them without requiring too much additional dataset. Through this paper, we propose an open IE system that addresses these issues.
 
-We propose an open IE system that combine heuristics (rule-based) models and a supervised learning model to extract entity relations from Indonesian text in triple format. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. Our objective is to define a baseline system for Indonesian open IE that may encourage further research in the future.
+We propose an open IE system that combines heuristics (rule-based) models and a supervised learning model to extract entity relations from Indonesian text in triple format. This approach only requires single manually annotated dataset which is required to train triple selector/classifier. Our objective is to define a baseline system for Indonesian open IE that may encourage further research in the future.
 
 In general, the contributions from this research are:
 
