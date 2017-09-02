@@ -16,7 +16,7 @@ python classifier.py --mode compare_models triple-selector.train.csv
 Feature sets comparison:
 
 ```
-python classifier.py --mode compare_models triple-selector.train.csv
+python classifier.py --mode compare_features triple-selector.train.csv
 ```
 
 Train best model (Random Forest)

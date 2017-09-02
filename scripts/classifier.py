@@ -1,3 +1,16 @@
+"""
+classifier.py
+@author yohanes.gultom@ui.ac.id
+
+Running experiments:
+* Comparing triple classifiers (optimized by grid search) performance using cross validation
+* Comparing feature sets performance agains the best triple classifier
+
+Train models:
+* Train triple classifier model using the best model and feature set then save it to binary file
+
+"""
+
 import argparse
 import collections
 import numpy as np
@@ -8,8 +21,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 from sklearn.externals import joblib
-from sklearn.model_selection import cross_val_score
-from sklearn.metrics import precision_recall_fscore_support
+from sklearn.model_selection import cross_val_score, cross_validate
+from sklearn.metrics import precision_recall_fscore_support, recall_score, precision_score, f1_score, make_scorer
 from tripletools import get_best_features
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -111,6 +124,7 @@ feature_sets = [
     }
 ]
 
+
 def extract_features(dataset, selected_features):
     total_features = dataset.shape[1] - 1
 
@@ -130,18 +144,7 @@ def extract_features(dataset, selected_features):
     return X, y, scaler
 
 
-def cross_validate_precision_recall_fbeta(model, X, y, cv=None):
-    precision = cross_val_score(model, X, y, cv=cv, scoring='precision').mean()
-    recall = cross_val_score(model, X, y, cv=cv, scoring='recall').mean()
-    fbeta_list = cross_val_score(model, X, y, cv=cv, scoring='f1')
-    fbeta = fbeta_list.mean()
-    fbeta_min = fbeta_list.min()
-    fbeta_max = fbeta_list.max()
-    fbeta_std = fbeta_list.std()
-    return precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std
-
-
-def plot_model_comparison(experiments, title, cv, score_field='best_score'):
+def plot_comparison_chart(experiments, title, cv, score_field='best_score'):
     fig, ax = plt.subplots()
 
     # Example data
@@ -174,6 +177,17 @@ def plot_model_comparison(experiments, title, cv, score_field='best_score'):
     plt.show()
 
 
+def print_comparison_table(experiments, score_field='best_score'):
+    print('Model\tPrecision\tRecall\tF1')
+    for exp in experiments:
+        print('{}\t{}\t{}\t{}'.format(
+            exp['name'],
+            exp[score_field]['precision'],
+            exp[score_field]['recall'],
+            exp[score_field]['f1']
+        ))
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Train triples classifier')
     parser.add_argument('dataset_path', help='Dataset path')
@@ -193,7 +207,6 @@ if __name__ == '__main__':
     if args.mode == 'compare_models':
         best_score = 0.0
         best_model = None
-        count = 0
 
         # feature selection
         X, y, scaler = extract_features(dataset, get_best_features())
@@ -212,34 +225,40 @@ if __name__ == '__main__':
                 precision, recall, fbeta, support = precision_recall_fscore_support(y, y_pred, average='binary')
                 fbeta_min = fbeta_max = fbeta_std = fbeta
             else:
-                precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(search.best_estimator_, X, y, cv)
-            print(search.best_estimator_)
-            print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
-                precision,
-                recall,
-                fbeta,
-                fbeta_min,
-                fbeta_max,
-                fbeta_std,
-            ))
-            experiment['best_model'] = best_model
+                cv_results = cross_validate(search.best_estimator_, X, y=y, scoring=['precision', 'recall'], cv=cv)
+                recall = cv_results['test_recall'].mean()
+                precision = cv_results['test_precision'].mean()
+                fbeta = 2 * recall * precision / (recall + precision)
+
             experiment['best_score'] = {'precision': precision, 'recall': recall, 'f1': fbeta}
             # replace current best model if the score is higher
             if search.best_score_ > best_score:
                 best_score = search.best_score_
                 best_model = search.best_estimator_
-            count += 1
+
         print('--------------- Result ----------------')
         print('Best models: {} (F1 = {})'.format(best_score, type(best_model).__name__))
-        model = best_model
+        print(best_model)
+
+        # print table
+        print('--------------- Table ----------------')
+        print_comparison_table(experiments, score_field='best_score')
 
         # show plot
-        plot_model_comparison(experiments, 'Triple Selector Models Performance', cv, score_field='best_score')
+        plot_comparison_chart(experiments, 'Triple Selector Models Performance', cv, score_field='best_score')
 
     elif args.mode == 'compare_features':
+        # best score and feature set var
+        best_score = 0
+        best_model = None
+        best_set = None
+
+        # best hyperparameters for the best model
         best_params = experiments[3]['params'][0]
         for feature_set in feature_sets:
             X, y, scaler = extract_features(dataset, feature_set['features'])
+
+            # only use the best model
             model = RandomForestClassifier(
                 max_depth=best_params['max_depth'][0],
                 class_weight=best_params['class_weight'][0],
@@ -248,25 +267,34 @@ if __name__ == '__main__':
                 max_features=best_params['max_features'][0],
                 random_state=best_params['random_state'][0]
             )
-            precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y, cv)
+
+            # cross_validate
+            cv_results = cross_validate(model, X, y=y, scoring=['precision', 'recall'], cv=cv)
+            recall = cv_results['test_recall'].mean()
+            precision = cv_results['test_precision'].mean()
+            fbeta = 2 * recall * precision / (recall + precision)
             feature_set['cv_score'] = {'precision': precision, 'recall': recall, 'f1': fbeta}
-            print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
-                precision,
-                recall,
-                fbeta,
-                fbeta_min,
-                fbeta_max,
-                fbeta_std,
-            ))
+
+            if best_score < fbeta:
+                best_score = fbeta
+                best_set = feature_set
+
+        # print result
+        print('--------------- Result ----------------')
+        print('Best feature set: {} (F1 = {})'.format(best_score, best_set))
+
+        # print table
+        print('--------------- Table ----------------')
+        print_comparison_table(feature_sets, score_field='cv_score')
 
         # show plot
-        plot_model_comparison(feature_sets, 'Triple Selector Feature Sets Performance', cv, score_field='cv_score')
+        plot_comparison_chart(feature_sets, 'Triple Selector Feature Sets Performance', cv, score_field='cv_score')
 
         print('\nInformation:')
         for feature_set in feature_sets:
             print('{}\t{}\t{}'.format(feature_set['name'], feature_set['desc'], feature_set['features']))
 
-    else: # if args.mode == 'train_model'
+    else:  # if args.mode == 'train_model'
 
         # feature selection
         X, y, scaler = extract_features(dataset, get_best_features())
@@ -287,19 +315,9 @@ if __name__ == '__main__':
         y_pred = model.predict(X)
         precision, recall, fbeta, support = precision_recall_fscore_support(y, y_pred, average='binary')
         fbeta_min = fbeta_max = fbeta_std = fbeta
-        # cross validate best model to compare score
-        # precision, recall, fbeta, fbeta_min, fbeta_max, fbeta_std = cross_validate_precision_recall_fbeta(model, X, y, cv)
-        print('Precision: {}\nRecall: {}\nF1 avg: {}\nF1 min: {}\nF1 max: {}\nF1 std: {}\n'.format(
-            precision,
-            recall,
-            fbeta,
-            fbeta_min,
-            fbeta_max,
-            fbeta_std,
-        ))
 
-    # save model to file
-    if model:
-        joblib.dump(model, args.output_path)
-        print('Model saved to {}'.format(args.output_path))
-        print('Scaler saved to {}'.format(args.scaler_output_path))
+        # save model to file
+        if model:
+            joblib.dump(model, args.output_path)
+            print('Model saved to {}'.format(args.output_path))
+            print('Scaler saved to {}'.format(args.scaler_output_path))
