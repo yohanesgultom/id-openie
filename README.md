@@ -1,5 +1,7 @@
 # Indonesian Open Domain Information Extractor
 
+> IWBIS 2017 presentation slides of this research is available [here](https://docs.google.com/presentation/d/1uJr6UaxaAfBZCTSxqVFVmlAMxTObTe3PmkD9ldJ0Hv4/edit?usp=sharing)
+
 > This is a work in progress and still focusing on proven of concept instead of precision and recall
 
 Indonesian open domain information extractor using Stanford NLP pipeline, heuristics triples candidate generator, heuristics token expander and Random Forest triple selector.
