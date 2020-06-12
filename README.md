@@ -119,10 +119,12 @@ List of Indonesian NLP datasets collected from various sources:
 
 BibTex format:
 ```
-@mastersthesis{gultom2017thesis,
-	author={Yohanes {Gultom}},
-	title={Automatic Open Domain Information Extraction from Indonesian Text},
-	school={Universitas Indonesia},
-	year={2017},
+@inproceedings{gultom2017automatic,
+  title={Automatic open domain information extraction from Indonesian text},
+  author={Gultom, Yohanes and Wibowo, Wahyu Catur},
+  booktitle={2017 International Workshop on Big Data and Information Security (IWBIS)},
+  pages={23--30},
+  year={2017},
+  organization={IEEE}
 }
 ```
