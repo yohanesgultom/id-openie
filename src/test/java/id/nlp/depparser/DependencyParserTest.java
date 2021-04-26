@@ -27,7 +27,7 @@ public class DependencyParserTest {
     @Test
     public void parseFileTest() {
         try {
-            String[] files = new String[]{ "/plain.txt" };
+            String[] files = new String[]{ System.getProperty("file.separator") + "plain.txt" };
             List<File> fileList = new ArrayList<>();
             URL url = null;
             for (String file:files) {

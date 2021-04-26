@@ -19,7 +19,7 @@ import java.util.function.BiConsumer;
 public class IndonesianStanfordCoreNLP extends StanfordCoreNLP {
 
     private static final Redwood.RedwoodChannels logger = Redwood.channels(IndonesianStanfordCoreNLP.class);
-    private static final String sqlFile = "/database.sql";
+    private static final String sqlFile = System.getProperty("file.separator") + "database.sql";
     private static final String databaseUrl = "jdbc:h2:mem:corenlp;DB_CLOSE_DELAY=-1;IGNORECASE=TRUE";
 
     private Properties properties;
