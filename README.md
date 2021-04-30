@@ -19,50 +19,59 @@ Expected output:
 "Sembungan" "terletak di" "kecamatan Kejajar"
 ```
 
-**Build**
+## Build
 
-To build from source:
+Docker build:
+
+```
+docker build -t id-openie:latest .
+```
+
+To build manually without docker (required to run experiments with Matplotlib charts):
 
 * Install build dependencies:
   * [Oracle JRE/JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
   * [Gradle](https://gradle.org/)
   * [Python 2.7](https://www.python.org/)
   * [Pip](https://pip.pypa.io)
-  * [Tkinter](https://wiki.python.org/moin/TkInter) (or `python-tk` in Ubuntu) to display comparison charts
+  * [Tkinter](https://wiki.python.org/moin/TkInter) (or `python-tk` in Ubuntu) to display classifier comparison charts
 * Download and clone this repo
 * Install Python dependencies: `pip install -r scripts/requirements.txt`
 * Run build command from repo directory: `gradle clean build`
 * Get distribution `.tar` or `.zip` from `build/distribution`
 * Extract distribution to your choice of installation directory
 
-**Usage**
+## Usage
 
 Command format:
 
 ```
-usage: extract_triples.py [-h] [-m MODEL_FILE] [-s SCALER_FILE]
-                          [-o OUTPUT_FILE] [-f {json,tsv}]
-                          input_file
+usage: python extract_triples.py [-h] [-m MODEL_FILE] [-s SCALER_FILE] [-o OUTPUT_FILE] [-f {json,tsv}] input_file
 
 Extract triples from Indonesian text
 
 positional arguments:
-  input_file            Input file containing 1 (one) Indonesian sentence per
-                        line
+  input_file            Input file containing 1 (one) Indonesian sentence per line
 
 optional arguments:
   -h, --help            show this help message and exit
-  -m MODEL_FILE, --model_file MODEL_FILE
-                        Triples classifier model file
-  -s SCALER_FILE, --scaler_file SCALER_FILE
-                        Triples classifier scaler file
-  -o OUTPUT_FILE, --output_file OUTPUT_FILE
-                        Output file containing triples
-  -f {json,tsv}, --output_format {json,tsv}
-                        Output file format
+  -m MODEL_FILE, --model_file MODEL_FILE Triples classifier model file
+  -s SCALER_FILE, --scaler_file SCALER_FILE Triples classifier scaler file
+  -o OUTPUT_FILE, --output_file OUTPUT_FILE Output file containing triples
+  -f {json,tsv}, --output_format {json,tsv} Output file format
 ```
 
-Example:
+Example running on Linux/MacOS:
+
+> on Windows use PowerShell or replace `${PWD}` with `%cd%` in normal command prompt
+
+```
+docker run --rm -v ${PWD}/data:/data id-openie python extract_triples.py -o /data/plain.triples.json /data/plain.txt
+docker run --rm -v ${PWD}/data:/data id-openie python extract_triples.py -o /data/plain.triples.json -f json /data/plain.txt
+docker run --rm -v ${PWD}/data:/data id-openie python extract_triples.py -o /data/plain.triples.tsv -f tsv /data/plain.txt
+```
+
+Example without docker:
 
 ```
 python extract_triples.py -o plain.triples.json plain.txt
@@ -70,7 +79,7 @@ python extract_triples.py -o plain.triples.json -f json plain.txt
 python extract_triples.py -o plain.triples.tsv -f tsv plain.txt
 ```
 
-**Datasets**
+## Datasets
 
 List of Indonesian NLP datasets collected from various sources:
 
@@ -97,7 +106,7 @@ List of Indonesian NLP datasets collected from various sources:
   * `data/triple-selector.dataset.csv` (human readable)
   * `data/triple-selector.train.csv` (vectorized)
 
-**Models**
+## Models
 
 * Stanford NLP POS tagger: `src/main/resources/tagger-id.universal.model`
 
@@ -109,13 +118,13 @@ List of Indonesian NLP datasets collected from various sources:
   * `scripts/triples-classifier-scaler.pkl`
   * `scripts/triples-classifier-model.pkl`
 
-**References**
+## References
 
 1. Banko, M., Cafarella, M.J., Soderland, S., Broadhead, M. and Etzioni, O., 2007, January. Open Information Extraction from the Web. In IJCAI (Vol. 7, pp. 2670-2676).
-1. Angeli, G., Premkumar, M.J. and Manning, C.D., 2015, July. Leveraging linguistic structure for open domain information extraction. In Proceedings of the 53rd Annual Meeting of the Association for Computational Linguistics (ACL 2015).
-1. Suhartono, D., 2014. Lemmatization Technique in Bahasa: Indonesian. Journal of Software, 9(5), p.1203.
+2. Angeli, G., Premkumar, M.J. and Manning, C.D., 2015, July. Leveraging linguistic structure for open domain information extraction. In Proceedings of the 53rd Annual Meeting of the Association for Computational Linguistics (ACL 2015).
+3. Suhartono, D., 2014. Lemmatization Technique in Bahasa: Indonesian. Journal of Software, 9(5), p.1203.
 
-**Citation**
+## Citation
 
 BibTex format:
 ```
